@@ -5,6 +5,8 @@ import FloatingButtons from './FloatingButtons'
 import { ReactNode } from 'react'
 import Head from 'next/head'
 
+import { Toaster } from "react-hot-toast";
+
 export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
@@ -24,6 +26,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             <Footer />
 
             <FloatingButtons />
+
+            <Toaster position="bottom-center" />
         </>
     )
 }

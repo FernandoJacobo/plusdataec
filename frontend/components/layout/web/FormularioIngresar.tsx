@@ -1,5 +1,8 @@
 import { useState } from 'react';
+
 import Link from 'next/link';
+
+import { Toast, showToast } from "@/components/general/Toast";
 
 type ClickResult = {
     success: boolean;
@@ -7,7 +10,7 @@ type ClickResult = {
 };
 
 interface FormProps {
-    onClick: (data: { email: string; password: string }) => ClickResult;
+    onClick: (data: { error: boolean; message: string }) => ClickResult;
     showLinkRegister: boolean;
 }
 
@@ -18,8 +21,26 @@ export default function FormularioIngresar({ onClick, showLinkRegister }: FormPr
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        onClick({ email, password });
+        if (!validateForm()) return;
+
+        onClick({ error: false, message: '' });
     };
+
+    const validateForm = () => {
+        if (!email.trim()) {
+            document.getElementById('email')?.focus();
+            showToast('Correo electrónico requerido.', 'error');
+            return false;
+        }
+
+        if (!password.trim()) {
+            document.getElementById('password')?.focus();
+            showToast('Contraseña requerida.', 'error');
+            return false;
+        }
+
+        return true;
+    }
 
     return (
         <>
@@ -29,12 +50,12 @@ export default function FormularioIngresar({ onClick, showLinkRegister }: FormPr
                 <div className="flex flex-col gap-3">
                     <label htmlFor="email" className="font-bold">Correo Electrónico</label>
                     <input
+                        id="email"
                         type="email"
                         placeholder="Ingrese su Correo Electrónico"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full p-2 rounded input-control"
-                        required
                     />
                 </div>
 
@@ -45,12 +66,12 @@ export default function FormularioIngresar({ onClick, showLinkRegister }: FormPr
                     </div>
 
                     <input
+                        id="password"
                         type="password"
                         placeholder="Ingrese su Contraseña"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-2 rounded input-control"
-                        required
                     />
                 </div>
 

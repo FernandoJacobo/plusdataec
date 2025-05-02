@@ -9,7 +9,7 @@ import FormularioIngresar from "@/components/layout/web/FormularioIngresar";
 
 const steps = [
     { id: 1, title: "Cotizar" },
-    { id: 2, title: "Imprimir" },
+    { id: 2, title: "Subir solicitud" },
     { id: 3, title: "Ingresar" },
     { id: 4, title: "Confirmar" },
 ];
@@ -48,82 +48,180 @@ export default function CotizarPage() {
     const [phone, setPhone] = useState('');
 
     const [showRegister, setShowRegister] = useState(false);
+    const [showCotizar, setShowCotizar] = useState(true);
+
+    const print = () => {
+        setShowCotizar(false);
+    }
+
+    const cancelPrint = () => {
+        setShowCotizar(true);
+    }
 
     const renderContent = () => {
         switch (currentStep) {
             case 1: // Cotizar
                 return (
-                    <div className="w-full flex flex-col items-center justify-center p-10">
-                        <form onSubmit={handleForm} className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-4">
-                            <div className="flex flex-col gap-3">
-                                <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
-                                <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} onChange={onChangeSelect} />
-                            </div>
+                    <>
+                        {showCotizar ? (
+                            <div className="w-full flex flex-col items-center justify-center p-10">
+                                <form onSubmit={handleForm} className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-4">
+                                    <h2 className="text-2xl font-bold text-center"> Cotizar en linea </h2>
 
-                            <div className="flex flex-col gap-3">
-                                <label htmlFor="valor" className='font-bold'> Valor </label>
-
-                                <input
-                                    type="text"
-                                    placeholder="$"
-                                    value={valor}
-                                    onChange={(e) => setValor(e.target.value)}
-                                    className="w-full text-right input-control"
-                                    required
-                                />
-                            </div>
-
-                            <div className="bg-purple-50 rounded-2xl shadow-lg max-w-md w-full space-y-4 p-4">
-                                <h1 className="font-bold"> Resultado de la cotización: </h1>
-
-                                <div className="max-w-md mx-auto">
-                                    <div className="bg-purple-50 rounded-lg overflow-hidden">
-                                        <ul className="divide-y divide-transparent">
-                                            <li className=" hover:bg-gray-100 cursor-pointer">
-                                                <div className="flex justify-between items-center">
-                                                    <span className=""> Intereses Ganados </span>
-
-                                                    <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                </div>
-                                            </li>
-
-                                            <li className=" hover:bg-gray-100 cursor-pointer">
-                                                <div className="flex justify-between items-center">
-                                                    <span className=""> Honorarios </span>
-
-                                                    <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                </div>
-                                            </li>
-
-                                            <li className=" hover:bg-gray-100 cursor-pointer">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="font-bold"> Valor Neto a recibir </span>
-                                                    <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                    <div className="flex flex-col gap-3">
+                                        <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
+                                        <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} onChange={onChangeSelect} />
                                     </div>
+
+                                    <div className="flex flex-col gap-3">
+                                        <label htmlFor="valor" className='font-bold'> Valor a solicitar </label>
+
+                                        <input
+                                            type="text"
+                                            placeholder="$"
+                                            value={valor}
+                                            onChange={(e) => setValor(e.target.value)}
+                                            className="w-full text-right input-control"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="bg-purple-50 rounded-2xl shadow-lg max-w-md w-full space-y-4 p-4">
+                                        <h1 className="font-bold"> Resultado de la cotización: </h1>
+
+                                        <div className="max-w-md mx-auto">
+                                            <div className="bg-purple-50 rounded-lg overflow-hidden">
+                                                <ul className="divide-y divide-transparent">
+                                                    <li className="cursor-pointer">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-gray-400 font-bold"> Monto aceptado por el ISR </span>
+
+                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="cursor-pointer">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-gray-400 font-bold"> (+) Intereses Ganados </span>
+
+                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="cursor-pointer">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-gray-400 font-bold"> (=) Valor de la Nota de Crédito </span>
+
+                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li className="cursor-pointer">
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="font-bold"> Honorarios (No incluye IVA) </span>
+
+                                                            <span className="text-sm text-yellow tex-end font-bold"> 0% </span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p className='text-gray-400'> El valor de los intereses ganados son aproximados </p>
+
+                                    <div className="flex flex-col md:flex-row gap-3">
+                                        <button className="w-full md:w-1/2 bg-white btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
+                                            Imprimir cotización
+                                        </button>
+
+                                        <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
+                                            Continuar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        ) : (
+                            <div className="w-full flex flex-col items-center justify-center p-10">
+                                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full space-y-4">
+                                    <h2 className="text-2xl font-bold text-center"> Imprimir cotización </h2>
+
+                                    <p className='text-gray-400'> Debe de registrar los datos del beneficiario que forma parte de la cotización que deseas imprimir </p>
+
+                                    <form onSubmit={handleForm} className="">
+                                        <div className="flex flex-col gap-3 mb-3">
+                                            <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
+                                            <input
+                                                type="text"
+                                                placeholder=""
+                                                value={ruc}
+                                                onChange={(e) => setRuc(e.target.value)}
+                                                className="w-full p-2 rounded input-control"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-3 mb-3">
+                                            <label htmlFor="name" className='font-bold'> Nombre o Razón Social </label>
+                                            <input
+                                                type="text"
+                                                placeholder=""
+                                                value={ruc}
+                                                onChange={(e) => setRuc(e.target.value)}
+                                                className="w-full p-2 rounded input-control"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className='flex flex-col md:flex-row gap-2 mb-3'>
+                                            <div className="w-full flex flex-col gap-3">
+                                                <label htmlFor="email" className='font-bold'> Correo Electrónico </label>
+                                                <input
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    className="w-full p-2 rounded input-control"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="w-full flex flex-col gap-3">
+                                                <label htmlFor="phone" className='font-bold'> Nro. de celular </label>
+                                                <input
+                                                    type="text"
+                                                    placeholder=""
+                                                    value={phone}
+                                                    onChange={(e) => setPhone(e.target.value)}
+                                                    className="w-full p-2 rounded input-control"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-row gap-3 mt-7">
+                                            <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancelPrint(); }}>
+                                                Cancelar
+                                            </button>
+
+                                            <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
+                                                Imprimir Cotización
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-
-                            <p className='text-gray-400'> El valor de los intereses ganados son aproximados </p>
-
-                            <button className="w-full bg-violet text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { alert(); }}>
-                                Ingresar
-                            </button>
-                        </form>
-                    </div>
+                        )}
+                    </>
                 );
             case 2: // Imprimir
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
-                        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full space-y-4">
-                            <h2 className="text-2xl font-bold text-center"> Imprimir cotización </h2>
-
-                            <p className='text-gray-400'> Debe de registrar los datos del beneficiario que forma parte de la cotización que deseas imprimir </p>
+                        <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
+                            <h2 className="text-xl font-bold text-center"> Registra la información del contribuyete </h2>
 
                             <form onSubmit={handleForm} className="">
-                                <div className="flex flex-col gap-3 mb-3">
+                                <div className="w-full md:w-1/2 flex flex-col gap-3 mb-3">
                                     <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
                                     <input
                                         type="text"
@@ -152,7 +250,7 @@ export default function CotizarPage() {
                                         <label htmlFor="email" className='font-bold'> Correo Electrónico </label>
                                         <input
                                             type="text"
-                                            placeholder="Ingresa tu correo electrónico"
+                                            placeholder=""
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             className="w-full p-2 rounded input-control"
@@ -164,7 +262,7 @@ export default function CotizarPage() {
                                         <label htmlFor="phone" className='font-bold'> Nro. de celular </label>
                                         <input
                                             type="text"
-                                            placeholder="Registra tu número"
+                                            placeholder=""
                                             value={phone}
                                             onChange={(e) => setPhone(e.target.value)}
                                             className="w-full p-2 rounded input-control"
@@ -173,13 +271,32 @@ export default function CotizarPage() {
                                     </div>
                                 </div>
 
+                                <div className="flex flex-col gap-3 mb-3">
+                                    <label htmlFor="name" className=''> Cargar formulario 101 donde se mantiene el saldo a favor </label>
+                                    
+                                    <input
+                                        type="file"
+                                        placeholder=""
+                                        className="w-full p-2 rounded input-control"
+                                        hidden
+                                    />
+
+                                    <div className="flex flex-col md:flex-row justify-between items-center gap-3">
+                                        <button className="w-full md:w-1/2 text-purple bg-purple-100 uppercase font-bold p-2 text-center rounded-xl hover:text-white transition hover:cursor-pointer">
+                                            Examinar
+                                        </button>
+
+                                        <span className="text-violet"> Ningún archivo seleccionado </span>
+                                    </div>
+                                </div>
+
                                 <div className="flex flex-row gap-3 mt-7">
-                                    <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
+                                    <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { alert(); }}>
                                         Cancelar
                                     </button>
 
                                     <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
-                                        Imprimir Cotización
+                                        Continuar
                                     </button>
                                 </div>
                             </form>

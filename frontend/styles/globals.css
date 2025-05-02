@@ -16,6 +16,10 @@ body {
     font-size: 13px;
 }
 
+.text-yellow {
+    color: var(--yellow);
+}
+
 .text-purple {
     color: var(--purple);
 }
