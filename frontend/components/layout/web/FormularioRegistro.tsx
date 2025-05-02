@@ -1,8 +1,15 @@
+'use client';
+
 import { useState } from 'react';
+
 import Link from 'next/link';
 
+import { Toast, showToast } from "@/components/general/Toast";
+
+import { isValidEmail, isValidPhone } from '@/helpers/validations'
+
 interface FormProps {
-    onClick: (data: { name: string; phone: string; email: string }) => void;
+    onClick: (data: { id: number; name: string; phone: string; email: string }) => void;
     showLinkLogin: boolean;
 }
 
@@ -17,16 +24,58 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
 
         if (!validateForm()) return;
 
-        onClick({ name, phone, email });
+        const id = 1;
+
+        onClick({ id, name, phone, email });
     };
 
     const validateForm = (): boolean => {
-        if (!name.trim() || !phone.trim() || !email.trim() || password.length < 8) {
-            alert('Completa todos los campos correctamente');
+        if (!name.trim()) {
+            document.getElementById('name')?.focus();
+            showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
+
+        if (!phone.trim()) {
+            document.getElementById('phone')?.focus();
+            showToast('Completa todos los campos correctamente', 'error');
+            return false;
+        }
+
+        if (!isValidPhone(phone.trim())) {
+            document.getElementById('phone')?.focus();
+            showToast('Número de celular invlido', 'error');
+            return false;
+        }
+
+        if (!email.trim()) {
+            document.getElementById('email')?.focus();
+            showToast('Completa todos los campos correctamente', 'error');
+            return false;
+        }
+
+        if (!isValidEmail(email.trim())) {
+            document.getElementById('email')?.focus();
+            showToast('Correo electrónico invlido', 'error');
+            return false;
+        }
+
+        if (password.length < 8) {
+            document.getElementById('password')?.focus();
+            showToast('Completa todos los campos correctamente', 'error');
+            return false;
+        }
+        
         return true;
     };
+
+    const resetForm = () => {
+        setName('');
+        setPhone('');
+        setEmail('');
+        setPassword('');
+        document.getElementById('name')?.focus();
+    }
 
     return (
         <>
@@ -36,12 +85,12 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                 <div className="flex flex-col gap-3">
                     <label className="font-bold">Nombre Completo</label>
                     <input
+                        id='name'
                         type="text"
                         placeholder="Ingresa tu nombre completo"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="input-control"
-                        required
                     />
                 </div>
 
@@ -49,24 +98,24 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                     <div className="w-full flex flex-col gap-3">
                         <label className="font-bold">Nro. de celular</label>
                         <input
+                            id='phone'
                             type="text"
                             placeholder="Registra tu número"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="input-control"
-                            required
                         />
                     </div>
 
                     <div className="w-full flex flex-col gap-3">
                         <label className="font-bold">Correo Electrónico</label>
                         <input
+                            id='id'
                             type="email"
                             placeholder="Ingresa tu correo electrónico"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="input-control"
-                            required
                         />
                     </div>
                 </div>
@@ -74,20 +123,27 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                 <div className="flex flex-col gap-3">
                     <label className="font-bold">Contraseña</label>
                     <input
+                        id='password'
                         type="password"
                         placeholder="Mínimo 8 caracteres"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="input-control"
-                        required
                     />
                 </div>
 
-                <button type="submit"
-                    className="w-full bg-violet text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105"
-                >
-                    Registrarse
-                </button>
+                <div className='flex d-flex flex-col md:flex-row gap-5'>
+                    <button type="submit"
+                        className="w-full md:w-1/2 bg-violet text-white uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105"
+                    >
+                        Registrarse
+                    </button>
+                    
+                    <button type="reset"
+                        className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { resetForm() }}>
+                        Limpiar Campos
+                    </button>
+                </div>
 
                 {showLinkLogin && (
                     <p className="text-black text-center">

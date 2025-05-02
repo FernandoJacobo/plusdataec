@@ -13,6 +13,8 @@ import "@fortawesome/fontawesome-svg-core/styles.css"
 
 import 'animate.css';
 
+import { Toaster } from "react-hot-toast";
+
 config.autoAddCss = false
 
 // Soporte para layouts personalizados por página
