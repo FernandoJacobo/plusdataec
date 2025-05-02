@@ -1,0 +1,72 @@
+@import './variables.css';
+
+@import 'tailwindcss';
+
+@import './web.css';
+
+@import './admin.css';
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--black);
+    font-family: var(--font);
+    font-size: 13px;
+}
+
+.text-purple {
+    color: var(--purple);
+}
+
+.text-violet {
+    color: var(--violet);
+}
+
+.bg-yellow {
+    background-color: var(--yellow);
+}
+
+.bg-purple {
+    background-color: var(--purple);
+}
+
+.bg-violet {
+    background-color: var(--violet);
+}
+
+.input-control {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.865rem;
+    line-height: 1.5;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    font-weight: 400;
+}
+
+.input-control:focus {
+    border-color: #ced4da;
+    outline: 0;
+    box-shadow: none
+}
+
+.input-control>option {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.865rem;
+    border-radius: 0.2rem;
+    border: 1px solid #ced4da;
+    font-weight: 400;
+}
+
+.input-control>option:hover {
+    background-color: #ced4da;
+    color: white;
+}
+
+.btn-ouline {
+    border: 1px solid var(--violet);
+}

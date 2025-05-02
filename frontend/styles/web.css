@@ -1,0 +1,185 @@
+/* Navbar */
+.logo {
+    color: var(--purple);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.link-navbar {
+    color: #7A6FF0;
+    font-size: 1rem;
+}
+
+.link-navbar.active,
+.link-navbar:hover {
+    color: var(--yellow);
+    font-weight: 500;
+}
+
+.btn-navbar {
+    border: 1px solid #7A6FF0;
+    color: #7A6FF0;
+}
+
+.btn-navbar:hover,
+.btn-navbar.active {
+    border: 1px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--white);
+    font-weight: bold;
+}
+
+.btn-mobile {
+    border: 1px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--white);
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+}
+
+.btn-mobile > svg {
+    margin-right: 0;
+}
+
+/* Navbar */
+
+/* Floating Buttons */
+
+.btn-whatsapp > svg,
+.btn-chat > svg {
+    margin-right: 0;
+}
+
+.btn-whatsapp > svg,
+.btn-chat > svg {
+    width: 25px;
+    height: 25px;
+}
+
+.btn-whatsapp:hover,
+.btn-chat:hover {
+    cursor: pointer;
+}
+
+.btn-whatsapp {
+    border: 1px solid #28B463;
+    background-color: #28B463;
+    color: var(--white);
+}
+
+.btn-chat {
+    border: 1px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--white);
+}
+
+/* Floating Buttons */
+
+/* Hero Section */
+
+.btn-hero {
+    border: 1px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--white);
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+}
+
+.btn-hero {
+    cursor: pointer;
+}
+
+.companies {
+    background-color: rgba(122, 111, 240, 0.2)
+}
+
+.companies span {
+    color: var(--violet);
+}
+
+/* Footer */
+
+.footer-web {
+    background-color: var(--purple);
+}
+
+.btn-footer {
+    border: 1px solid var(--yellow);
+    background-color: var(--yellow);
+    color: var(--white);
+    font-weight: bold;
+    text-align: center;
+    font-size: 15px;
+}
+
+.btn-footer {
+    cursor: pointer;
+}
+
+.footer-divider {
+    width: 100%;
+    border-bottom: 3px dashed var(--white);
+    display: block;
+    height: 20px;
+}
+
+.footer-social {
+    background-color: var(--white);
+    color: var(--purple);
+}
+
+.footer-social:hover {
+    cursor: pointer;
+}
+
+/* Footer */
+
+/* Preguntas */
+
+.bg-accordion {
+    background-color: rgba(122, 111, 240, 0.2)
+}
+
+.border-accordion {
+    border: transparent;
+}
+
+.btn-accordion:hover {
+    background: transparent;
+}
+
+.title-accordion {
+    color: var(--purple);
+    font-weight: bold;
+}
+
+.text-accordion {
+    color: var(--purple);
+}
+
+/* Preguntas */
+
+/* Contáctanos */
+
+.icon-contact {
+    width: 70px;
+}
+
+/* Contáctanos */
+
+/* ¿Cómo funciona? */
+
+.timeline span {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 1px;
+    border-right: 2px dotted var(--violet);
+}
+
+.timeline svg {
+    color: var(--purple);
+    fill: var(--purple);
+}
