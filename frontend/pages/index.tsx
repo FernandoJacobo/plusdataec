@@ -34,10 +34,12 @@ const comoFunciona = [
 ];
 
 const logos = [
-    "/images/logos/boitas.png",
-    "/images/logos/canasta-rosa.png",
-    "/images/logos/impegno.png",
-    "/images/logos/vopero.png",
+    "/images/logos/almon.png",
+    "/images/logos/automatis.png",
+    "/images/logos/bridgestone.png",
+    "/images/logos/disna.png",
+    "/images/logos/interaseo.png",
+    "/images/logos/rancho-mary-pronaca-india.png",
 ];
 
 const preguntas = [
