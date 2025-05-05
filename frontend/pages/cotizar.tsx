@@ -2,21 +2,16 @@
 
 import { useState } from "react";
 
-import Select from 'react-select';
-
 import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
 import FormularioIngresar from "@/components/layout/web/FormularioIngresar";
+import FormularioCotizarEnLinea from "@/components/layout/web/FormularioCotizarEnLinea";
+import { showToast } from "@/components/general/Toast";
 
 const steps = [
     { id: 1, title: "Cotizar" },
     { id: 2, title: "Subir solicitud" },
     { id: 3, title: "Ingresar" },
     { id: 4, title: "Confirmar" },
-];
-
-const options = [
-    { value: 1, label: 'Pago en exceso de Impuestos a la Renta' },
-    { value: 2, label: 'Retenciones de IVA' },
 ];
 
 type ClickResult = {
@@ -26,20 +21,16 @@ type ClickResult = {
 
 export default function CotizarPage() {
     const [currentStep, setCurrentStep] = useState(1);
+    const [stepsCompleted, setStepsCompleted] = useState([]);
 
-    const [tipoImpuesto, setTipoImpuesto] = useState('');
-    const [valor, setValor] = useState('');
-
-    const onChangeSelect = (e: any) => {
-        if (e == null) return;
-
-        e.value ? setTipoImpuesto(e.value) : setTipoImpuesto('');
-    }
-
-    const handleForm = async (e: React.FormEvent) => {
+    const handleFormImprimir = async (e: React.FormEvent) => {
         e.preventDefault()
         // Aquí se llamará al backend
-        console.log({ tipoImpuesto, valor })
+    }
+
+    const handleFormContribuyente = async (e: React.FormEvent) => {
+        e.preventDefault()
+        // Aquí se llamará al backend
     }
 
     const [ruc, setRuc] = useState('');
@@ -50,13 +41,69 @@ export default function CotizarPage() {
     const [showRegister, setShowRegister] = useState(false);
     const [showCotizar, setShowCotizar] = useState(true);
 
-    const print = () => {
-        setShowCotizar(false);
-    }
-
     const cancelPrint = () => {
         setShowCotizar(true);
     }
+
+    const validateForm = () => {
+        return true;
+    }
+
+    const download = async (e: any) => {
+        setShowCotizar(false);
+    }
+
+    const gotToStep2 = async (e: any) => {
+        setCurrentStep(2);
+        setStepsCompleted([...stepsCompleted, 1]);
+    }
+
+    const gotToStep3 = async () => {
+        setCurrentStep(3);
+        setStepsCompleted([...stepsCompleted, 2]);
+    }
+
+    const gotToStep4 = async () => {
+        setCurrentStep(4);
+        setStepsCompleted([...stepsCompleted, 3]);
+    }
+
+    const setNewStep = (id: number) => {
+        // Paso inicial siempre está permitido
+        if (id === 1) {
+            setCurrentStep(1);
+            if (!stepsCompleted.includes(1)) {
+                setStepsCompleted([...stepsCompleted, 1]);
+            }
+            return;
+        }
+
+        const prev = id - 1;
+
+        // Si el paso anterior ya fue completado, permitir avanzar
+        if (stepsCompleted.includes(prev)) {
+            setCurrentStep(id);
+        } else {
+            // No permitir avanzar
+            showToast(`No puedes continuar con el paso ${id} sin completar el paso ${prev}`, 'error');
+        }
+    }
+
+    const handleSendEmail = async () => {
+        const data = new FormData();
+
+        data.append("name", '');
+        data.append("email", '');
+        data.append("message", '');
+
+        const res = await fetch("http://localhost:4000/api/email/send", {
+            method: "POST",
+            body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+        alert(result.message);
+    };
 
     const renderContent = () => {
         switch (currentStep) {
@@ -64,105 +111,17 @@ export default function CotizarPage() {
                 return (
                     <>
                         {showCotizar ? (
-                            <div className="w-full flex flex-col items-center justify-center p-10">
-                                <form onSubmit={handleForm} className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-4">
-                                    <h2 className="text-2xl font-bold text-center"> Cotizar en linea </h2>
-
-                                    <div className="flex flex-col gap-3">
-                                        <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
-                                        <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} onChange={onChangeSelect} />
-                                    </div>
-
-                                    <div className="flex flex-col gap-3">
-                                        <label htmlFor="valor" className='font-bold'> Valor a solicitar </label>
-
-                                        <input
-                                            type="text"
-                                            placeholder="$"
-                                            value={valor}
-                                            onChange={(e) => setValor(e.target.value)}
-                                            className="w-full text-right input-control"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="bg-purple-50 rounded-2xl shadow-lg max-w-md w-full space-y-4 p-4">
-                                        <h1 className="font-bold"> Resultado de la cotización: </h1>
-
-                                        <div className="max-w-md mx-auto">
-                                            <div className="bg-purple-50 rounded-lg overflow-hidden">
-                                                <ul className="divide-y divide-transparent">
-                                                    <li className="cursor-pointer">
-                                                        <div className="flex justify-between items-center">
-                                                            <span className="text-gray-400 font-bold"> Monto aceptado por el ISR </span>
-
-                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                        </div>
-                                                    </li>
-
-                                                    <li className="cursor-pointer">
-                                                        <div className="flex justify-between items-center">
-                                                            <span className="text-gray-400 font-bold"> (+) Intereses Ganados </span>
-
-                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                        </div>
-                                                    </li>
-
-                                                    <li className="cursor-pointer">
-                                                        <div className="flex justify-between items-center">
-                                                            <span className="text-gray-400 font-bold"> (=) Valor de la Nota de Crédito </span>
-
-                                                            <span className="text-sm text-gray-500 tex-end"> $0.00 </span>
-                                                        </div>
-                                                    </li>
-
-                                                    <li className="cursor-pointer">
-                                                        <div className="flex justify-between items-center">
-                                                            <span className="font-bold"> Honorarios (No incluye IVA) </span>
-
-                                                            <span className="text-sm text-yellow tex-end font-bold"> 0% </span>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <p className='text-gray-400'> El valor de los intereses ganados son aproximados </p>
-
-                                    <div className="flex flex-col md:flex-row gap-3">
-                                        <button className="w-full md:w-1/2 bg-white btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
-                                            Imprimir cotización
-                                        </button>
-
-                                        <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
-                                            Continuar
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+                            <FormularioCotizarEnLinea onClickDownload={download} onClickNext={gotToStep2} />
                         ) : (
                             <div className="w-full flex flex-col items-center justify-center p-10">
                                 <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full space-y-4">
-                                    <h2 className="text-2xl font-bold text-center"> Imprimir cotización </h2>
+                                    <h2 className="text-2xl font-bold text-center"> Enviar cotización a mi correo </h2>
 
-                                    <p className='text-gray-400'> Debe de registrar los datos del beneficiario que forma parte de la cotización que deseas imprimir </p>
+                                    <p className='text-gray-400'> Ingresa tus datos de contacto y la informaciòn general del beneficiario (persona o empresa) para generar la cotizaciòn. </p>
 
-                                    <form onSubmit={handleForm} className="">
+                                    <form onSubmit={handleFormImprimir} className="">
                                         <div className="flex flex-col gap-3 mb-3">
-                                            <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
-                                            <input
-                                                type="text"
-                                                placeholder=""
-                                                value={ruc}
-                                                onChange={(e) => setRuc(e.target.value)}
-                                                className="w-full p-2 rounded input-control"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col gap-3 mb-3">
-                                            <label htmlFor="name" className='font-bold'> Nombre o Razón Social </label>
+                                            <label htmlFor="name" className='font-bold'> Nombre Completo </label>
                                             <input
                                                 type="text"
                                                 placeholder=""
@@ -199,13 +158,37 @@ export default function CotizarPage() {
                                             </div>
                                         </div>
 
+                                        <div className="flex flex-col gap-3 mb-3">
+                                            <label htmlFor="name" className='font-bold'> Nombre del Beneficiario (persona o empresa) </label>
+                                            <input
+                                                type="text"
+                                                placeholder=""
+                                                value={ruc}
+                                                onChange={(e) => setRuc(e.target.value)}
+                                                className="w-full p-2 rounded input-control"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className="flex flex-col gap-3 mb-3">
+                                            <label htmlFor="name" className='font-bold'> Nro. de RUC del Beneficiario </label>
+                                            <input
+                                                type="text"
+                                                placeholder=""
+                                                value={ruc}
+                                                onChange={(e) => setRuc(e.target.value)}
+                                                className="w-full p-2 rounded input-control"
+                                                required
+                                            />
+                                        </div>
+
                                         <div className="flex flex-row gap-3 mt-7">
                                             <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancelPrint(); }}>
-                                                Cancelar
+                                                Regresar atrás
                                             </button>
 
-                                            <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
-                                                Imprimir Cotización
+                                            <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { handleSendEmail(); }}>
+                                                Enviar Cotización
                                             </button>
                                         </div>
                                     </form>
@@ -220,7 +203,7 @@ export default function CotizarPage() {
                         <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center"> Registra la información del contribuyete </h2>
 
-                            <form onSubmit={handleForm} className="">
+                            <form onSubmit={handleFormContribuyente} className="">
                                 <div className="w-full md:w-1/2 flex flex-col gap-3 mb-3">
                                     <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
                                     <input
@@ -273,7 +256,7 @@ export default function CotizarPage() {
 
                                 <div className="flex flex-col gap-3 mb-3">
                                     <label htmlFor="name" className=''> Cargar formulario 101 donde se mantiene el saldo a favor </label>
-                                    
+
                                     <input
                                         type="file"
                                         placeholder=""
@@ -295,7 +278,7 @@ export default function CotizarPage() {
                                         Cancelar
                                     </button>
 
-                                    <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
+                                    <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { gotToStep3(); }}>
                                         Continuar
                                     </button>
                                 </div>
@@ -421,7 +404,7 @@ export default function CotizarPage() {
         <div className="w-full max-w-4xl mx-auto p-4">
             <div className="flex justify-between items-center space-x-4">
                 {steps.map((step) => (
-                    <div key={step.id} onClick={() => setCurrentStep(step.id)} className="flex-1 text-center cursor-pointer" >
+                    <div key={step.id} onClick={() => setNewStep(step.id)} className="flex-1 text-center cursor-pointer" >
                         <div className={`text-sm font-semibold transition-colors ${step.id === currentStep ? "text-violet" : "text-gray-400"}`}>
                             {step.id}- {step.title}
                         </div>
@@ -430,6 +413,8 @@ export default function CotizarPage() {
                     </div>
                 ))}
             </div>
+
+            <pre>{stepsCompleted}</pre>
 
             {renderContent()}
         </div>

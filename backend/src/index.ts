@@ -1,4 +1,5 @@
 import express from 'express';
+import bodyParser from  'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
@@ -8,6 +9,7 @@ dotenv.config();
 
 const app = express();
 
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
