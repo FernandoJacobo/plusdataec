@@ -4,6 +4,9 @@ import { Toast, showToast } from "@/components/general/Toast";
 
 import Select from 'react-select';
 
+import { useStore } from '@/store/useStore';
+import { numberToPercent, numberFormat } from '@/helpers/general';
+
 type ClickResult = {
     success: boolean;
     message: string;
@@ -33,23 +36,26 @@ const arrHonorarios = [
 ];
 
 export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext }: FormProps) {
-    const [tipoImpuesto, setTipoImpuesto] = useState('');
+    const { cotizacion, setCotizacion } = useStore();
+
+    const tipoImpuesto = options.find(opt => opt.value === cotizacion.tipoImpuesto) || null;
+    
     const onChangeTipoImpuesto = (e: any) => {
         if (e == null) return;
 
-        e.value ? setTipoImpuesto(e.value) : setTipoImpuesto('');
+        e.value ? setCotizacion({tipoImpuesto: e.value}) : setCotizacion({tipoImpuesto: ''});
     }
 
     const [valorASolicitar, setValorASolicitar] = useState('');
     const onChangeValorASolicitar = (value: string) => {
-        setValorASolicitar(value);
+        setCotizacion({valorASolicitar: value});
 
         const val = parseFloat(value);
 
         setValorADeVolver(val);
 
         const honorario = getHonorio(val);
-        setHonorarios(honorario);
+        setCotizacion({honorarios: honorario});
     }
 
     const [valorADeVolver, setValorADeVolver] = useState(0);
@@ -72,19 +78,10 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
         return 0;
     }
 
-    const numberToPercent = (number: number) => {
-        const percent = number * 100;
-        return `${percent.toFixed(2)} %`;
-    }
-
-    const numberFormat = (number: number, decimals: number = 2) => {
-        return number.toFixed(decimals)
-    }
-
-    const donwload = async () => {
+    const print = async () => {
         if (!validateForm()) return;
 
-        handleGeneratePDF();
+        // handleGeneratePDF();
 
         onClickDownload({
             tipoImpuesto,
@@ -110,12 +107,12 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     }
 
     const validateForm = () => {
-        if (tipoImpuesto.trim() == '') {
+        if (cotizacion.tipoImpuesto.trim() == '') {
             showToast('Es requerido seleccionar un tipo de impuesto.', 'error');
             return false;
         }
 
-        if (valorASolicitar.trim() == '') {
+        if (cotizacion.valorASolicitar.trim() == '') {
             showToast('Es requerido agregar un valor a solicitar.', 'error');
             return false;
         }
@@ -172,7 +169,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
 
                     <div className="flex flex-col gap-3">
                         <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
-                        <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} onChange={onChangeTipoImpuesto} />
+                        <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} value={tipoImpuesto} onChange={onChangeTipoImpuesto} />
                     </div>
 
                     <div className="flex flex-col gap-3">
@@ -181,48 +178,21 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         <input
                             type="text"
                             placeholder="$"
-                            value={valorASolicitar}
+                            value={cotizacion.valorASolicitar}
                             onChange={(e) => onChangeValorASolicitar(e.target.value)}
                             className="w-full text-right input-control"
-                            required
                         />
                     </div>
 
                     <div className="bg-purple-50 rounded-2xl shadow-lg max-w-md w-full space-y-4 p-4">
-                        <h1 className="font-bold"> Resultado de la cotización: </h1>
-
                         <div className="max-w-md mx-auto">
                             <div className="bg-purple-50 rounded-lg overflow-hidden">
                                 <ul className="divide-y divide-transparent">
                                     <li className="cursor-pointer">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-gray-400 font-bold"> Valor a devolver </span>
-
-                                            <span className="text-sm text-gray-500 tex-end"> {numberFormat(valorADeVolver)} </span>
-                                        </div>
-                                    </li>
-
-                                    <li className="cursor-pointer">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-400 font-bold"> (+) Intereses Ganados </span>
-
-                                            <span className="text-sm text-gray-500 tex-end"> {numberFormat(interesesGanados)} </span>
-                                        </div>
-                                    </li>
-
-                                    <li className="cursor-pointer">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-400 font-bold"> (=) Valor de la Nota de Crédito </span>
-
-                                            <span className="text-sm text-gray-500 tex-end"> {numberFormat(valorNotaDeCredito)} </span>
-                                        </div>
-                                    </li>
-
-                                    <li className="cursor-pointer">
-                                        <div className="flex justify-between items-center">
                                             <span className="font-bold"> Honorarios (No incluye IVA) </span>
 
-                                            <span className="text-sm text-yellow tex-end font-bold"> {numberToPercent(honorarios)} </span>
+                                            <span className="text-sm text-yellow tex-end font-bold"> {numberToPercent(cotizacion.honorarios)} </span>
                                         </div>
                                     </li>
                                 </ul>
@@ -230,11 +200,9 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         </div>
                     </div>
 
-                    <p className='text-gray-400'> El valor de los intereses ganados son aproximados </p>
-
                     <div className="flex flex-col md:flex-row gap-3">
-                        <button type="button" className="w-full md:w-1/2 bg-white btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { donwload(); }}>
-                            Descargar cotización
+                        <button type="button" className="w-full md:w-1/2 bg-white btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
+                            Enviar cotización
                         </button>
 
                         <button type="button" className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { next(); }}>

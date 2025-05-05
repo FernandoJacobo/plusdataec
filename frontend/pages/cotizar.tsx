@@ -5,6 +5,8 @@ import { useState } from "react";
 import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
 import FormularioIngresar from "@/components/layout/web/FormularioIngresar";
 import FormularioCotizarEnLinea from "@/components/layout/web/FormularioCotizarEnLinea";
+import FormularioEnviarCoizacion from "@/components/layout/web/FormularioEnviarCotizacion";
+
 import { showToast } from "@/components/general/Toast";
 
 const steps = [
@@ -23,30 +25,20 @@ export default function CotizarPage() {
     const [currentStep, setCurrentStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState([]);
 
-    const handleFormImprimir = async (e: React.FormEvent) => {
-        e.preventDefault()
-        // Aquí se llamará al backend
-    }
-
     const handleFormContribuyente = async (e: React.FormEvent) => {
         e.preventDefault()
         // Aquí se llamará al backend
     }
 
     const [ruc, setRuc] = useState('');
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
     const [showRegister, setShowRegister] = useState(false);
     const [showCotizar, setShowCotizar] = useState(true);
 
-    const cancelPrint = () => {
+    const cancelSendEmail = (cancel: boolean) => {
         setShowCotizar(true);
-    }
-
-    const validateForm = () => {
-        return true;
     }
 
     const download = async (e: any) => {
@@ -89,22 +81,6 @@ export default function CotizarPage() {
         }
     }
 
-    const handleSendEmail = async () => {
-        const data = new FormData();
-
-        data.append("name", '');
-        data.append("email", '');
-        data.append("message", '');
-
-        const res = await fetch("http://localhost:4000/api/email/send", {
-            method: "POST",
-            body: JSON.stringify(data),
-        });
-
-        const result = await res.json();
-        alert(result.message);
-    };
-
     const renderContent = () => {
         switch (currentStep) {
             case 1: // Cotizar
@@ -113,97 +89,17 @@ export default function CotizarPage() {
                         {showCotizar ? (
                             <FormularioCotizarEnLinea onClickDownload={download} onClickNext={gotToStep2} />
                         ) : (
-                            <div className="w-full flex flex-col items-center justify-center p-10">
-                                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full space-y-4">
-                                    <h2 className="text-2xl font-bold text-center"> Enviar cotización a mi correo </h2>
-
-                                    <p className='text-gray-400'> Ingresa tus datos de contacto y la informaciòn general del beneficiario (persona o empresa) para generar la cotizaciòn. </p>
-
-                                    <form onSubmit={handleFormImprimir} className="">
-                                        <div className="flex flex-col gap-3 mb-3">
-                                            <label htmlFor="name" className='font-bold'> Nombre Completo </label>
-                                            <input
-                                                type="text"
-                                                placeholder=""
-                                                value={ruc}
-                                                onChange={(e) => setRuc(e.target.value)}
-                                                className="w-full p-2 rounded input-control"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className='flex flex-col md:flex-row gap-2 mb-3'>
-                                            <div className="w-full flex flex-col gap-3">
-                                                <label htmlFor="email" className='font-bold'> Correo Electrónico </label>
-                                                <input
-                                                    type="text"
-                                                    placeholder=""
-                                                    value={email}
-                                                    onChange={(e) => setEmail(e.target.value)}
-                                                    className="w-full p-2 rounded input-control"
-                                                    required
-                                                />
-                                            </div>
-
-                                            <div className="w-full flex flex-col gap-3">
-                                                <label htmlFor="phone" className='font-bold'> Nro. de celular </label>
-                                                <input
-                                                    type="text"
-                                                    placeholder=""
-                                                    value={phone}
-                                                    onChange={(e) => setPhone(e.target.value)}
-                                                    className="w-full p-2 rounded input-control"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="flex flex-col gap-3 mb-3">
-                                            <label htmlFor="name" className='font-bold'> Nombre del Beneficiario (persona o empresa) </label>
-                                            <input
-                                                type="text"
-                                                placeholder=""
-                                                value={ruc}
-                                                onChange={(e) => setRuc(e.target.value)}
-                                                className="w-full p-2 rounded input-control"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-col gap-3 mb-3">
-                                            <label htmlFor="name" className='font-bold'> Nro. de RUC del Beneficiario </label>
-                                            <input
-                                                type="text"
-                                                placeholder=""
-                                                value={ruc}
-                                                onChange={(e) => setRuc(e.target.value)}
-                                                className="w-full p-2 rounded input-control"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-row gap-3 mt-7">
-                                            <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancelPrint(); }}>
-                                                Regresar atrás
-                                            </button>
-
-                                            <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { handleSendEmail(); }}>
-                                                Enviar Cotización
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                            <FormularioEnviarCoizacion onClickRegresar={cancelSendEmail} />
                         )}
                     </>
                 );
-            case 2: // Imprimir
+            case 2: // Subir Solicitd
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
                         <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center"> Registra la información del contribuyete </h2>
 
-                            <form onSubmit={handleFormContribuyente} className="">
+                            <form autoComplete="off" className="">
                                 <div className="w-full md:w-1/2 flex flex-col gap-3 mb-3">
                                     <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
                                     <input

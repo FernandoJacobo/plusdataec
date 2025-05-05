@@ -1,40 +1,75 @@
 import { Router, Request, Response } from "express";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
+import multer from "multer";
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
 
-import dotenv from 'dotenv';
 dotenv.config();
 
+const upload = multer({ dest: "uploads/" });
 const emailRoutes = Router();
 
-emailRoutes.post("/send", async (req, res) => {
-    /* const { name, email, message } = req.body; */
+emailRoutes.post("/send", upload.single("archivo"), async (req: Request, res: Response) => {
+    const { nombreORazonSocial, nombreEmpresa, correo, numero, rucEmpresa, tipoDeImpuesto, valorASolicitar, interesesGanados, valorNotaDeCredito, honorarios } = req.body;
+    const file = req.file;
 
-    const name = 'Fernando';
-    const email = 'fernandojacobo54@gmail.com';
-    const message = 'Test';
+    if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
+        return res.status(500).json({ success: false, message: "Credenciales de correo no configuradas" });
+    }
+
+    let htmlTemplate = fs.readFileSync(path.join(__dirname, "../public/email-templates/email-template.html"), "utf8");
+    htmlTemplate = htmlTemplate
+        .replace("{{nombreORazonSocial}}", nombreORazonSocial || "")
+        .replace("{{nombreEmpresa}}", nombreEmpresa || "")
+        .replace("{{rucEmpresa}}", rucEmpresa || "")
+        .replace("{{tipoDeImpuesto}}", tipoDeImpuesto || "")
+        .replace("{{valorASolicitar}}", valorASolicitar || "")
+        .replace("{{interesesGanados}}", interesesGanados || "")
+        .replace("{{valorNotaDeCredito}}", valorNotaDeCredito || "")
+        .replace("{{honorarios}}", honorarios || "")
+        .replace("{{correo}}", 'info@plusdata.ec')
+        .replace("{{numero}}", '0999677844')
+        .replace("{{link}}", '');
 
     const transporter = nodemailer.createTransport({
         host: "smtp.hostinger.com",
-        port: 465, // O usa 587 si estás en desarrollo
-        secure: true, // true para 465, false para 587
+        port: 465,
+        secure: true,
         auth: {
-            user: process.env.MAIL, // Tu correo de Hostinger
-            pass: process.env.MAIL_PASS,   // Contraseña del correo
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
+        },
+        tls: {
+            rejectUnauthorized: false,
         },
     });
 
     const mailOptions = {
-        from: `"Contacto " <${process.env.MAIL}>`,
-        to: "fernandojacobo54@gmail.com",
-        subject: "Nuevo mensaje del formulario",
-        text: message,
+        from: `"Formulario Web" <${process.env.EMAIL}>`,
+        to: correo,
+        subject: "",
+        html: htmlTemplate,
+        attachments: [
+            {
+                filename: "logo.png",
+                path: path.join(__dirname, "../public/logo.png"),
+                cid: "logo_cid",
+            },
+            ...(file
+                ? [{
+                    filename: file.originalname,
+                    path: file.path,
+                }]
+                : []),
+        ],
     };
 
     try {
         await transporter.sendMail(mailOptions);
-        res.status(200).json({ success: true, message: "Correo enviado" });
+        res.status(200).json({ success: true, message: "Correo enviado exitosamente" });
     } catch (error) {
-        console.error(error);
+        console.error("Error al enviar correo:", error);
         res.status(500).json({ success: false, message: "Error al enviar correo" });
     }
 });
