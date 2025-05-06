@@ -6,9 +6,19 @@ export interface Cotizacion {
     honorarios: number;
 }
 
+export interface SubirSolicitud {
+    ruc: string;
+    name: string;
+    email: string;
+    phone: string;
+    file: File | null
+}
+
 export interface StoreState {
     cotizacion: Cotizacion;
     setCotizacion: (input: Partial<Cotizacion>) => void;
+    subirSolicitud: SubirSolicitud;
+    setSubirSolicitud: (input: Partial<SubirSolicitud>) => void;
 }
 
 export const useStore = create<StoreState>((set) => ({
@@ -22,5 +32,18 @@ export const useStore = create<StoreState>((set) => ({
             ...state.cotizacion,
             ...valor
         }
-    }))
+    })),
+    subirSolicitud: {
+        ruc: '',
+        name: '',
+        email: '',
+        phone: '',
+        file: null,
+      },
+      setSubirSolicitud: (valor) => set((state) => ({
+        subirSolicitud: {
+          ...state.subirSolicitud,
+          ...valor,
+        }
+      })),
 }));

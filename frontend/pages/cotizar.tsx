@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 
-import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
-import FormularioIngresar from "@/components/layout/web/FormularioIngresar";
 import FormularioCotizarEnLinea from "@/components/layout/web/FormularioCotizarEnLinea";
 import FormularioEnviarCoizacion from "@/components/layout/web/FormularioEnviarCotizacion";
+import FormularioIngresar from "@/components/layout/web/FormularioIngresar";
+import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
 
 import { showToast } from "@/components/general/Toast";
+import FormularioSubirSolicitud from "@/components/layout/web/FormularioSubirSolicitud";
 
 const steps = [
     { id: 1, title: "Cotizar" },
@@ -29,10 +30,6 @@ export default function CotizarPage() {
         e.preventDefault()
         // Aquí se llamará al backend
     }
-
-    const [ruc, setRuc] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
 
     const [showRegister, setShowRegister] = useState(false);
     const [showCotizar, setShowCotizar] = useState(true);
@@ -60,6 +57,12 @@ export default function CotizarPage() {
         setStepsCompleted([...stepsCompleted, 3]);
     }
 
+    const goToPrevStep = () => {
+        const newStep = currentStep - 1;
+        setCurrentStep(newStep);
+        deleteCurrentStep();
+    }
+
     const setNewStep = (id: number) => {
         // Paso inicial siempre está permitido
         if (id === 1) {
@@ -81,6 +84,16 @@ export default function CotizarPage() {
         }
     }
 
+    const deleteCurrentStep = () => {
+        const newSteps = stepsCompleted.filter(step => step !== currentStep);
+        newSteps.sort();
+        setStepsCompleted(newSteps);
+    }
+
+    const cancelStep2 = () => {
+        goToPrevStep();
+    }
+
     const renderContent = () => {
         switch (currentStep) {
             case 1: // Cotizar
@@ -99,86 +112,7 @@ export default function CotizarPage() {
                         <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center"> Registra la información del contribuyete </h2>
 
-                            <form autoComplete="off" className="">
-                                <div className="w-full md:w-1/2 flex flex-col gap-3 mb-3">
-                                    <label htmlFor="name" className='font-bold'> Nro. de RUC </label>
-                                    <input
-                                        type="text"
-                                        placeholder=""
-                                        value={ruc}
-                                        onChange={(e) => setRuc(e.target.value)}
-                                        className="w-full p-2 rounded input-control"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="flex flex-col gap-3 mb-3">
-                                    <label htmlFor="name" className='font-bold'> Nombre o Razón Social </label>
-                                    <input
-                                        type="text"
-                                        placeholder=""
-                                        value={ruc}
-                                        onChange={(e) => setRuc(e.target.value)}
-                                        className="w-full p-2 rounded input-control"
-                                        required
-                                    />
-                                </div>
-
-                                <div className='flex flex-col md:flex-row gap-2 mb-3'>
-                                    <div className="w-full flex flex-col gap-3">
-                                        <label htmlFor="email" className='font-bold'> Correo Electrónico </label>
-                                        <input
-                                            type="text"
-                                            placeholder=""
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full p-2 rounded input-control"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="w-full flex flex-col gap-3">
-                                        <label htmlFor="phone" className='font-bold'> Nro. de celular </label>
-                                        <input
-                                            type="text"
-                                            placeholder=""
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            className="w-full p-2 rounded input-control"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col gap-3 mb-3">
-                                    <label htmlFor="name" className=''> Cargar formulario 101 donde se mantiene el saldo a favor </label>
-
-                                    <input
-                                        type="file"
-                                        placeholder=""
-                                        className="w-full p-2 rounded input-control"
-                                        hidden
-                                    />
-
-                                    <div className="flex flex-col md:flex-row justify-between items-center gap-3">
-                                        <button className="w-full md:w-1/2 text-purple bg-purple-100 uppercase font-bold p-2 text-center rounded-xl hover:text-white transition hover:cursor-pointer">
-                                            Examinar
-                                        </button>
-
-                                        <span className="text-violet"> Ningún archivo seleccionado </span>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-row gap-3 mt-7">
-                                    <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { alert(); }}>
-                                        Cancelar
-                                    </button>
-
-                                    <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { gotToStep3(); }}>
-                                        Continuar
-                                    </button>
-                                </div>
-                            </form>
+                            <FormularioSubirSolicitud onClickCancel={cancelStep2} onClickContinue={gotToStep3}/>
                         </div>
                     </div>
                 );
@@ -298,6 +232,7 @@ export default function CotizarPage() {
 
     return (
         <div className="w-full max-w-4xl mx-auto p-4">
+            <pre>{stepsCompleted}</pre>
             <div className="flex justify-between items-center space-x-4">
                 {steps.map((step) => (
                     <div key={step.id} onClick={() => setNewStep(step.id)} className="flex-1 text-center cursor-pointer" >
@@ -309,8 +244,6 @@ export default function CotizarPage() {
                     </div>
                 ))}
             </div>
-
-            <pre>{stepsCompleted}</pre>
 
             {renderContent()}
         </div>

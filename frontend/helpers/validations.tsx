@@ -7,3 +7,8 @@ export const isValidPhone = (phone: string): boolean => {
     const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
 }
+
+export const isValidRuc = (ruc: string): boolean => {
+    const rucRegex = /^\d{13}$/;
+    return rucRegex.test(ruc);
+}
