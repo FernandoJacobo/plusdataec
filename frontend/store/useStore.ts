@@ -25,7 +25,7 @@ export const useStore = create<StoreState>((set) => ({
     cotizacion: {
         tipoImpuesto: '',
         valorASolicitar: '',
-        honorarios: 0
+        honorarios: ''
     },
     setCotizacion: (valor) => set((state) => ({
         cotizacion: {

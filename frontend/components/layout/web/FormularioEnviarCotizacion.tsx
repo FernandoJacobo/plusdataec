@@ -44,8 +44,15 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
             body: data,
         });
 
-        const result = await res.json();
-        alert(result.message);
+        const { success, message } = await res.json();
+        
+        if (!success) {
+            showToast(message, 'error');
+            return;
+        }
+
+        showToast(message, 'success');
+        return;
     };
 
     const validateForm = () => {
