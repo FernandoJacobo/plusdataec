@@ -7,6 +7,7 @@ import { useStore } from '@/store/useStore';
 import { isValidEmail, isValidPhone } from '@/helpers/validations'
 import { numberToPercent, numberFormat } from '@/helpers/general';
 
+
 type ClickResult = {
     success: boolean;
     message: string;

@@ -117,24 +117,7 @@ export default function CotizarPage() {
                             <p className="text-gray-400 uppercase font-bold">Empresa de ejemplo S.A.</p>
                             <div className="bg-purple-50 rounded-2xl shadow-xl max-w-md w-full space-y-4 p-4 mb-8">
                                 <h1 className="font-bold text-sm mb-8">Resultado de la cotización:</h1>
-                                <div className="max-w-md mx-auto">
-                                    <ul className="divide-y divide-transparent">
-                                        {[
-                                            ['Tipo de Impuesto', '$0.00'],
-                                            ['Valor', '$0.00'],
-                                            ['Intereses Ganados', '$0.00'],
-                                            ['Honorarios 0.00%', '$0.00'],
-                                            ['Valor Neto a recibir', '$0.00'],
-                                        ].map(([label, value], index) => (
-                                            <li key={index} className="hover:bg-gray-100 cursor-pointer mb-4">
-                                                <div className="flex justify-between items-center">
-                                                    <span className={label.includes('Neto') ? 'font-bold text-[15px]' : ''}>{label}</span>
-                                                    <span className="text-sm text-gray-500 text-end">{value}</span>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                <div className="max-w-md mx-auto"></div>
                             </div>
                             <div className="w-full flex flex-col md:flex-row gap-4">
                                 <button className="w-full md:w-1/2 bg-white text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Toast, showToast } from "@/components/general/Toast";
 
@@ -6,6 +6,7 @@ import Select from 'react-select';
 
 import { useStore } from '@/store/useStore';
 import { numberToPercent, numberFormat } from '@/helpers/general';
+import { useWebStore } from '@/store/useWebStore';
 
 type ClickResult = {
     success: boolean;
@@ -17,28 +18,17 @@ interface FormProps {
     onClickNext: (data: {}) => ClickResult;
 }
 
-const options = [
-    { value: '1', label: 'Retenciones de Impuesto a la Renta' },
-    { value: '2', label: 'Retenciones de IVA' },
-];
-
-const arrHonorarios = [
-    { id: 1, rango: 2, desde: 0, hasta: 9999, honorario: 0.12 },
-    { id: 2, rango: 2, desde: 10000, hasta: 20000, honorario: 0.12 },
-    { id: 3, rango: 3, desde: 20001, hasta: 30000, honorario: 0.10 },
-    { id: 4, rango: 4, desde: 30001, hasta: 50000, honorario: 0.08 },
-    { id: 5, rango: 6, desde: 50001, hasta: 80000, honorario: 0.07 },
-    { id: 6, rango: 7, desde: 80001, hasta: 150000, honorario: 0.06 },
-    { id: 7, rango: 8, desde: 150001, hasta: 300000, honorario: 0.05 },
-    { id: 8, rango: 9, desde: 300001, hasta: 500000, honorario: 0.04 },
-    { id: 9, rango: 10, desde: 500001, hasta: 800000, honorario: 0.03 },
-    { id: 10, rango: 10, desde: 800001, hasta: 99999999999, honorario: 0.02 },
-];
-
 export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext }: FormProps) {
+    const { arrHonorarios, fetchHonorarios, arrTiposImpuesto, fetchTiposImpuesto } = useWebStore();
+
+    useEffect(() => { 
+        fetchHonorarios();
+        fetchTiposImpuesto();
+    }, []);
+
     const { cotizacion, setCotizacion } = useStore();
 
-    const tipoImpuesto = options.find(opt => opt.value === cotizacion.tipoImpuesto) || null;
+    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto) || null;
     
     const onChangeTipoImpuesto = (e: any) => {
         if (e == null) return;
@@ -107,7 +97,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     }
 
     const validateForm = () => {
-        if (cotizacion.tipoImpuesto.trim() == '') {
+        if (cotizacion.tipoImpuesto == '') {
             showToast('Es requerido seleccionar un tipo de impuesto.', 'error');
             return false;
         }
@@ -166,10 +156,9 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
             <div className="w-full flex flex-col items-center justify-center p-10">
                 <form autoComplete="off" className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-4">
                     <h2 className="text-2xl font-bold text-center"> Cotizar en linea </h2>
-
                     <div className="flex flex-col gap-3">
                         <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
-                        <Select options={options} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} value={tipoImpuesto} onChange={onChangeTipoImpuesto} />
+                        <Select options={arrTiposImpuesto} placeholder="Selecciona" noOptionsMessage={() => 'Sin Opciones'} value={tipoImpuesto} onChange={onChangeTipoImpuesto} />
                     </div>
 
                     <div className="flex flex-col gap-3">

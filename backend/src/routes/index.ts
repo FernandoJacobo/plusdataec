@@ -3,10 +3,14 @@ import authRoutes from './auth';
 import pdfRoutes from './pdf';
 import emailRoutes from './email';
 
+import webRoutes from './web/index'
+
 const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/pdf', pdfRoutes);
 router.use('/email', emailRoutes);
+
+router.use('/web', webRoutes);
 
 export default router;
