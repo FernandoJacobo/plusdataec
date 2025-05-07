@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-05-2025 a las 01:36:23
+-- Tiempo de generación: 07-05-2025 a las 05:15:12
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,20 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `plusdataec`
 --
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `contribuyentes`
---
-
-CREATE TABLE `contribuyentes` (
-  `id` int(11) NOT NULL,
-  `ruc` varchar(13) NOT NULL,
-  `nombreORazonSocial` varchar(250) NOT NULL,
-  `correo` varchar(250) NOT NULL,
-  `celular` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,34 +73,25 @@ INSERT INTO `tiposimpuesto` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estructura de tabla para la tabla `users`
 --
 
-CREATE TABLE `usuarios` (
+CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(250) NOT NULL,
-  `celular` varchar(10) NOT NULL,
-  `correo` varchar(250) NOT NULL,
-  `contrasena` varchar(8) NOT NULL
+  `user` varchar(250) NOT NULL,
+  `password` int(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `celular`, `correo`, `contrasena`) VALUES
-(1, 'Fernando Alvarez Jacobo', '0123456789', 'fernandojacobo54@gmail.com', '$2b$10$0'),
-(2, 'Fernando Alvarez Jacobo', '0123456789', 'fernando@gmail.com', '$2b$10$X');
+INSERT INTO `users` (`id`, `user`, `password`) VALUES
+(1, 'a', 11111111);
 
 --
 -- Índices para tablas volcadas
 --
-
---
--- Indices de la tabla `contribuyentes`
---
-ALTER TABLE `contribuyentes`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `rangoshonorarios`
@@ -129,20 +106,14 @@ ALTER TABLE `tiposimpuesto`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `usuarios`
+-- Indices de la tabla `users`
 --
-ALTER TABLE `usuarios`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
-
---
--- AUTO_INCREMENT de la tabla `contribuyentes`
---
-ALTER TABLE `contribuyentes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `rangoshonorarios`
@@ -157,10 +128,10 @@ ALTER TABLE `tiposimpuesto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de la tabla `users`
 --
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
