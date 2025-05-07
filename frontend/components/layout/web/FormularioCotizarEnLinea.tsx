@@ -4,8 +4,8 @@ import { Toast, showToast } from "@/components/general/Toast";
 
 import Select from 'react-select';
 
-import { useStore } from '@/store/useStore';
 import { numberToPercent, numberFormat } from '@/helpers/general';
+
 import { useWebStore } from '@/store/useWebStore';
 
 type ClickResult = {
@@ -26,7 +26,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
         fetchTiposImpuesto();
     }, []);
 
-    const { cotizacion, setCotizacion } = useStore();
+    const { cotizacion, setCotizacion } = useWebStore();
 
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto) || null;
     

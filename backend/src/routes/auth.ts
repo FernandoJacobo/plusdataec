@@ -1,73 +1,95 @@
-import { Router, Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { db } from '../database';
+import { Router, Request, Response } from 'express'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { db } from '../database' // Ajusta según tu estructura
 
-const router = Router();
+const router = Router()
+const JWT_SECRET = process.env.JWT_SECRET!
 
-const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) {
-  throw new Error('Falta definir JWT_SECRET en el archivo .env');
+    throw new Error('Debes definir JWT_SECRET en tu archivo .env')
 }
 
 // Registro de usuario
 router.post('/register', async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
+    const { nombre, celular, correo, contrasena } = req.body
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
+    if (!nombre || !celular || !correo ! || !contrasena) {
+        return res.status(400).json({ error: true, message: 'Faltan campos obligatorios' })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await db.query(
-      'INSERT INTO users (email, password) VALUES (?, ?)',
-      [email, hashedPassword]
-    );
+    try {
+        const [existingUser]: any = await db.query(
+            'SELECT * FROM usuarios WHERE correo = ?',
+            [correo]
+        )
 
-    res.status(201).json({ message: 'Usuario registrado correctamente' });
-  } catch (error: any) {
-    res.status(500).json({ message: 'Error en el registro', error: error.message });
-  }
-});
+        if (existingUser.length > 0) {
+            return res.status(409).json({ error: true, message: 'El usuario ya existe' })
+        }
 
-// Login de usuario
+        const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+        await db.query(
+            'INSERT INTO usuarios (nombre, celular, correo, contrasena) VALUES (?, ?, ?, ?)',
+            [nombre, celular, correo, hashedPassword]
+        )
+
+        const token = jwt.sign({ correo }, JWT_SECRET, { expiresIn: '1d' })
+
+        res.status(201).json({ error: false, message: 'Usuario registrado', token })
+    } catch (error: any) {
+        res.status(500).json({ error: true, message: error.message })
+    }
+})
+
+// Login
 router.post('/login', async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email y contraseña son requeridos' });
+        return res.status(400).json({ message: 'Faltan campos obligatorios' })
     }
 
-    const [rows]: any = await db.query(
-      'SELECT * FROM users WHERE email = ?',
-      [email]
-    );
-    const user = rows[0];
+    try {
+        const [rows]: any = await db.query('SELECT * FROM usuarios WHERE email = ?', [email])
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: 'Credenciales inválidas' });
+        const user = rows[0]
+
+        if (!user) {
+            return res.status(401).json({ message: 'Credenciales inválidas' })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Credenciales inválidas' })
+        }
+
+        const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '7d' })
+
+        res.status(200).json({ message: 'Login exitoso', token })
+    } catch (error: any) {
+        res.status(500).json({ message: 'Error en el login', error: error.message })
+    }
+})
+
+// Verificación de token
+router.get('/verify-token', (req: Request, res: Response) => {
+    const authHeader = req.headers.authorization
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Token no proporcionado' })
     }
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = authHeader.split(' ')[1]
 
-    res.json({ token });
-  } catch (error: any) {
-    res.status(500).json({ message: 'Error en el login', error: error.message });
-  }
-});
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET)
+        res.status(200).json({ message: 'Token válido', decoded })
+    } catch (error: any) {
+        res.status(401).json({ message: 'Token inválido o expirado', error: error.message })
+    }
+})
 
-router.get('/users', async (req: Request, res: Response) => {
-  try {
-   const [rows]: any = await db.query('SELECT * FROM users');
-
-    const users = rows;
-
-    res.status(201).json({ message: '', users });
-  } catch (error: any) {
-    res.status(500).json({ message: 'Error en el registro', error: error.message });
-  }
-});
-
-export default router;
+export default router

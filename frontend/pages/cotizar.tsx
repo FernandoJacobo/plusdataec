@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+
 import FormularioCotizarEnLinea from '@/components/layout/web/FormularioCotizarEnLinea';
 import FormularioEnviarCoizacion from '@/components/layout/web/FormularioEnviarCotizacion';
 import FormularioIngresar from '@/components/layout/web/FormularioIngresar';
 import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
 import FormularioSubirSolicitud from '@/components/layout/web/FormularioSubirSolicitud';
+
 import { showToast } from '@/components/general/Toast';
 
 const steps = [
@@ -51,31 +53,27 @@ export default function CotizarPage() {
         goToPrevStep();
     };
 
+    const register = (token: string) => {
+        handleStepAdvance(4);
+    }
+
     const renderStepContent = () => {
         switch (currentStep) {
             case 1:
                 return showCotizar ? (
-                    <FormularioCotizarEnLinea
-                        onClickDownload={() => setShowCotizar(false)}
-                        onClickNext={() => handleStepAdvance(2)}
-                    />
+                    <FormularioCotizarEnLinea onClickDownload={() => setShowCotizar(false)} onClickNext={() => handleStepAdvance(2)} />
                 ) : (
                     <FormularioEnviarCoizacion onClickRegresar={() => setShowCotizar(true)} />
                 );
-
             case 2:
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
                         <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center">Registra la información del contribuyente</h2>
-                            <FormularioSubirSolicitud
-                                onClickCancel={handleCancelStep}
-                                onClickContinue={() => handleStepAdvance(3)}
-                            />
+                            <FormularioSubirSolicitud onClickCancel={handleCancelStep} onClickContinue={() => handleStepAdvance(3)} />
                         </div>
                     </div>
                 );
-
             case 3:
                 return (
                     <div className="w-full md:w-5/6 mx-auto p-4 flex flex-col items-center justify-center p-10">
@@ -83,24 +81,18 @@ export default function CotizarPage() {
                             <div className="w-full flex flex-col justify-center items-center md:w-5/6 mt-2">
                                 <FormularioIngresar onClick={(res) => console.log('ingresar', res)} showLinkRegister={false} />
                                 <p className="text-black text-center mt-3">
-                                    ¿No tienes cuenta?{' '}
-                                    <button
-                                        onClick={() => setShowRegister(true)}
-                                        className="text-violet hover:font-bold cursor-pointer"
-                                    >
+                                    ¿No tienes cuenta?
+                                    <button onClick={() => setShowRegister(true)} className="text-violet hover:font-bold cursor-pointer">
                                         Regístrate aquí
                                     </button>
                                 </p>
                             </div>
                         ) : (
                             <div className="w-full flex flex-col justify-center items-center md:w-5/6 mt-2">
-                                <FormularioRegistro onClick={(res) => console.log('registrar', res)} showLinkLogin={false} />
+                                <FormularioRegistro onClick={register} showLinkLogin={false} />
                                 <p className="text-black text-center mt-3">
-                                    ¿Ya tienes cuenta?{' '}
-                                    <button
-                                        onClick={() => setShowRegister(false)}
-                                        className="text-violet hover:font-bold cursor-pointer"
-                                    >
+                                    ¿Ya tienes cuenta?
+                                    <button onClick={() => setShowRegister(false)} className="text-violet hover:font-bold cursor-pointer">
                                         Ingresa aquí
                                     </button>
                                 </p>
@@ -108,7 +100,6 @@ export default function CotizarPage() {
                         )}
                     </div>
                 );
-
             case 4:
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
@@ -120,7 +111,7 @@ export default function CotizarPage() {
                                 <div className="max-w-md mx-auto"></div>
                             </div>
                             <div className="w-full flex flex-col md:flex-row gap-4">
-                                <button className="w-full md:w-1/2 bg-white text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105">
+                                <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105">
                                     Continuar Luego
                                 </button>
                                 <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
@@ -130,7 +121,6 @@ export default function CotizarPage() {
                         </div>
                     </div>
                 );
-
             default:
                 return null;
         }

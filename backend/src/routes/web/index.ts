@@ -24,8 +24,8 @@ router.get('/tiposimpuesto', async (req: Request, res: Response) => {
         const [rows] = await db.query('SELECT * FROM tiposimpuesto')
 
         const options = (rows as any[]).map((row) => ({
-          value: row.id,       // o el nombre real de la columna ID en tu tabla
-          label: row.nombre    // o la columna que representa el nombre
+          value: row.id,
+          label: row.nombre
         }))
     
         res.status(200).json({ data: options })

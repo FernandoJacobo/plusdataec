@@ -1,8 +1,15 @@
 import { Router, Request, Response } from "express";
+
 import nodemailer from "nodemailer";
+
 import multer from "multer";
+
 import fs from "fs";
+
 import path from "path";
+
+import type SMTPTransport from "nodemailer/lib/smtp-transport";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -10,15 +17,23 @@ dotenv.config();
 const upload = multer({ dest: "uploads/" });
 const emailRoutes = Router();
 
-emailRoutes.post("/send", upload.single("archivo"), async (req: Request, res: Response) => {
+emailRoutes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request, res: Response) => {
     const { nombreORazonSocial, nombreEmpresa, correo, numero, rucEmpresa, tipoDeImpuesto, valorASolicitar, interesesGanados, valorNotaDeCredito, honorarios } = req.body;
+
     const file = req.file;
 
-    if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
-        return res.status(500).json({ success: false, message: "Credenciales de correo no configuradas" });
+    if (!process.env.SMTP_SERVER || !process.env.SMTP_PORT) {
+        return res.status(500).json({ success: false, message: 'Credenciales del servidor SMTP no configuradas.' });
     }
 
+    if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
+        return res.status(500).json({ success: false, message: 'Credenciales de correo no configuradas.' });
+    }
+
+    const nroCotizacion = '';
+
     let htmlTemplate = fs.readFileSync(path.join(__dirname, "../public/email-templates/email-template.html"), "utf8");
+
     htmlTemplate = htmlTemplate
         .replace("{{nombreORazonSocial}}", nombreORazonSocial || "")
         .replace("{{nombreEmpresa}}", nombreEmpresa || "")
@@ -33,8 +48,8 @@ emailRoutes.post("/send", upload.single("archivo"), async (req: Request, res: Re
         .replace("{{link}}", '');
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.hostinger.com",
-        port: 465,
+        host: process.env.SMTP_SERVER,
+        port: parseInt(process.env.SMTP_PORT || "465", 10),
         secure: true,
         auth: {
             user: process.env.EMAIL,
@@ -43,12 +58,12 @@ emailRoutes.post("/send", upload.single("archivo"), async (req: Request, res: Re
         tls: {
             rejectUnauthorized: false,
         },
-    });
+    } as SMTPTransport.Options);
 
     const mailOptions = {
-        from: `"Formulario Web" <${process.env.EMAIL}>`,
+        from: `"PLUSDATA ECUADOR S.A." <${process.env.EMAIL}>`,
         to: correo,
-        subject: "",
+        subject: `Cotización trámite devolución impuestos Nro. ${nroCotizacion} PLUSDATA ECUADOR S.A.`,
         html: htmlTemplate,
         attachments: [
             {

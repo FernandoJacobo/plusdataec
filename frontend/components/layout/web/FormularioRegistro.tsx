@@ -6,7 +6,9 @@ import Link from 'next/link';
 
 import { Toast, showToast } from "@/components/general/Toast";
 
-import { isValidEmail, isValidPhone } from '@/helpers/validations'
+import { isValidEmail, isValidPhone } from '@/helpers/validations';
+
+import { register } from '@/lib/api/auth'
 
 interface FormProps {
     onClick: (data: { id: number; name: string; phone: string; email: string }) => void;
@@ -19,14 +21,26 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!validateForm()) return;
 
-        const id = 1;
+        const res = await register({
+            nombre: name,
+            celular: phone,
+            correo: email,
+            contrasena: password
+        });
 
-        onClick({ id, name, phone, email });
+        if (res.error) {
+            showToast(res.message, 'error');
+            return;
+        }
+
+        showToast(res.message, 'success');
+
+        onClick(res.token);
     };
 
     const validateForm = (): boolean => {

@@ -81,7 +81,7 @@ export default function FormularioIngresar({ onClick, showLinkRegister }: FormPr
 
                 {showLinkRegister && (
                     <p className="text-black text-center">
-                        Si no tiene una cuenta <Link href="/registro" className="text-violet hover:font-bold mt-4">Regístrate aquí</Link>
+                        Si no tiene una cuenta <Link href="/registro" className="text-violet hover:font-bold mt-4"> Regístrate aquí </Link>
                     </p>
                 )}
             </form>

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { showToast } from "@/components/general/Toast";
 
-import { useStore } from '@/store/useStore';
+import { useWebStore } from '@/store/useWebStore';
 
 import { isValidEmail, isValidPhone } from '@/helpers/validations'
 import { numberToPercent, numberFormat } from '@/helpers/general';
@@ -18,7 +18,7 @@ interface FormProps {
 }
 
 export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps) {
-    const { cotizacion, setCotizacion } = useStore();
+    const { arrTiposImpuesto, cotizacion, setCotizacion } = useWebStore();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -29,6 +29,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
     const handleSendEmail = async () => {
         if (!validateForm()) return;
 
+        const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto);
+
         const data = new FormData();
 
         data.append('nombreORazonSocial', name);
@@ -36,11 +38,11 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
         data.append('correo', email);
         data.append('numero', phone);
         data.append('rucEmpresa', rucBeneficiary);
-        data.append('tipoDeImpuesto', cotizacion.tipoImpuesto);
+        data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label: cotizacion.tipoImpuesto);
         data.append('valorASolicitar', cotizacion.valorASolicitar);
         data.append('honorarios', numberToPercent(cotizacion.honorarios));
 
-        const res = await fetch("http://localhost:4000/api/email/send", {
+        const res = await fetch("http://localhost:4000/api/email/enviar-cotizacion", {
             method: "POST",
             body: data,
         });
