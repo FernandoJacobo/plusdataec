@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-05-2025 a las 07:42:43
+-- Tiempo de generación: 08-05-2025 a las 01:36:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -29,47 +29,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `contribuyentes` (
   `id` int(11) NOT NULL,
-  `idEstatus` int(11) NOT NULL,
   `ruc` varchar(13) NOT NULL,
   `nombreORazonSocial` varchar(250) NOT NULL,
   `correo` varchar(250) NOT NULL,
   `celular` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `cotizaciones`
---
-
-CREATE TABLE `cotizaciones` (
-  `id` int(11) NOT NULL,
-  `idEstatus` int(11) NOT NULL,
-  `idTiposImpuesto` int(11) NOT NULL,
-  `valorASolicitar` decimal(13,2) NOT NULL,
-  `honorarios` decimal(3,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `estatus`
---
-
-CREATE TABLE `estatus` (
-  `id` int(11) NOT NULL,
-  `estatus` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `estatus`
---
-
-INSERT INTO `estatus` (`id`, `estatus`) VALUES
-(1, 'Borrador'),
-(2, 'Pendiente'),
-(3, 'Aceptado'),
-(4, 'Eliminado');
 
 -- --------------------------------------------------------
 
@@ -128,12 +92,19 @@ INSERT INTO `tiposimpuesto` (`id`, `nombre`) VALUES
 
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL,
-  `idEstatus` int(11) NOT NULL,
   `nombre` varchar(250) NOT NULL,
   `celular` varchar(10) NOT NULL,
   `correo` varchar(250) NOT NULL,
   `contrasena` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre`, `celular`, `correo`, `contrasena`) VALUES
+(1, 'Fernando Alvarez Jacobo', '0123456789', 'fernandojacobo54@gmail.com', '$2b$10$0'),
+(2, 'Fernando Alvarez Jacobo', '0123456789', 'fernando@gmail.com', '$2b$10$X');
 
 --
 -- Índices para tablas volcadas
@@ -143,18 +114,6 @@ CREATE TABLE `usuarios` (
 -- Indices de la tabla `contribuyentes`
 --
 ALTER TABLE `contribuyentes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `cotizaciones`
---
-ALTER TABLE `cotizaciones`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `estatus`
---
-ALTER TABLE `estatus`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -186,18 +145,6 @@ ALTER TABLE `contribuyentes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `cotizaciones`
---
-ALTER TABLE `cotizaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `estatus`
---
-ALTER TABLE `estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT de la tabla `rangoshonorarios`
 --
 ALTER TABLE `rangoshonorarios`
@@ -213,7 +160,7 @@ ALTER TABLE `tiposimpuesto`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

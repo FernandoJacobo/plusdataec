@@ -19,14 +19,12 @@ interface FormProps {
 }
 
 export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext }: FormProps) {
-    const { arrHonorarios, fetchHonorarios, arrTiposImpuesto, fetchTiposImpuesto } = useWebStore();
+    const { cotizacion, setCotizacion, arrHonorarios, fetchHonorarios, arrTiposImpuesto, fetchTiposImpuesto } = useWebStore();
 
     useEffect(() => { 
         fetchHonorarios();
         fetchTiposImpuesto();
     }, []);
-
-    const { cotizacion, setCotizacion } = useWebStore();
 
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto) || null;
     
@@ -151,10 +149,16 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
         link.click();
     };
 
+    const reset = () => {
+        setCotizacion({tipoImpuesto: ''})
+        setCotizacion({valorASolicitar: ''});
+        setCotizacion({honorarios: 0});
+    }
+
     return (
         <>
             <div className="w-full flex flex-col items-center justify-center p-10">
-                <form autoComplete="off" className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full space-y-4">
+                <form autoComplete="off" className="bg-white p-8 rounded-2xl shadow-lg w-full md:w-4/6 space-y-4">
                     <h2 className="text-2xl font-bold text-center"> Cotizar en linea </h2>
                     <div className="flex flex-col gap-3">
                         <label htmlFor="tipoDeImpuesto" className='font-bold'> Tipo de Impuesto </label>
@@ -173,8 +177,10 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         />
                     </div>
 
-                    <div className="bg-purple-50 rounded-2xl shadow-lg max-w-md w-full space-y-4 p-4">
-                        <div className="max-w-md mx-auto">
+                    <div className="bg-purple-50 rounded-2xl shadow-lg w-full space-y-4 p-4">
+                        <div className="mx-auto">
+                            <p className="text-gray-500 mb-4"> Resultado de la cotización </p>
+                            
                             <div className="bg-purple-50 rounded-lg overflow-hidden">
                                 <ul className="divide-y divide-transparent">
                                     <li className="cursor-pointer">
@@ -189,8 +195,20 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         </div>
                     </div>
 
+                    <p className="text-gray-500 mt-4 mb-4"> Nuestros honorarios se pagan en su totalidad (100%) despues de que el SRI emita la resolución final. No requerimos anticipos. </p>
+
                     <div className="flex flex-col md:flex-row gap-3">
-                        <button type="button" className="w-full md:w-1/2 bg-white btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
+                        <button type="button" className="w-full md:w-1/2 bg-white btn-ouline-violet text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
+                            Imprimir cotización
+                        </button>
+
+                        <button type="button" className="w-full md:w-1/2 bg-purple text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-purple hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { reset(); }}>
+                            Limpiar Campos
+                        </button>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row justify-center items-center gap-3">
+                        <button type="button" className="w-full md:w-1/2 bg-white btn-ouline-yellow text-yellow uppercase font-bold p-2 text-center rounded-4xl hover:border-yellow hover:bg-ext-yellow hover:text-yellow transition hover:cursor-pointer hover:scale-105" onClick={() => { print(); }}>
                             Enviar cotización
                         </button>
 

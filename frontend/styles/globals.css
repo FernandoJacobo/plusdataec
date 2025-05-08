@@ -74,3 +74,15 @@ body {
 .btn-ouline {
     border: 1px solid var(--violet);
 }
+
+.btn-ouline-violet {
+    border: 1px solid var(--violet);
+}
+
+.btn-ouline-purple {
+    border: 1px solid var(--purple);
+}
+
+.btn-ouline-yellow {
+    border: 1px solid var(--yellow);
+}

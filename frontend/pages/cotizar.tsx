@@ -10,14 +10,20 @@ import FormularioSubirSolicitud from '@/components/layout/web/FormularioSubirSol
 
 import { showToast } from '@/components/general/Toast';
 
+import { useWebStore } from '@/store/useWebStore';
+
+import { numberToPercent, numberFormat } from '@/helpers/general';
+
 const steps = [
     { id: 1, title: 'Cotizar' },
     { id: 2, title: 'Subir solicitud' },
-    { id: 3, title: 'Ingresar' },
-    { id: 4, title: 'Confirmar' },
+    /* { id: 3, title: 'Ingresar' }, */
+    { id: 3, title: 'Confirmar' },
 ];
 
 export default function CotizarPage() {
+    const { arrTiposImpuesto, cotizacion, contribuyente } = useWebStore();
+
     const [currentStep, setCurrentStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState<number[]>([]);
     const [showRegister, setShowRegister] = useState(false);
@@ -28,12 +34,16 @@ export default function CotizarPage() {
     };
 
     const goToStep = (step: number) => {
-        if (step === 1 || stepsCompleted.includes(step - 1)) {
+        /* if (step === 1 || stepsCompleted.includes(step - 1)) {
             setCurrentStep(step);
             if (step === 1) updateStepsCompleted(1);
         } else {
             showToast(`No puedes continuar con el paso ${step} sin completar el paso ${step - 1}`, 'error');
-        }
+        } */
+
+        setCurrentStep(step);
+
+        if (step === 1) updateStepsCompleted(1);
     };
 
     const goToNextStep = () => setCurrentStep((prev) => prev + 1);
@@ -57,6 +67,12 @@ export default function CotizarPage() {
         handleStepAdvance(4);
     }
 
+    const login = () => {
+        showToast('Plataforma en Construcción.', 'success');
+    }
+
+    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto);
+
     const renderStepContent = () => {
         switch (currentStep) {
             case 1:
@@ -74,12 +90,12 @@ export default function CotizarPage() {
                         </div>
                     </div>
                 );
-            case 3:
+            case 30:
                 return (
                     <div className="w-full md:w-5/6 mx-auto p-4 flex flex-col items-center justify-center p-10">
                         {!showRegister ? (
                             <div className="w-full flex flex-col justify-center items-center md:w-5/6 mt-2">
-                                <FormularioIngresar onClick={(res) => console.log('ingresar', res)} showLinkRegister={false} />
+                                <FormularioIngresar onClick={login} showLinkRegister={false} />
                                 <p className="text-black text-center mt-3">
                                     ¿No tienes cuenta?
                                     <button onClick={() => setShowRegister(true)} className="text-violet hover:font-bold cursor-pointer">
@@ -100,16 +116,49 @@ export default function CotizarPage() {
                         )}
                     </div>
                 );
-            case 4:
+            case 3:
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
                         <div className="w-full sm:w-5/6 bg-white p-8 rounded-4xl shadow-lg max-w-md space-y-4">
                             <h2 className="text-xl font-bold text-center mb-4">Confirmar Solicitud</h2>
-                            <p className="text-gray-400 uppercase font-bold">Empresa de ejemplo S.A.</p>
-                            <div className="bg-purple-50 rounded-2xl shadow-xl max-w-md w-full space-y-4 p-4 mb-8">
-                                <h1 className="font-bold text-sm mb-8">Resultado de la cotización:</h1>
-                                <div className="max-w-md mx-auto"></div>
+                            
+                            <p className="text-gray-400 uppercase font-bold"> { contribuyente.nombreORazonSocial } </p>
+                            <p className="text-gray-400 uppercase font-bold"> RUC: { contribuyente.ruc } </p>
+
+                            <div className="bg-purple-50 rounded-2xl shadow-lg w-full space-y-4 p-4">
+                                <div className="mx-auto">
+                                    <p className="text-gray-500 mb-4"> Resultado de la cotización </p>
+                                    
+                                    <div className="bg-purple-50 rounded-lg overflow-hidden">
+                                        <ul className="divide-y divide-transparent">
+                                            <li className="cursor-pointer mb-2">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="font-bold"> Tipo Impuesto </span>
+        
+                                                    <span className="text-sm tex-end"> {tipoImpuesto?.label} </span>
+                                                </div>
+                                            </li>
+
+                                            <li className="cursor-pointer mb-2">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="font-bold"> Valor a solicitar </span>
+        
+                                                    <span className="text-sm tex-end"> {cotizacion?.valorASolicitar} </span>
+                                                </div>
+                                            </li>
+
+                                            <li className="cursor-pointer">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="font-bold"> Honorarios (No incluye IVA) </span>
+        
+                                                    <span className="text-sm text-yellow tex-end font-bold"> {numberToPercent(cotizacion.honorarios)} </span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
+                            
                             <div className="w-full flex flex-col md:flex-row gap-4">
                                 <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105">
                                     Continuar Luego
@@ -129,7 +178,6 @@ export default function CotizarPage() {
     return (
         <div className="w-full max-w-4xl mx-auto p-4">
             <div className="flex justify-between items-center space-x-4">
-                <pre>{JSON.stringify(stepsCompleted)}</pre>
                 {steps.map((step) => (
                     <div
                         key={step.id}
