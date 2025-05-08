@@ -14,6 +14,8 @@ import { useWebStore } from '@/store/useWebStore';
 
 import { numberToPercent, numberFormat } from '@/helpers/general';
 
+import { register } from '@/lib/api/cotizaciones'
+
 const steps = [
     { id: 1, title: 'Cotizar' },
     { id: 2, title: 'Subir solicitud' },
@@ -63,7 +65,7 @@ export default function CotizarPage() {
         goToPrevStep();
     };
 
-    const register = (token: string) => {
+    const registerUser = (token: string) => {
         handleStepAdvance(4);
     }
 
@@ -72,6 +74,27 @@ export default function CotizarPage() {
     }
 
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto);
+
+    const confirm = async () => {
+        const res = await register({
+            idEstatus: 3,
+            idTiposImpuesto: cotizacion.tipoImpuesto,
+            valorASolicitar: cotizacion.valorASolicitar,
+            honorarios: cotizacion.honorarios,
+            nombre: cotizacion.nombreComlpeto,
+            correo: cotizacion.correo,
+            celular: cotizacion.celular,
+            nombreBeneficiario: cotizacion.nombreORazonSocialBeneficiario,
+            rucBeneficiario: cotizacion.rucBeneficiario,
+        });
+
+        if(res.error) {
+            showToast(res.message, 'error')
+            return;
+        }
+
+        showToast(res.message, 'success')
+    }
 
     const renderStepContent = () => {
         switch (currentStep) {
@@ -94,7 +117,7 @@ export default function CotizarPage() {
                 return (
                     <div className="w-full md:w-5/6 mx-auto p-4 flex flex-col items-center justify-center p-10">
                         {!showRegister ? (
-                            <div className="w-full flex flex-col justify-center items-center md:w-5/6 mt-2">
+                            <div className="w-full md:w-5/6 flex flex-col justify-center items-center mt-2">
                                 <FormularioIngresar onClick={login} showLinkRegister={false} />
                                 <p className="text-black text-center mt-3">
                                     ¿No tienes cuenta?
@@ -104,8 +127,8 @@ export default function CotizarPage() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="w-full flex flex-col justify-center items-center md:w-5/6 mt-2">
-                                <FormularioRegistro onClick={register} showLinkLogin={false} />
+                            <div className="w-full md:w-5/6 flex flex-col justify-center items-center mt-2">
+                                <FormularioRegistro onClick={registerUser} showLinkLogin={false} />
                                 <p className="text-black text-center mt-3">
                                     ¿Ya tienes cuenta?
                                     <button onClick={() => setShowRegister(false)} className="text-violet hover:font-bold cursor-pointer">
@@ -119,11 +142,11 @@ export default function CotizarPage() {
             case 3:
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
-                        <div className="w-full sm:w-5/6 bg-white p-8 rounded-4xl shadow-lg max-w-md space-y-4">
+                        <div className="w-full md:w-4/6 bg-white p-8 rounded-4xl shadow-lg space-y-4">
                             <h2 className="text-xl font-bold text-center mb-4">Confirmar Solicitud</h2>
                             
-                            <p className="text-gray-400 uppercase font-bold"> { contribuyente.nombreORazonSocial } </p>
-                            <p className="text-gray-400 uppercase font-bold"> RUC: { contribuyente.ruc } </p>
+                            <p className="text-gray-400 uppercase font-bold"> { cotizacion.nombreORazonSocialBeneficiario } </p>
+                            <p className="text-gray-400 uppercase font-bold"> RUC: { cotizacion.rucBeneficiario } </p>
 
                             <div className="bg-purple-50 rounded-2xl shadow-lg w-full space-y-4 p-4">
                                 <div className="mx-auto">
@@ -143,7 +166,7 @@ export default function CotizarPage() {
                                                 <div className="flex justify-between items-center">
                                                     <span className="font-bold"> Valor a solicitar </span>
         
-                                                    <span className="text-sm tex-end"> {cotizacion?.valorASolicitar} </span>
+                                                    <span className="text-sm tex-end"> ${numberFormat(cotizacion.valorASolicitar)} </span>
                                                 </div>
                                             </li>
 
@@ -160,10 +183,11 @@ export default function CotizarPage() {
                             </div>
                             
                             <div className="w-full flex flex-col md:flex-row gap-4">
-                                <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105">
-                                    Continuar Luego
+                                <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { goToPrevStep(); }}>
+                                    Regresar
                                 </button>
-                                <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105">
+
+                                <button className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { confirm(); }}>
                                     Confirmar
                                 </button>
                             </div>

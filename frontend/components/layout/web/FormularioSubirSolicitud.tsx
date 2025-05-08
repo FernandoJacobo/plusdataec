@@ -17,55 +17,61 @@ interface FormProps {
 }
 
 export default function FormularioSubirSolicitud({onClickCancel, onClickContinue}: FormProps) {
-    const { contribuyente, setContribuyente } = useWebStore();
+    const { contribuyente, setContribuyente, cotizacion, setCotizacion } = useWebStore();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [fileName, setFileName] = useState("Ningún archivo seleccionado");
 
     const validateForm = () => {
-        if (!contribuyente.ruc.trim()) {
-            document.getElementById('ruc')?.focus();
-            showToast('El campo Nro. de RUC es requerido', 'error');
-            return false;
-        }
-
-        if (!isValidRuc(contribuyente.ruc.trim())) {
-            document.getElementById('ruc')?.focus();
-            showToast('El campo Nro. de RUC es inválido', 'error');
-            return false;
-        }
-
-        if (!contribuyente.nombreORazonSocial.trim()) {
+        if (!cotizacion.nombreComlpeto.trim()) {
             document.getElementById('name')?.focus();
             showToast('El campo Nombre o Razón Social es requerido.', 'error');
             return false;
         }
 
-        if (!contribuyente.correo.trim()) {
+        if (!cotizacion.correo.trim()) {
             document.getElementById('email')?.focus();
             showToast('El campo Correo Electrónico es requerido.', 'error');
             return false;
         }
 
-        if (!isValidEmail(contribuyente.correo.trim())) {
+        if (!isValidEmail(cotizacion.correo.trim())) {
             document.getElementById('email')?.focus();
             showToast('El campo Correo Electrónic es inválido', 'error');
             return false;
         }
 
-        if (!contribuyente.celular.trim()) {
+        if (!cotizacion.celular.trim()) {
             document.getElementById('phone')?.focus();
             showToast('El campo Nro. de celular es requerido.', 'error');
             return false;
         }
 
-        if (!isValidPhone(contribuyente.celular.trim())) {
+        if (!isValidPhone(cotizacion.celular.trim())) {
             document.getElementById('phone')?.focus();
             showToast('El campo Nro. de celular es inválido', 'error');
             return false;
         }
 
-        if (contribuyente.archivo == null) {
+        if (!cotizacion.nombreORazonSocialBeneficiario.trim()) {
+            document.getElementById('name')?.focus();
+            showToast('El campo Nombre o Razón Social es requerido.', 'error');
+            return false;
+        }
+
+        if (!cotizacion.rucBeneficiario.trim()) {
+            document.getElementById('ruc')?.focus();
+            showToast('El campo Nro. de RUC es requerido', 'error');
+            return false;
+        }
+
+        if (!isValidRuc(cotizacion.rucBeneficiario.trim())) {
+            document.getElementById('ruc')?.focus();
+            showToast('El campo Nro. de RUC es inválido', 'error');
+            return false;
+        }
+
+        if (cotizacion.archivo == null) {
             document.getElementById('phone')?.focus();
             showToast('Es requerido cargar el formulario 101 en formato PDF', 'error');
             return false;
@@ -76,14 +82,6 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
 
     const next = () => {
         if (!validateForm()) return;
-
-        setContribuyente({
-            ruc: contribuyente.ruc,
-            nombreORazonSocial: contribuyente.nombreORazonSocial,
-            correo: contribuyente.correo,
-            celular: contribuyente.celular,
-            archivo: contribuyente.archivo
-        });
 
         onClickContinue({});
     }
@@ -100,17 +98,17 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
         const selectedFile = e.target.files?.[0];
 
         if(!selectedFile) {
-            setContribuyente({archivo: null})
+            setCotizacion({archivo: null})
             setFileName('Ningún archivo seleccionado');
             return;
         }
     
         if (selectedFile && selectedFile.type === 'application/pdf') {
             setFileName(selectedFile.name);
-            setContribuyente({archivo: selectedFile})
+            setCotizacion({archivo: selectedFile})
         } else {
             showToast('Archivo inválido. Solo se permite PDF.', 'error');
-            setContribuyente({archivo: null})
+            setCotizacion({archivo: null})
             setFileName('Ningún archivo seleccionado');
         }
     };
@@ -135,26 +133,14 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
     return (
         <>
             <form autoComplete="off" className="">
-                <div className="w-full md:w-1/2 flex flex-col gap-3 mb-3">
-                    <label htmlFor="ruc" className='font-bold'> Nro. de RUC </label>
-                    <input
-                        id='ruc'
-                        type="text"
-                        placeholder=""
-                        value={contribuyente.ruc}
-                        onChange={(e) => setContribuyente({ruc: e.target.value})}
-                        className="w-full p-2 rounded input-control"
-                    />
-                </div>
-
                 <div className="flex flex-col gap-3 mb-3">
                     <label htmlFor="name" className='font-bold'> Nombre o Razón Social </label>
                     <input
                         id="name"
                         type="text"
                         placeholder=""
-                        value={contribuyente.nombreORazonSocial}
-                        onChange={(e) => setContribuyente({nombreORazonSocial: e.target.value})}
+                        value={cotizacion.nombreComlpeto}
+                        onChange={(e) => setCotizacion({nombreComlpeto: e.target.value})}
                         className="w-full p-2 rounded input-control"
                     />
                 </div>
@@ -166,8 +152,8 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                             id="email"
                             type="text"
                             placeholder=""
-                            value={contribuyente.correo}
-                            onChange={(e) => setContribuyente({correo: e.target.value})}
+                            value={cotizacion.correo}
+                            onChange={(e) => setCotizacion({correo: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
@@ -178,11 +164,35 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                             id="phone"
                             type="text"
                             placeholder=""
-                            value={contribuyente.celular}
-                            onChange={(e) => setContribuyente({celular: e.target.value})}
+                            value={cotizacion.celular}
+                            onChange={(e) => setCotizacion({celular: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
+                </div>
+
+                <div className="w-full flex flex-col gap-3 mb-3">
+                    <label htmlFor="ruc" className='font-bold'> Nombre del beneficiario (persona o empresa) </label>
+                    <input
+                        id='ruc'
+                        type="text"
+                        placeholder=""
+                        value={cotizacion.nombreORazonSocialBeneficiario}
+                        onChange={(e) => setCotizacion({nombreORazonSocialBeneficiario: e.target.value})}
+                        className="w-full p-2 rounded input-control"
+                    />
+                </div>
+
+                <div className="w-full flex flex-col gap-3 mb-3">
+                    <label htmlFor="ruc" className='font-bold'> Nro. de RUC del beneficiario </label>
+                    <input
+                        id='ruc'
+                        type="text"
+                        placeholder=""
+                        value={cotizacion.rucBeneficiario}
+                        onChange={(e) => setCotizacion({rucBeneficiario: e.target.value})}
+                        className="w-full p-2 rounded input-control"
+                    />
                 </div>
 
                 <div className="flex flex-col gap-3 mb-3">
@@ -220,4 +230,4 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
             </form>
         </>
     );
-}
+};

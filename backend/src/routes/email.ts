@@ -32,7 +32,7 @@ emailRoutes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Req
 
     const nroCotizacion = '';
 
-    let htmlTemplate = fs.readFileSync(path.join(__dirname, "../public/email-templates/email-template.html"), "utf8");
+    let htmlTemplate = fs.readFileSync(path.join(__dirname, "../public/email-templates/email.html"), "utf8");
 
     htmlTemplate = htmlTemplate
         .replace("{{nombreORazonSocial}}", nombreORazonSocial || "")

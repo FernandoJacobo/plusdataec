@@ -2,72 +2,100 @@
 
 import { useState } from "react"
 
+import { useWebStore } from '@/store/useWebStore';
+import { isValidEmail, isValidPhone } from "@/helpers/validations";
+import { showToast } from "@/components/general/Toast";
+
+import { sendMessage, registerMessage } from '@/lib/api/web';
+
 export default function Contactanos() {
-    const [name, setName] = useState('');
-    const [email, seteMail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [message, setMessage] = useState('');
+    const { mensaje, setMensaje } = useWebStore();
 
     const [showProgressbar, setShowProgressbar] = useState(false);
 
     const resetForm = () => {
-        setName('');
+        setMensaje({ nombre: '' });
         document.getElementById('name')?.focus();
 
-        seteMail('');
-        setPhone('');
-        setMessage('');
+        setMensaje({ correo: '' });
+        setMensaje({ celular: '' });
+        setMensaje({ mensaje: '' });
     }
 
     const validateForm = () => {
-        if (name == '') {
+        if (mensaje.nombre == '') {
+            showToast('Campo requerido.', 'error');
             document.getElementById('name')?.focus();
             return false;
         }
 
-        if (email == '') {
+        if (mensaje.correo == '') {
+            showToast('Campo requerido.', 'error');
             document.getElementById('email')?.focus();
             return false;
         }
 
-        if (!isValidEmail(email)) {
+        if (!isValidEmail(mensaje.correo)) {
+            showToast('Campo requerido.', 'error');
             document.getElementById('email')?.focus();
             return false;
         }
 
-        if (phone == '') {
+        if (mensaje.celular == '') {
+            showToast('Campo requerido.', 'error');
             document.getElementById('phone')?.focus();
             return false;
         }
 
-        if (!isValidPhone(phone)) {
+        if (!isValidPhone(mensaje.celular)) {
+            showToast('Campo requerido.', 'error');
             document.getElementById('phone')?.focus();
             return false;
         }
 
-        if (message == '') {
+        if (mensaje.mensaje == '') {
+            showToast('Campo requerido.', 'error');
             document.getElementById('message')?.focus();
             return false;
         }
 
-        setShowProgressbar(true);
-
-        setTimeout(() => {
-            setShowProgressbar(false);
-            resetForm();
-        }, 1000);
-
         return true;
     }
 
-    const isValidEmail = (email: string): boolean => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
-    }
+    const sendEmail = async () => {
+        if (!validateForm()) return;
 
-    const isValidPhone = (phone: string): boolean => {
-        const phoneRegex = /^[0-9]{10}$/;
-        return phoneRegex.test(phone);
+        setShowProgressbar(true);
+
+        const resEnvio = await sendMessage({
+            nombre: mensaje.nombre,
+            correo: mensaje.correo,
+            celular: mensaje.celular,
+            mensaje: mensaje.mensaje
+        });
+
+        setShowProgressbar(false);
+
+        if (resEnvio.error) {
+            showToast(resEnvio.message, 'error');
+            return;
+        }
+
+        const resRegistro = await registerMessage({
+            nombre: mensaje.nombre,
+            correo: mensaje.correo,
+            celular: mensaje.celular,
+            mensaje: mensaje.mensaje
+        });
+
+        if (resRegistro.error) {
+            showToast(resRegistro.message, 'error');
+            return;
+        }
+
+        resetForm();
+
+        showToast(resEnvio.message, 'success');
     }
 
     return (
@@ -124,30 +152,30 @@ export default function Contactanos() {
                                 <div className="flex flex-wrap gap-4">
                                     <div className="w-full mb-3">
                                         <label htmlFor="name" className="font-bold">Nombre completo</label>
-                                        <input id="name" name="name" type="text" className="w-full p-2 rounded input-control" value={name} onChange={(e) => setName(e.target.value)} />
+                                        <input id="name" name="name" type="text" className="w-full p-2 rounded input-control" value={mensaje.nombre} onChange={(e) => setMensaje({nombre: e.target.value})} />
                                     </div>
 
                                     <div className="w-full flex flex-col md:flex-row gap-4">
                                         <div className="w-full md:w-1/2 mb-3">
                                             <label htmlFor="email" className="font-bold">Correo electrónico</label>
-                                            <input id="email" name="email" type="email" className="w-full p-2 rounded input-control" value={email} onChange={(e) => seteMail(e.target.value)} />
+                                            <input id="email" name="email" type="email" className="w-full p-2 rounded input-control" value={mensaje.correo} onChange={(e) => setMensaje({correo: e.target.value})} />
                                         </div>
 
                                         <div className="w-full md:w-1/2 mb-3">
                                             <label htmlFor="phone" className="font-bold">Nro. de celular</label>
-                                            <input id="phone" name="phone" type="text" className="w-full p-2 rounded input-control" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                                            <input id="phone" name="phone" type="text" className="w-full p-2 rounded input-control" value={mensaje.celular} onChange={(e) => setMensaje({celular: e.target.value})} />
                                         </div>
                                     </div>
 
                                     <div className="w-full mb-3">
                                         <label htmlFor="message" className="font-bold">¿En qué podemos ayudarte?</label>
-                                        <textarea id="message" name="message" placeholder="Cuéntanos un poco más, para darte una respuesta más rápida" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition resize-none h-32 input-control" value={message} onChange={(e) => setMessage(e.target.value)} />
+                                        <textarea id="message" name="message" placeholder="Cuéntanos un poco más, para darte una respuesta más rápida" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition resize-none h-32 input-control" value={mensaje.mensaje} onChange={(e) => setMensaje({mensaje: e.target.value})} />
                                     </div>
                                 </div>
                             </form>
 
                             <div className="flex flex-col md:flex-row gap-2">
-                                <button className="w-full md:w-[150px] bg-yellow text-white p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { validateForm(); }}>
+                                <button className="w-full md:w-[150px] bg-yellow text-white p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { sendEmail(); }}>
                                     Enviar
                                 </button>
 

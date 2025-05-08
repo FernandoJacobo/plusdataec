@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { db } from '../database' // Ajusta según tu estructura
+import { db } from '../database'
 
 const router = Router()
 const JWT_SECRET = process.env.JWT_SECRET!

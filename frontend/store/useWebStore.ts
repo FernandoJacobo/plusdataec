@@ -1,64 +1,38 @@
 import { create } from "zustand";
 
-export interface Cotizacion {
-    tipoImpuesto: string;
-    valorASolicitar: string;
-    honorarios: number;
-}
-
-interface Honorarios {
-    id: number;
-    rango: number;
-    desde: number;
-    hasta: number;
-    honorario: number;
-}
-
-interface OptionSelect {
-    value: number | string;
-    label: string;
-}
-
-interface Contribuyente {
-    ruc: string;
-    nombreORazonSocial: string;
-    correo: string;
-    celular: string;
-    archivo: File | null;
-}
-
-interface WebStoreState {
-    // Datos de Cotización
-    cotizacion: Cotizacion;
-    setCotizacion: (input: Partial<Cotizacion>) => void;
-
-    // Datos Contribuyente
-    contribuyente: Contribuyente;
-    setContribuyente: (input: Partial<Contribuyente>) => void;
-
-    // Estado de carga y errores
-    loadingHonorarios: boolean;
-    loadingTiposImpuesto: boolean;
-    errorHonorarios: string | null;
-    errorTiposImpuesto: string | null;
-
-    // Listas de opciones
-    arrHonorarios: Honorarios[];
-    arrTiposImpuesto: OptionSelect[];
-
-    // Métodos para cargar datos desde el backend
-    fetchHonorarios: () => Promise<void>;
-    fetchTiposImpuesto: () => Promise<void>;
-}
+import { WebStoreState } from '@/types'
 
 const API_BASE = process.env.API_URL || "http://localhost:4000/api/web";
 
 export const useWebStore = create<WebStoreState>((set) => ({
+    // Mensaje de Contacto
+    mensaje: {
+        id: 0,
+        nombre: '',
+        correo: '',
+        celular: '',
+        mensaje: '',
+    },
+    setMensaje: (valor) =>
+        set((state) => ({
+            mensaje: {
+                ...state.mensaje,
+                ...valor,
+            },
+        })),
+
     // Cotización inicial
     cotizacion: {
-        tipoImpuesto: "",
-        valorASolicitar: "",
+        id: 0,
+        tipoImpuesto: 0,
+        valorASolicitar: 0,
         honorarios: 0,
+        nombreComlpeto: '',
+        correo: '',
+        celular: '',
+        nombreORazonSocialBeneficiario: '',
+        rucBeneficiario: '',
+        archivo: null
     },
     setCotizacion: (valor) =>
         set((state) => ({
@@ -74,7 +48,6 @@ export const useWebStore = create<WebStoreState>((set) => ({
         nombreORazonSocial: "",
         correo: "",
         celular: "",
-        archivo: null
     },
     setContribuyente: (valor) =>
         set((state) => ({

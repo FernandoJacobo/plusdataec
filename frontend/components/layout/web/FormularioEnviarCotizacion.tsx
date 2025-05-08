@@ -4,7 +4,7 @@ import { showToast } from "@/components/general/Toast";
 
 import { useWebStore } from '@/store/useWebStore';
 
-import { isValidEmail, isValidPhone } from '@/helpers/validations'
+import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 import { numberToPercent, numberFormat } from '@/helpers/general';
 
 
@@ -20,12 +20,6 @@ interface FormProps {
 export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps) {
     const { arrTiposImpuesto, cotizacion, setCotizacion } = useWebStore();
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [nameBeneficiary, setNameBeneficiary] = useState('');
-    const [rucBeneficiary, setBeneficiary] = useState('');
-
     const handleSendEmail = async () => {
         if (!validateForm()) return;
 
@@ -33,13 +27,13 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
 
         const data = new FormData();
 
-        data.append('nombreORazonSocial', name);
-        data.append('nombreEmpresa', nameBeneficiary);
-        data.append('correo', email);
-        data.append('numero', phone);
-        data.append('rucEmpresa', rucBeneficiary);
+        data.append('nombreComlpeto', cotizacion.nombreComlpeto);
+        data.append('nombreEmpresa', cotizacion.nombreORazonSocialBeneficiario);
+        data.append('correo', cotizacion.correo);
+        data.append('numero', cotizacion.celular);
+        data.append('rucEmpresa', cotizacion.rucBeneficiario);
         data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label: cotizacion.tipoImpuesto);
-        data.append('valorASolicitar', cotizacion.valorASolicitar);
+        data.append('valorASolicitar', numberFormat(parseFloat(cotizacion.valorASolicitar)));
         data.append('honorarios', numberToPercent(cotizacion.honorarios));
 
         const res = await fetch("http://localhost:4000/api/email/enviar-cotizacion", {
@@ -59,38 +53,43 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
     };
 
     const validateForm = () => {
-        if (name.trim() == '') {
+        if (cotizacion.nombreComlpeto.trim() == '') {
             showToast('Campo requerido.', 'error');
             return false;
         }
 
-        if (email.trim() == '') {
+        if (cotizacion.correo.trim() == '') {
             showToast('Campo requerido.', 'error');
             return false;
         }
 
-        if (!isValidEmail(email.trim())) {
+        if (!isValidEmail(cotizacion.correo.trim())) {
             showToast('Correo Electrónico inválido.', 'error');
             return false;
         }
 
-        if (phone.trim() == '') {
+        if (cotizacion.celular.trim() == '') {
             showToast('Campo requerido.', 'error');
             return false;
         }
 
-        if (!isValidPhone(phone.trim())) {
+        if (!isValidPhone(cotizacion.celular.trim())) {
             showToast('Número de celular inválido.', 'error');
             return false;
         }
 
-        if (nameBeneficiary.trim() == '') {
+        if (cotizacion.nombreORazonSocialBeneficiario.trim() == '') {
             showToast('Campo requerido.', 'error');
             return false;
         }
 
-        if (rucBeneficiary.trim() == '') {
+        if (cotizacion.rucBeneficiario.trim() == '') {
             showToast('Campo requerido.', 'error');
+            return false;
+        }
+
+        if (!isValidRuc(cotizacion.rucBeneficiario.trim())) {
+            showToast('RUC inválido.', 'error');
             return false;
         }
 
@@ -103,7 +102,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
 
     return (
         <div className="w-full flex flex-col items-center justify-center p-10">
-            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full space-y-4">
+            <div className="bg-white p-8 rounded-2xl shadow-xl w-full md:w-4/6  space-y-4">
                 <h2 className="text-2xl font-bold text-center"> Enviar cotización a mi correo </h2>
 
                 <p className='text-gray-400'> Ingresa tus datos de contacto y la informaciòn general del beneficiario (persona o empresa) para generar la cotizaciòn. </p>
@@ -114,8 +113,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
                         <input
                             type="text"
                             placeholder=""
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={cotizacion.nombreComlpeto}
+                            onChange={(e) => setCotizacion({nombreComlpeto: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
@@ -126,8 +125,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
                             <input
                                 type="text"
                                 placeholder=""
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={cotizacion.correo}
+                                onChange={(e) => setCotizacion({correo: e.target.value})}
                                 className="w-full p-2 rounded input-control"
 
                             />
@@ -138,8 +137,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
                             <input
                                 type="text"
                                 placeholder=""
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                value={cotizacion.celular}
+                                onChange={(e) => setCotizacion({celular: e.target.value})}
                                 className="w-full p-2 rounded input-control"
 
                             />
@@ -151,8 +150,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
                         <input
                             type="text"
                             placeholder=""
-                            value={nameBeneficiary}
-                            onChange={(e) => setNameBeneficiary(e.target.value)}
+                            value={cotizacion.nombreORazonSocialBeneficiario}
+                            onChange={(e) => setCotizacion({nombreORazonSocialBeneficiario: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
@@ -162,15 +161,15 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
                         <input
                             type="text"
                             placeholder=""
-                            value={rucBeneficiary}
-                            onChange={(e) => setBeneficiary(e.target.value)}
+                            value={cotizacion.rucBeneficiario}
+                            onChange={(e) => setCotizacion({rucBeneficiario: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
 
                     <div className="flex flex-row gap-3 mt-7">
                         <button type="button" className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancelSenEmail(); }}>
-                            Regresar atrás
+                            Regresar
                         </button>
 
                         <button type="button" className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { handleSendEmail(); }}>
