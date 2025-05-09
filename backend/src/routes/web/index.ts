@@ -24,7 +24,7 @@ if (!JWT_SECRET) {
 // Obtener rangos de honorarios
 router.get('/honorarios', async (req: Request, res: Response) => {
     try {
-        const [rows] = await db.query('SELECT * FROM rangoshonorarios')
+        const [rows] = await db.query('SELECT * FROM honorarios')
         res.status(200).json({ data: rows })
     } catch (error: any) {
         res.status(500).json({ message: 'Error al consultar rangos de honorarios', error: error.message })
@@ -65,6 +65,10 @@ router.post('/enviar-mensaje', async (req: Request, res: Response) => {
         }
 
         let htmlTemplate = fs.readFileSync(path.join(__dirname, "../../public/email-templates/message.html"), "utf8");
+
+        htmlTemplate = htmlTemplate
+        .replace("{{nombre}}", nombre || "")
+        .replace("{{mensaje}}", mensaje || "")
 
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_SERVER,

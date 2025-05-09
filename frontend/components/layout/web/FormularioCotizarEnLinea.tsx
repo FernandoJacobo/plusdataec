@@ -8,14 +8,9 @@ import { numberToPercent, numberFormat } from '@/helpers/general';
 
 import { useWebStore } from '@/store/useWebStore';
 
-type ClickResult = {
-    success: boolean;
-    message: string;
-};
-
 interface FormProps {
-    onClickDownload: (data: {}) => ClickResult;
-    onClickNext: (data: {}) => ClickResult;
+    onClickDownload: () => void;
+    onClickNext: () => void;
 }
 
 export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext }: FormProps) {
@@ -26,32 +21,25 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
         fetchTiposImpuesto();
     }, []);
 
-    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto) || null;
+    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto) || null;
     
     const onChangeTipoImpuesto = (e: any) => {
         if (e == null) return;
 
-        e.value ? setCotizacion({tipoImpuesto: e.value}) : setCotizacion({tipoImpuesto: 0});
+        e.value ? setCotizacion({idTipoImpuesto: e.value}) : setCotizacion({idTipoImpuesto: 0});
     }
 
     const [valorASolicitar, setValorASolicitar] = useState('');
     const onChangeValorASolicitar = (value: string) => {
+        setValorASolicitar(value);
+
         const val = parseFloat(value);
         
         setCotizacion({valorASolicitar: val});
 
-        setValorADeVolver(val);
-
         const honorario = getHonorio(val);
         setCotizacion({honorarios: honorario});
     }
-
-    const [valorADeVolver, setValorADeVolver] = useState(0);
-
-    const [interesesGanados, setInteresesGanados] = useState(0);
-    const [valorNotaDeCredito, setValorNotaDeCredito] = useState(0);
-
-    const [honorarios, setHonorarios] = useState(0);
 
     const getHonorio = (value: number) => {
         const rangoValido = arrHonorarios.find(h =>
@@ -69,33 +57,17 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     const print = async () => {
         if (!validateForm()) return;
 
-        // handleGeneratePDF();
-
-        onClickDownload({
-            tipoImpuesto,
-            valorASolicitar,
-            valorADeVolver,
-            interesesGanados,
-            valorNotaDeCredito,
-            honorarios,
-        });
+        onClickDownload();
     }
 
     const next = async () => {
         if (!validateForm()) return;
 
-        onClickNext({
-            tipoImpuesto,
-            valorASolicitar,
-            valorADeVolver,
-            interesesGanados,
-            valorNotaDeCredito,
-            honorarios,
-        });
+        onClickDownload();
     }
 
     const validateForm = () => {
-        if (cotizacion.tipoImpuesto == 0) {
+        if (cotizacion.idTipoImpuesto == 0) {
             showToast('Es requerido seleccionar un tipo de impuesto.', 'error');
             return false;
         }
@@ -105,55 +77,18 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
             return false;
         }
 
-        /* if (valorADeVolver == 0) {
-            showToast('Campo Requerido', 'error');
-            return false;
-        }
-
-        if (interesesGanados == 0) {
-            showToast('Campo Requerido', 'error');
-            return false;
-        }
-
-        if (valorNotaDeCredito == 0) {
-            showToast('Campo Requerido', 'error');
-            return false;
-        }
-
-        if (honorarios == 0) {
-            showToast('Campo Requerido', 'error');
-            return false;
-        } */
-
         return true;
     }
 
-    const handleGeneratePDF = async () => {
-        const html = `<html><body><h1>Hola, PDF</h1></body></html>`;
-
-        const res = await fetch("http://localhost:4000/api/pdf/generate-pdf", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ htmlContent: html }),
-        });
-
-        console.log(res);
-
-        const blob = await res.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "documento.pdf";
-        link.click();
-    };
-
     const reset = () => {
-        setCotizacion({tipoImpuesto: 0})
+        setCotizacion({idTipoImpuesto: 0})
         setCotizacion({valorASolicitar: 0});
         setCotizacion({honorarios: 0});
     }
+
+    useEffect(() => { 
+        cotizacion.valorASolicitar > 0 ? setValorASolicitar(numberFormat(cotizacion.valorASolicitar)) : 0;
+    }, []);
 
     return (
         <>
@@ -171,7 +106,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         <input
                             type="text"
                             placeholder="$"
-                            value={cotizacion.valorASolicitar}
+                            value={valorASolicitar}
                             onChange={(e) => onChangeValorASolicitar(e.target.value)}
                             className="w-full text-right input-control"
                         />

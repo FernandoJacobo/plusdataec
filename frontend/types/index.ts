@@ -8,7 +8,8 @@ export interface Mensaje {
 
 export interface Cotizacion {
     id: number;
-    tipoImpuesto: number;
+    idEstatus: number;
+    idTipoImpuesto: number;
     valorASolicitar: number;
     honorarios: number;
     nombreComlpeto: string;

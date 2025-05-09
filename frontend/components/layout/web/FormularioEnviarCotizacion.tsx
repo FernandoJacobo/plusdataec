@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { showToast } from "@/components/general/Toast";
 
@@ -7,23 +7,18 @@ import { useWebStore } from '@/store/useWebStore';
 import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 import { numberToPercent, numberFormat } from '@/helpers/general';
 
-
-type ClickResult = {
-    success: boolean;
-    message: string;
-};
-
 interface FormProps {
-    onClickRegresar: (data: {}) => ClickResult;
+    onClickRegresar: () => void;
+    onClickSenEmail: () => void;
 }
 
-export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps) {
+export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenEmail }: FormProps) {
     const { arrTiposImpuesto, cotizacion, setCotizacion } = useWebStore();
 
     const handleSendEmail = async () => {
         if (!validateForm()) return;
 
-        const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto);
+        const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto);
 
         const data = new FormData();
 
@@ -32,8 +27,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
         data.append('correo', cotizacion.correo);
         data.append('numero', cotizacion.celular);
         data.append('rucEmpresa', cotizacion.rucBeneficiario);
-        data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label: cotizacion.tipoImpuesto);
-        data.append('valorASolicitar', numberFormat(parseFloat(cotizacion.valorASolicitar)));
+        data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label : cotizacion.idTipoImpuesto.toString());
+        data.append('valorASolicitar', numberFormat(cotizacion.valorASolicitar));
         data.append('honorarios', numberToPercent(cotizacion.honorarios));
 
         const res = await fetch("http://localhost:4000/api/email/enviar-cotizacion", {
@@ -49,6 +44,9 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
         }
 
         showToast(message, 'success');
+
+        onClickSenEmail();
+
         return;
     };
 
@@ -97,7 +95,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar }: FormProps
     }
 
     const cancelSenEmail = () => {
-        onClickRegresar(true);
+        onClickRegresar();
     }
 
     return (

@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import routes from './routes';
+import path from 'path';
 
 dotenv.config();
 
@@ -13,6 +14,9 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+
+// Middleware para servir archivos estáticos desde la carpeta 'public'
+app.use('/public', express.static(path.join(__dirname)));
 
 app.use('/api', routes);
 

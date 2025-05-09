@@ -18,7 +18,7 @@ const upload = multer({ dest: "uploads/" });
 const emailRoutes = Router();
 
 emailRoutes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request, res: Response) => {
-    const { nombreORazonSocial, nombreEmpresa, correo, numero, rucEmpresa, tipoDeImpuesto, valorASolicitar, interesesGanados, valorNotaDeCredito, honorarios } = req.body;
+    const { nombreORazonSocial, nombreEmpresa, correo, celular, rucEmpresa, tipoDeImpuesto, valorASolicitar, interesesGanados, valorNotaDeCredito, honorarios } = req.body;
 
     const file = req.file;
 

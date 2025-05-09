@@ -24,7 +24,8 @@ export const useWebStore = create<WebStoreState>((set) => ({
     // Cotización inicial
     cotizacion: {
         id: 0,
-        tipoImpuesto: 0,
+        idEstatus: 0,
+        idTipoImpuesto: 0,
         valorASolicitar: 0,
         honorarios: 0,
         nombreComlpeto: '',

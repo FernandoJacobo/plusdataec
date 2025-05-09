@@ -22,4 +22,5 @@ router.use('/email', emailRoutes);
 
 router.use('/web', webRoutes);
 
+
 export default router;

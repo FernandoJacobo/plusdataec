@@ -73,12 +73,24 @@ export default function CotizarPage() {
         showToast('Plataforma en Construcción.', 'success');
     }
 
-    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.tipoImpuesto);
+    const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto);
+
+    const downloadBase64 = (base64String: string, fileName: string) => {
+        const linkSource = `data:application/pdf;base64,${base64String}`;
+        const downloadLink = document.createElement('a');
+        const suggestedFileName = fileName || `cotizacion_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
+
+        downloadLink.href = linkSource;
+        downloadLink.download = suggestedFileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    };
 
     const confirm = async () => {
-        const res = await register({
+        const cotizacionData = {
             idEstatus: 3,
-            idTiposImpuesto: cotizacion.tipoImpuesto,
+            idTiposImpuesto: cotizacion.idTipoImpuesto,
             valorASolicitar: cotizacion.valorASolicitar,
             honorarios: cotizacion.honorarios,
             nombre: cotizacion.nombreComlpeto,
@@ -86,30 +98,41 @@ export default function CotizarPage() {
             celular: cotizacion.celular,
             nombreBeneficiario: cotizacion.nombreORazonSocialBeneficiario,
             rucBeneficiario: cotizacion.rucBeneficiario,
-        });
+        };
 
-        if(res.error) {
-            showToast(res.message, 'error')
+        const res = await register(cotizacionData);
+
+        if (res.error) {
+            showToast(res.message, 'error');
             return;
         }
 
-        showToast(res.message, 'success')
-    }
+        if (res.pdfBase64) {
+            downloadBase64(res.pdfBase64, `cotizacion_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`);
+            showToast(res.message, 'success');
+            // Aquí podrías redirigir o mostrar un mensaje adicional indicando que el correo será enviado.
+        } else {
+            showToast('No se recibió el contenido Base64 del PDF.', 'error');
+        }
+
+        // La URL para el correo electrónico estará en res.downloadUrl
+        console.log('URL para el correo electrónico:', res.downloadUrl);
+    };
 
     const renderStepContent = () => {
         switch (currentStep) {
             case 1:
                 return showCotizar ? (
-                    <FormularioCotizarEnLinea onClickDownload={() => setShowCotizar(false)} onClickNext={() => handleStepAdvance(2)} />
+                    <FormularioCotizarEnLinea onClickDownload={() => { setShowCotizar(false) }} onClickNext={() => handleStepAdvance(2)} />
                 ) : (
-                    <FormularioEnviarCoizacion onClickRegresar={() => setShowCotizar(true)} />
+                    <FormularioEnviarCoizacion onClickRegresar={() => { setShowCotizar(true) }} onClickSenEmail={() => { setShowCotizar(true) }} />
                 );
             case 2:
                 return (
                     <div className="w-full flex flex-col items-center justify-center p-10">
                         <div className="w-full md:w-5/2 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center">Registra la información del contribuyente</h2>
-                            <FormularioSubirSolicitud onClickCancel={handleCancelStep} onClickContinue={() => handleStepAdvance(3)} />
+                            <FormularioSubirSolicitud onClickCancel={() => { handleCancelStep() }} onClickContinue={() => handleStepAdvance(3)} />
                         </div>
                     </div>
                 );
@@ -144,20 +167,20 @@ export default function CotizarPage() {
                     <div className="w-full flex flex-col items-center justify-center p-10">
                         <div className="w-full md:w-4/6 bg-white p-8 rounded-4xl shadow-lg space-y-4">
                             <h2 className="text-xl font-bold text-center mb-4">Confirmar Solicitud</h2>
-                            
-                            <p className="text-gray-400 uppercase font-bold"> { cotizacion.nombreORazonSocialBeneficiario } </p>
-                            <p className="text-gray-400 uppercase font-bold"> RUC: { cotizacion.rucBeneficiario } </p>
+
+                            <p className="text-gray-400 uppercase font-bold"> {cotizacion.nombreORazonSocialBeneficiario} </p>
+                            <p className="text-gray-400 uppercase font-bold"> RUC: {cotizacion.rucBeneficiario} </p>
 
                             <div className="bg-purple-50 rounded-2xl shadow-lg w-full space-y-4 p-4">
                                 <div className="mx-auto">
                                     <p className="text-gray-500 mb-4"> Resultado de la cotización </p>
-                                    
+
                                     <div className="bg-purple-50 rounded-lg overflow-hidden">
                                         <ul className="divide-y divide-transparent">
                                             <li className="cursor-pointer mb-2">
                                                 <div className="flex justify-between items-center">
                                                     <span className="font-bold"> Tipo Impuesto </span>
-        
+
                                                     <span className="text-sm tex-end"> {tipoImpuesto?.label} </span>
                                                 </div>
                                             </li>
@@ -165,7 +188,7 @@ export default function CotizarPage() {
                                             <li className="cursor-pointer mb-2">
                                                 <div className="flex justify-between items-center">
                                                     <span className="font-bold"> Valor a solicitar </span>
-        
+
                                                     <span className="text-sm tex-end"> ${numberFormat(cotizacion.valorASolicitar)} </span>
                                                 </div>
                                             </li>
@@ -173,7 +196,7 @@ export default function CotizarPage() {
                                             <li className="cursor-pointer">
                                                 <div className="flex justify-between items-center">
                                                     <span className="font-bold"> Honorarios (No incluye IVA) </span>
-        
+
                                                     <span className="text-sm text-yellow tex-end font-bold"> {numberToPercent(cotizacion.honorarios)} </span>
                                                 </div>
                                             </li>
@@ -181,7 +204,7 @@ export default function CotizarPage() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="w-full flex flex-col md:flex-row gap-4">
                                 <button className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { goToPrevStep(); }}>
                                     Regresar

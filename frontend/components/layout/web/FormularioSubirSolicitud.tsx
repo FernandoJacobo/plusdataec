@@ -6,14 +6,9 @@ import { Toast, showToast } from "@/components/general/Toast";
 
 import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 
-type ClickResult = {
-    success: boolean;
-    message: string;
-};
-
 interface FormProps {
-    onClickCancel: (data: {}) => ClickResult;
-    onClickContinue: (data: {}) => ClickResult;
+    onClickCancel: () => void;
+    onClickContinue: () => void;
 }
 
 export default function FormularioSubirSolicitud({onClickCancel, onClickContinue}: FormProps) {
@@ -83,11 +78,11 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
     const next = () => {
         if (!validateForm()) return;
 
-        onClickContinue({});
+        onClickContinue();
     }
 
     const cancel = () => {
-        onClickCancel(true);
+        onClickCancel();
     }
 
     const handleFileButtonClick = () => {
@@ -214,7 +209,7 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                             Examinar
                         </button>
 
-                        <span className="text-violet truncate"> {contribuyente.archivo ? `${truncateFileName(contribuyente.archivo.name)} (${formatBytes(contribuyente.archivo.size)})` : fileName} </span>
+                        <span className="text-violet truncate"> {cotizacion.archivo ? `${truncateFileName(cotizacion.archivo.name)} (${formatBytes(cotizacion.archivo.size)})` : fileName} </span>
                     </div>
                 </div>
 
