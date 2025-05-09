@@ -87,7 +87,7 @@ router.post('/enviar-mensaje', async (req: Request, res: Response) => {
             from: `"PLUSDATA ECUADOR S.A." <${process.env.EMAIL}>`,
             to: process.env.EMAIL,
             cc: correo,
-            subject: `Formulario de Contacto - PLUSDATA ECUADOR S.A.`,
+            subject: `Notificacion de mensaje recibido - PLUSDATA ECUADOR S.A.`,
             html: htmlTemplate,
             attachments: [
                 {

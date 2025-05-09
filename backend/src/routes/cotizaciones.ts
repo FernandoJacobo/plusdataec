@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
-import { LayoutCotizacion } from './web/templates/cotizacion'; // asegúrate de que devuelva HTML como string
-import { writeFile, mkdir, readFile } from 'fs/promises'; // Importa readFile
+import { LayoutCotizacion } from './web/templates/cotizacion';
+import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import puppeteer from 'puppeteer';
 import { db } from '../database';
+import pdf from 'pdf-parse';
 
 const router = Router();
 
@@ -35,34 +36,40 @@ router.post('/register', async (req: Request, res: Response) => {
         );
 
         // 2. Generar HTML dinámico
-        const html = LayoutCotizacion(req.body); // debe retornar un string HTML completo
+        const html = LayoutCotizacion(req.body);
 
         // 3. Generar PDF con Puppeteer
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+        });
         const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: 'networkidle0' });
+        await page.setContent(html, { waitUntil: 'networkidle0', timeout: 0 });
 
-        const pdfBuffer = await page.pdf({ format: 'A4' });
+        const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
         await browser.close();
+
+        const extracted = await pdf(pdfBuffer);
 
         // 4. Guardar PDF en carpeta pública
         const fileName = `cotizacion-${Date.now()}.pdf`;
-        const dirPath = path.join(__dirname, "../public/", 'contizaciones');
+        const dirPath = path.join(__dirname, "../public/", 'cotizaciones');
         await mkdir(dirPath, { recursive: true });
         const filePath = path.join(dirPath, fileName);
         await writeFile(filePath, pdfBuffer);
 
-        // 5. Leer el archivo PDF guardado para convertirlo a Base64
-        const pdfBase64 = pdfBuffer.toString();
+        // 5. Convertir a Base64 correctamente
+        const pdfBase64 = pdfBuffer.toString('base64');
 
-        // 6. Devolver la URL para el correo y el Base64 para la descarga inmediata
+        // 6. Devolver URL relativa y Base64
         res.status(201).json({
             error: false,
             message: 'Cotización registrada y PDF generado',
-            downloadUrl: path.join(__dirname, "../public/", 'contizaciones') + fileName, // URL para el correo
-            pdfBase64: btoa(pdfBase64), // Contenido Base64 para descarga inmediata
+            downloadUrl: `/cotizaciones/${fileName}`,
+            pdfBase64
         });
-    } catch (error: any) {
+
+    } catch (error) {
         console.error('Error al registrar cotización:', error);
         res.status(500).json({ error: true, message: 'Error interno del servidor' });
     }

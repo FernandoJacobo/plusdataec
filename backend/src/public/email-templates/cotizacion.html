@@ -1,4 +1,3 @@
-export const LayoutCotizacion = (data: any): string => `
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,8 +8,8 @@ export const LayoutCotizacion = (data: any): string => `
         body {
             font-family: Arial, sans-serif;
             color: #333;
-			font-size: 15px;
-			padding: 20px;
+            font-size: 15px;
+            padding: 20px;
         }
 
         h1 {
@@ -32,7 +31,7 @@ export const LayoutCotizacion = (data: any): string => `
 
         .numero-cotizacion h6 {
             text-align: right;
-            color: #999999;
+            color: #999;
         }
 
         .section-cliente {
@@ -51,7 +50,7 @@ export const LayoutCotizacion = (data: any): string => `
         }
 
         .section-total div {
-            background: #999999;
+            background: #999;
             color: #FFFFFF;
             padding: 8px;
             width: 30%;
@@ -74,7 +73,7 @@ export const LayoutCotizacion = (data: any): string => `
             margin-top: 30px;
             font-size: 0.9em;
             line-height: 1.5;
-            width: 70%;
+            width: 50%;
         }
 
         .notes h3 {
@@ -98,7 +97,7 @@ export const LayoutCotizacion = (data: any): string => `
         }
 
         .footer .url {
-            background-color: #F5A623;
+            background: #F5A623;
             color: #FFFFFF;
             text-align: center;
         }
@@ -111,7 +110,7 @@ export const LayoutCotizacion = (data: any): string => `
         }
 
         .table thead {
-            background: #999999;
+            background: #999;
             color: #FFFFFF;
         }
 
@@ -184,7 +183,7 @@ export const LayoutCotizacion = (data: any): string => `
             </thead>
             <tbody>
                 <tr>
-                    <td> PATROCINIO EN LA DEVOLUCIÓN DE IMPUESTOS </td>
+                    <td>PATROCINIO EN LA DEVOLUCIÓN DE IMPUESTOS<br>RETENCIONES DE IMPUESTO A LA RENTA</td>
                     <td> ${data.tipoImpuesto} </td>
                     <td> $ ${data.valorSolicitado} </td>
                     <td> ${data.honorarios} </td>
@@ -235,4 +234,3 @@ export const LayoutCotizacion = (data: any): string => `
 </body>
 
 </html>
-`;

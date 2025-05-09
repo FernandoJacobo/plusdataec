@@ -15,8 +15,8 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-// Middleware para servir archivos estáticos desde la carpeta 'public'
-app.use('/public', express.static(path.join(__dirname)));
+// Esto sirve todos los archivos dentro de "public"
+app.use('/cotizaciones', express.static(path.join(__dirname, 'public/cotizaciones')));
 
 app.use('/api', routes);
 
