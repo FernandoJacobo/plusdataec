@@ -185,8 +185,8 @@ export const LayoutCotizacion = (data: any): string => `
             <tbody>
                 <tr>
                     <td> PATROCINIO EN LA DEVOLUCIÓN DE IMPUESTOS </td>
-                    <td> ${data.tipoImpuesto} </td>
-                    <td> $ ${data.valorSolicitado} </td>
+                    <td> ${data.idTiposImpuesto} </td>
+                    <td> $ ${data.valorASolicitar} </td>
                     <td> ${data.honorarios} </td>
                 </tr>
             </tbody>
@@ -195,7 +195,7 @@ export const LayoutCotizacion = (data: any): string => `
 
     <div class="section section-total">
         <div>
-            <span class="label"> Total (No incluye IVA) </span> $12%
+            <span class="label"> Total (No incluye IVA) </span> ${data.honorarios}
         </div>
     </div>
 

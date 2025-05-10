@@ -76,8 +76,7 @@ export default function CotizarPage() {
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto);
 
     const downloadBase64 = (base64String: string, fileName: string) => {
-        // const linkSource = `data:application/pdf;base64,${base64String}`;
-        const linkSource = base64String;
+        const linkSource = base64String; // Ya debe venir como: data:application/pdf;base64,...
         const downloadLink = document.createElement('a');
         const suggestedFileName = fileName || `cotizacion_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
 
@@ -108,8 +107,8 @@ export default function CotizarPage() {
             return;
         }
 
-        if (res.downloadUrl) {
-            downloadBase64(res.downloadUrl, `cotizacion_${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`);
+        if (res.pdfBase64) {
+            downloadBase64(`data:application/pdf;base64,${res.pdfBase64}`, res.fileName);
             showToast(res.message, 'success');
             // Aquí podrías redirigir o mostrar un mensaje adicional indicando que el correo será enviado.
         } else {

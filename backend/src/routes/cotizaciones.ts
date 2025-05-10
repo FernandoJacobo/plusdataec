@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { LayoutCotizacion } from './web/templates/cotizacion';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, access } from 'fs/promises';
 import path from 'path';
 import puppeteer from 'puppeteer';
 import { db } from '../database';
-import pdf from 'pdf-parse';
+import { readFile } from 'fs/promises';
 
 const router = Router();
 
@@ -21,6 +21,7 @@ router.post('/register', async (req: Request, res: Response) => {
         rucBeneficiario,
     } = req.body;
 
+    // Validación básica
     if (
         !idEstatus || !idTiposImpuesto || !valorASolicitar || !honorarios ||
         !nombre || !correo || !celular || !nombreBeneficiario || !rucBeneficiario
@@ -29,44 +30,50 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 
     try {
-        // 1. Guardar en BD
-        await db.query(
+        // 1. Insertar en la base de datos
+        const result = await db.query(
             'INSERT INTO cotizaciones (idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario]
         );
 
-        // 2. Generar HTML dinámico
+        console.log(res);
+
+        // 2. Generar el HTML del PDF
         const html = LayoutCotizacion(req.body);
 
-        // 3. Generar PDF con Puppeteer
+        // 3. Crear PDF con Puppeteer
         const browser = await puppeteer.launch({
-            headless: "new",
-            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
         const page = await browser.newPage();
         await page.setContent(html, { waitUntil: 'networkidle0', timeout: 0 });
-
         const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
         await browser.close();
 
-        const extracted = await pdf(pdfBuffer);
-
-        // 4. Guardar PDF en carpeta pública
+        // 4. Guardar el archivo PDF
         const fileName = `cotizacion-${Date.now()}.pdf`;
-        const dirPath = path.join(__dirname, "../public/", 'cotizaciones');
+        const dirPath = path.join(__dirname, '../public', 'cotizaciones');
         await mkdir(dirPath, { recursive: true });
         const filePath = path.join(dirPath, fileName);
         await writeFile(filePath, pdfBuffer);
 
-        // 5. Convertir a Base64 correctamente
-        const pdfBase64 = pdfBuffer.toString('base64');
+        // 5. Verificar que el archivo se guardó (opcional)
+        await access(filePath);
 
-        // 6. Devolver URL relativa y Base64
+        // 6. Extraer contenido en base64 (equivalente a file_get_contents + base64_encode en PHP)
+        // const pdfBase64 = pdfBuffer.toString('base64');
+        // Leer archivo guardado
+        const savedPdf = await readFile(filePath); // filePath ya lo tienes de antes
+        const pdfBase64 = savedPdf.toString('base64');
+
+        // 7. Responder con éxito
         res.status(201).json({
             error: false,
             message: 'Cotización registrada y PDF generado',
-            downloadUrl: `/cotizaciones/${fileName}`,
-            pdfBase64
+            downloadUrl: ``,
+            fileName,
+            pdfBase64,
         });
 
     } catch (error) {
