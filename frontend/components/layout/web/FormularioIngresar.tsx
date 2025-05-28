@@ -4,13 +4,8 @@ import Link from 'next/link';
 
 import { Toast, showToast } from "@/components/general/Toast";
 
-type ClickResult = {
-    success: boolean;
-    message: string;
-};
-
 interface FormProps {
-    onClick: (data: { error: boolean; message: string }) => ClickResult;
+    onClick: () => void;
     showLinkRegister: boolean;
 }
 
@@ -23,7 +18,7 @@ export default function FormularioIngresar({ onClick, showLinkRegister }: FormPr
 
         if (!validateForm()) return;
 
-        onClick({ error: false, message: '' });
+        onClick();
     };
 
     const validateForm = () => {

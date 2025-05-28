@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -83,7 +82,8 @@ const preguntas = [
 ];
 
 export default function HomePage() {
-    const itemRefs = useRef<HTMLDivElement[]>([]);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    
     const [currentImage, setCurrentImage] = useState(comoFunciona[0]);
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -171,7 +171,7 @@ export default function HomePage() {
                 <div className="w-full md:w-3/4 flex flex-col md:flex-row p-4 mb-4 timeline">
                     <div className="w-full">
                         {comoFunciona.map((item, index) => (
-                            <div key={item.id} data-index={index} ref={(el) => (itemRefs.current[index] = el!)} className="flex flex-row h-50">
+                            <div key={item.id} data-index={index} ref={(el) => { itemRefs.current[index] = el; }} className="flex flex-row h-50">
                                 <div className="flex flex-col items-center h-full">
                                     <FontAwesomeIcon
                                         icon={activeIndex === index ? faCircle : faCircleDot}

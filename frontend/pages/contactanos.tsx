@@ -68,6 +68,7 @@ export default function Contactanos() {
         setShowProgressbar(true);
 
         const resEnvio = await sendMessage({
+            id: 0,
             nombre: mensaje.nombre,
             correo: mensaje.correo,
             celular: mensaje.celular,
@@ -82,6 +83,7 @@ export default function Contactanos() {
         }
 
         const resRegistro = await registerMessage({
+            id: 0,
             nombre: mensaje.nombre,
             correo: mensaje.correo,
             celular: mensaje.celular,

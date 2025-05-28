@@ -1,14 +1,9 @@
 import Image from "next/image";
 import FormularioIngresar from '@/components/layout/web/FormularioIngresar';
 
-type ClickResult = {
-    success: boolean;
-    message: string;
-};
-
 export default function LoginPage() {
-    const ingresar = (res: ClickResult) => {
-        console.log('i: ', res);
+    const ingresar = () => {
+        return '';
     };
 
     return (

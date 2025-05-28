@@ -21,7 +21,7 @@ export default function RegistroPage() {
                 className=""
             />
 
-             <FormularioRegistro onClick={registrar} showLinkLogin={true} />
+             <FormularioRegistro onClick={() => {registrar}} showLinkLogin={true} />
         </div>
     )
 }
