@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from "next/image";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentDots, faCopyright } from '@fortawesome/free-solid-svg-icons'
@@ -16,10 +15,10 @@ export default function Footer() {
 
                     <p className="text-lg text-white font-bold mb-3 uppercase">0999677844</p>
 
-                    <button className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
+                    <Link href={'/contactanos'} className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
                         <FontAwesomeIcon icon={faCommentDots} className='me-2' />
                         ¡Chatea con ahora!
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">

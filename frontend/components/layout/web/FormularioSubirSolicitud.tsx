@@ -215,7 +215,7 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
 
                 <div className="flex flex-row gap-3 mt-7">
                     <button type='button' className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancel(); }}>
-                        Cancelar
+                        Regresar
                     </button>
 
                     <button type='button' className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { next(); }}>

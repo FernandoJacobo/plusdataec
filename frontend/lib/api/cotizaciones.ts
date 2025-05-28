@@ -1,4 +1,5 @@
 interface Cotizacion {
+    id: number;
     idEstatus: number;
     idTiposImpuesto: number;
     valorASolicitar: number;
@@ -17,6 +18,30 @@ export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, hon
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
+    })
+
+    if (!res.ok) throw new Error('Registro fallido')
+
+    return res.json()
+}
+
+export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
+    const res = await fetch(`${API}/update`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
+    })
+
+    if (!res.ok) throw new Error('Registro fallido')
+
+    return res.json()
+}
+
+export const confirm = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
+    const res = await fetch(`${API}/confirm`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
     })
 
     if (!res.ok) throw new Error('Registro fallido')

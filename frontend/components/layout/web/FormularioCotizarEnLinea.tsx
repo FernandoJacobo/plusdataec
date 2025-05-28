@@ -63,7 +63,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     const next = async () => {
         if (!validateForm()) return;
 
-        onClickDownload();
+        onClickNext();
     }
 
     const validateForm = () => {

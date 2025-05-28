@@ -2,6 +2,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 export default function FloatingButtons() {
     return (
@@ -9,7 +10,7 @@ export default function FloatingButtons() {
             {/* Botón WhatsApp (Esquina Derecha) */}
             <div className="fixed bottom-6 left-6 z-50">
                 <a
-                    href="https://wa.me/7778350114?text=Hola%20quiero%20más%20información"
+                    href="https://wa.me/0999677844?text=Hola%20quiero%20más%20información"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-4 rounded-full shadow-lg transition transform hover:scale-110 flex items-center justify-center btn-whatsapp"
@@ -21,13 +22,12 @@ export default function FloatingButtons() {
 
             {/* Botón Chat (Esquina Izquierda) */}
             <div className="fixed bottom-6 right-6 z-50">
-                <button
-                    onClick={() => alert("Abrir chat...")}
+                <Link href={'/contactanos'}
                     className="p-4 rounded-full shadow-lg transition transform hover:scale-110 flex items-center justify-center btn-chat"
                     aria-label="Chat"
                 >
                     <FontAwesomeIcon icon={faCommentDots} className="text-2xl" />
-                </button>
+                </Link>
             </div>
         </>
     );

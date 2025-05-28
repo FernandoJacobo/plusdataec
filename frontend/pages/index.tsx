@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faCircleDot } from "@fortawesome/free-solid-svg-icons";
 
 import Accordion from "@/components/layout/web/Accordion";
+import Link from "next/link";
 
 const comoFunciona = [
     {
@@ -119,9 +120,9 @@ export default function HomePage() {
                         <p className="text-lg text-gray-500 mb-6">
                             Transforma tu experiencia en la gestión del trámite de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
                         </p>
-                        <button className="px-6 py-3 rounded-full transition hover:scale-110 btn-hero">
+                        <Link href={'/contactanos'} className="px-6 py-3 rounded-full transition hover:scale-110 btn-hero">
                             Cotiza aquí
-                        </button>
+                        </Link>
                     </div>
 
                     <div className="flex justify-center md:justify-end">

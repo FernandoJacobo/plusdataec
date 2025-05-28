@@ -4,9 +4,10 @@ import { ReactNode } from "react";
 type ToastType = 'success' | 'error' | 'loading';
 
 const showToast = (
-    message: string | ReactNode,
+    message: string,
     type: ToastType = 'success'
 ) => {
+
     const options = {
         duration: 4000,
     };

@@ -141,7 +141,7 @@ export const LayoutCotizacion = (data: any): string => `
 
         <div class="numero-cotizacion">
             <h2> Cotización </h2>
-            <h6> NRO. 0000001 </h6>
+            <h6> NRO. ${data.id} </h6>
         </div>
     </div>
 
