@@ -12,7 +12,7 @@ if (!JWT_SECRET) {
 
 // Registro de usuario
 router.post('/register', async (req: Request, res: Response) => {
-    const { nombre, celular, correo, contrasena } = req.body
+    const { idEstatus, nombre, celular, correo, contrasena } = req.body
 
     if (!nombre || !celular || !correo ! || !contrasena) {
         return res.status(400).json({ error: true, message: 'Faltan campos obligatorios' })
@@ -31,8 +31,8 @@ router.post('/register', async (req: Request, res: Response) => {
         const hashedPassword = await bcrypt.hash(contrasena, 10);
 
         await db.query(
-            'INSERT INTO usuarios (nombre, celular, correo, contrasena) VALUES (?, ?, ?, ?)',
-            [nombre, celular, correo, hashedPassword]
+            'INSERT INTO usuarios (idEstatus, nombre, celular, correo, contrasena) VALUES (?, ?, ?, ?, ?)',
+            [idEstatus, nombre, celular, correo, hashedPassword]
         )
 
         const token = jwt.sign({ correo }, JWT_SECRET, { expiresIn: '1d' })

@@ -1,4 +1,6 @@
 interface UserProps {
+    id: number;
+    idEstatus: number;
     nombre: string;
     celular: string;
     correo: string;
@@ -19,11 +21,11 @@ export const login = async (email: string, password: string) => {
     return res.json()
 }
 
-export const register = async ({nombre, celular, correo, contrasena}: UserProps) => {
+export const register = async ({idEstatus, nombre, celular, correo, contrasena}: UserProps) => {
     const res = await fetch(`${API}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, celular, correo, contrasena })
+        body: JSON.stringify({ idEstatus, nombre, celular, correo, contrasena })
     })
 
     console.log(res);

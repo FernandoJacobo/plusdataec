@@ -1,9 +1,10 @@
 import Image from "next/image";
 import FormularioIngresar from '@/components/layout/web/FormularioIngresar';
+import { showToast } from "@/components/general/Toast";
 
 export default function LoginPage() {
     const ingresar = () => {
-        return '';
+        showToast('Plataforma en construcción.', 'error');
     };
 
     return (

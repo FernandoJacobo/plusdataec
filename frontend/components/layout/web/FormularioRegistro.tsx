@@ -27,6 +27,8 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
         if (!validateForm()) return;
 
         const res = await register({
+            id: 0,
+            idEstatus: 5,
             nombre: name,
             celular: phone,
             correo: email,

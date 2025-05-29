@@ -171,7 +171,7 @@ export default function HomePage() {
                 <div className="w-full md:w-3/4 flex flex-col md:flex-row p-4 mb-4 timeline">
                     <div className="w-full">
                         {comoFunciona.map((item, index) => (
-                            <div key={item.id} data-index={index} ref={(el) => { itemRefs.current[index] = el; }} className="flex flex-row h-50">
+                            <div key={item.id} data-index={index} ref={(el) => { itemRefs.current[index] = el; }} className="flex flex-row h-100">
                                 <div className="flex flex-col items-center h-full">
                                     <FontAwesomeIcon
                                         icon={activeIndex === index ? faCircle : faCircleDot}
@@ -203,13 +203,13 @@ export default function HomePage() {
                     </div>
 
                     {/* Imagen fija a la derecha */}
-                    <div className="hidden w-full md:flex flex-col items-center justify-center h-100 sticky top-25">
+                    <div className="hidden w-full md:flex flex-col items-center justify-center h-100 sticky top-40">
                         <Image
                             src={currentImage.image}
                             alt={`Imagen ${currentImage.id}`}
                             width={400}
                             height={300}
-                            className="rounded-2xl shadow-lg h-100 w-150"
+                            className="rounded-2xl shadow-lg h-100 w-full"
                         />
                     </div>
                 </div>
