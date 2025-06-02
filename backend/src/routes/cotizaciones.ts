@@ -1,13 +1,18 @@
 import { Router, Request, Response } from 'express';
+
 import { LayoutCotizacion } from './web/templates/cotizacion';
+
 import { writeFile, mkdir, access, readFile } from 'fs/promises';
+
 import path from 'path';
+
 import puppeteer from 'puppeteer';
+
 import { db } from '../database';
 
 const router = Router();
 
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', async (req: Request, res: Response) : Promise<void> => {
     const {
         idEstatus,
         idTiposImpuesto,
@@ -48,7 +53,7 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/update', async (req: Request, res: Response) => {
+router.post('/update', async (req: Request, res: Response) : Promise<void> => {
     const {
         id,
         idEstatus,
@@ -96,7 +101,7 @@ router.post('/update', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/confirm', async (req: Request, res: Response) => {
+router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
     const {
         id,
         idEstatus,
@@ -115,10 +120,11 @@ router.post('/confirm', async (req: Request, res: Response) => {
         !idEstatus || !idTiposImpuesto || !valorASolicitar || !honorarios ||
         !nombre || !correo || !celular || !nombreBeneficiario || !rucBeneficiario
     ) {
-        return res.status(400).json({
+        res.status(400).json({
             error: true,
             message: 'Faltan uno o más campos obligatorios',
         });
+        return
     }
 
     try {
@@ -143,7 +149,7 @@ router.post('/confirm', async (req: Request, res: Response) => {
 
         // 3. Crear PDF con Puppeteer
         const browser = await puppeteer.launch({
-            headless: 'new',
+            headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
         });
 

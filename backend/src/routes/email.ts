@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 
 import nodemailer from "nodemailer";
 
-import multer from "multer";
+import multer from 'multer';
 
 import fs from "fs";
 
@@ -15,19 +15,22 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const upload = multer({ dest: "uploads/" });
-const emailRoutes = Router();
 
-emailRoutes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request, res: Response) => {
+const routes = Router();
+
+routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request, res: Response): Promise<void> => {
     const { nombreORazonSocial, nombreEmpresa, correo, celular, rucEmpresa, tipoDeImpuesto, valorASolicitar, interesesGanados, valorNotaDeCredito, honorarios } = req.body;
 
     const file = req.file;
 
     if (!process.env.SMTP_SERVER || !process.env.SMTP_PORT) {
-        return res.status(500).json({ success: false, message: 'Credenciales del servidor SMTP no configuradas.' });
+        res.status(500).json({ success: false, message: 'Credenciales del servidor SMTP no configuradas.' });
+        return
     }
 
     if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
-        return res.status(500).json({ success: false, message: 'Credenciales de correo no configuradas.' });
+        res.status(500).json({ success: false, message: 'Credenciales de correo no configuradas.' });
+        return
     }
 
     const nroCotizacion = '';
@@ -89,4 +92,4 @@ emailRoutes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Req
     }
 });
 
-export default emailRoutes;
+export default routes;

@@ -22,7 +22,7 @@ if (!JWT_SECRET) {
 }
 
 // Obtener rangos de honorarios
-router.get('/honorarios', async (req: Request, res: Response) => {
+router.get('/honorarios', async (req: Request, res: Response) : Promise<void> => {
     try {
         const [rows] = await db.query('SELECT * FROM honorarios')
         res.status(200).json({ data: rows })
@@ -32,7 +32,7 @@ router.get('/honorarios', async (req: Request, res: Response) => {
 });
 
 // Obtener Tipos de Impuesto
-router.get('/tiposimpuesto', async (req: Request, res: Response) => {
+router.get('/tiposimpuesto', async (req: Request, res: Response) : Promise<void> => {
     try {
         const [rows] = await db.query('SELECT * FROM tiposimpuesto')
 
@@ -48,20 +48,23 @@ router.get('/tiposimpuesto', async (req: Request, res: Response) => {
 });
 
 // Enviar mensaje
-router.post('/enviar-mensaje', async (req: Request, res: Response) => {
+router.post('/enviar-mensaje', async (req: Request, res: Response) : Promise<void> => {
     try {
         const { nombre, correo, celular, mensaje } = req.body;
 
         if (!nombre || !correo || !celular || !mensaje) {
-            return res.status(500).json({ error: true, message: 'Faltan campos obligatorios' })
+            res.status(500).json({ error: true, message: 'Faltan campos obligatorios' })
+            return
         }
 
         if (!process.env.SMTP_SERVER || !process.env.SMTP_PORT) {
-            return res.status(500).json({ error: true, message: 'Credenciales del servidor SMTP no configuradas.' });
+            res.status(500).json({ error: true, message: 'Credenciales del servidor SMTP no configuradas.' });
+            return
         }
 
         if (!process.env.EMAIL || !process.env.EMAIL_PASS) {
-            return res.status(500).json({ error: true, message: 'Credenciales de correo no configuradas.' });
+            res.status(500).json({ error: true, message: 'Credenciales de correo no configuradas.' });
+            return
         }
 
         let htmlTemplate = fs.readFileSync(path.join(__dirname, "../../public/email-templates/message.html"), "utf8");
@@ -110,19 +113,18 @@ router.post('/enviar-mensaje', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/registrar-mensaje', async (req: Request, res: Response) => {
+router.post('/registrar-mensaje', async (req: Request, res: Response) : Promise<void> => {
     const { nombre, correo, celular, mensaje } = req.body;
 
     if (!nombre || !correo || !celular || !mensaje) {
-        return res.status(500).json({ error: true, message: 'Faltan campos obligatorios' })
+        res.status(500).json({ error: true, message: 'Faltan campos obligatorios' })
+        return
     }
 
     try {
         const result = await db.query(
             'INSERT INTO mensajes (nombre, correo, celular, mensaje) VALUES (?, ?, ?, ?)', [nombre, correo, celular, mensaje]
         )
-
-        console.log(result);
 
         res.status(201).json({ error: false, message: 'Mensaje guardado.' })
     } catch (error: any) {
