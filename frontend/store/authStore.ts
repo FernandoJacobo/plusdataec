@@ -11,7 +11,9 @@ interface AuthState {
     checkAuth: () => Promise<void>
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/auth'
+const API_URL = process.env.API_URL || "http://localhost:4000";
+
+const API_BASE = `${API_URL}/api/auth`;
 
 export const useAuthStore = create<AuthState>((set) => ({
     loading: false,

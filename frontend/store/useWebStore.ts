@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 import { WebStoreState } from '@/types'
 
-const API_BASE = process.env.API_URL || "http://localhost:4000/api/web";
+const API_URL = process.env.API_URL || "http://localhost:4000";
+
+const API_BASE = `${API_URL}/api/web`;
 
 export const useWebStore = create<WebStoreState>((set) => ({
     // Mensaje de Contacto
