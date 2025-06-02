@@ -13,6 +13,7 @@ interface FormProps {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_BASE = `${API_URL}/api/email`;
 
 export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenEmail }: FormProps) {
     const { arrTiposImpuesto, cotizacion, setCotizacion } = useWebStore();
@@ -33,7 +34,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
         data.append('valorASolicitar', numberFormat(cotizacion.valorASolicitar));
         data.append('honorarios', numberToPercent(cotizacion.honorarios));
 
-        const res = await fetch(`${API_URL}/api/email/enviar-cotizacion`, {
+        const res = await fetch(`${API_BASE}/enviar-cotizacion`, {
             method: "POST",
             body: data,
         });

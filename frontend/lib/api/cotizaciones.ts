@@ -11,10 +11,11 @@ interface Cotizacion {
     rucBeneficiario: string;
 }
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/cotizaciones'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_BASE = `${API_URL}/api/cotizaciones`;
 
 export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API}/register`, {
+    const res = await fetch(`${API_BASE}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -26,7 +27,7 @@ export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, hon
 }
 
 export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API}/update`, {
+    const res = await fetch(`${API_BASE}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -38,7 +39,7 @@ export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, h
 }
 
 export const confirm = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API}/confirm`, {
+    const res = await fetch(`${API_BASE}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
