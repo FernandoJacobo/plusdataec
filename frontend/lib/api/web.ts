@@ -3,7 +3,7 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/web";
 import { Mensaje } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-const API_BASE = `${API_URL}/api/auth`;
+const API_BASE = `${API_URL}/api/web`;
 
 export const sendMessage = async ({nombre, correo, celular, mensaje}: Mensaje) => {
     const res = await fetch(`${API_BASE}/enviar-mensaje`, {
