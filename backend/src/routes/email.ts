@@ -44,7 +44,6 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
         .replace("{{numero}}", telefonoPD || "")
         .replace("{{link}}", '');
 
-    // 1. Generar el HTML del PDF
     const html = LayoutCotizacion({
         ...req.body, nombre: nombreCompleto,
         nombreBeneficiario: nombreEmpresa,
@@ -54,7 +53,6 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
         correo: correo, id: idCotizacion, correoPD, numeroPD: telefonoPD
     });
 
-    // 2. Crear PDF con Puppeteer
     const browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
@@ -63,10 +61,8 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 0 });
     const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
-
     await browser.close();
 
-    // 3. Guardar PDF (opcional)
     const fileName = `cotizacion-${nroCotizacion}.pdf`;
     const dirPath = path.join(__dirname, '../public', 'cotizaciones');
     await mkdir(dirPath, { recursive: true });
@@ -95,7 +91,7 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
         },
         {
             filename: fileName,
-            content: pdfBuffer,
+            path: filePath,
             contentType: "application/pdf",
         }
     ];
@@ -109,7 +105,7 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
     };
 
     try {
-        transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
         res.status(200).json({
             success: true,
             message: "Correo enviado exitosamente. Revisa tu correo, te hemos enviado la cotización y te estaremos contactando para brindarte la mejor asesoría"
@@ -119,5 +115,6 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
         res.status(500).json({ success: false, message: "Error al enviar correo" });
     }
 });
+
 
 export default routes;
