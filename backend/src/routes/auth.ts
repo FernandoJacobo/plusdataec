@@ -43,7 +43,7 @@ router.post('/register', async (req: Request, res: Response) : Promise<void> => 
 
         const token = jwt.sign({ correo }, JWT_SECRET, { expiresIn: '1d' });
 
-        res.status(201).json({ error: false, message: 'Usuario registrado', token });
+        res.status(201).json({ error: false, message: '¡Registrado correctamente!. En las próximas horas nos pondremos en contacto contigo para habilitar el acceso al sistema', token });
     } catch (error: any) {
         res.status(500).json({ error: true, message: error.message });
     }

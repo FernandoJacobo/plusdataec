@@ -113,6 +113,8 @@ router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
         celular,
         nombreBeneficiario,
         rucBeneficiario,
+        correoPD,
+        numeroPD,
     } = req.body;
 
     // Validación básica
@@ -144,8 +146,10 @@ router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
             [idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario, id]
         );
 
+        const nroCotizacion = String(id).padStart(9, '0');
+
         // 2. Generar el HTML del PDF
-        const html = LayoutCotizacion({ ...req.body, id: id });
+        const html = LayoutCotizacion({ ...req.body, id: id, correoPD: correoPD, numeroPD: numeroPD });
 
         // 3. Crear PDF con Puppeteer
         const browser = await puppeteer.launch({
@@ -159,7 +163,7 @@ router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
         await browser.close();
 
         // 4. Guardar el archivo PDF
-        const fileName = `cotizacion-${id}.pdf`;
+        const fileName = `cotizacion-${nroCotizacion}.pdf`;
         const dirPath = path.join(__dirname, '../public', 'cotizaciones');
         await mkdir(dirPath, { recursive: true });
         const filePath = path.join(dirPath, fileName);
@@ -173,7 +177,7 @@ router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
         // 6. Responder con éxito
         res.status(201).json({
             error: false,
-            message: 'Cotización registrada y PDF generado',
+            message: 'Gracias por confiar en PLUSDATA.EC. Enseguida nos pondremos en contacto contigo para avanzar con el proceso.',
             id: id,
             fileName,
             downloadUrl: `/cotizaciones/${fileName}`,

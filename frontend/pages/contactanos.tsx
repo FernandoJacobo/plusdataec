@@ -7,6 +7,8 @@ import { isValidEmail, isValidPhone } from "@/helpers/validations";
 import { showToast } from "@/components/general/Toast";
 
 import { sendMessage, registerMessage } from '@/lib/api/web';
+import { showAlert } from "@/helpers/general";
+import { Progressbar } from "@/components/general/Progressbar";
 
 export default function Contactanos() {
     const { informacionDeContacto, mensaje, setMensaje } = useWebStore();
@@ -75,9 +77,8 @@ export default function Contactanos() {
             mensaje: mensaje.mensaje
         });
 
-        setShowProgressbar(false);
-
         if (resEnvio.error) {
+            setShowProgressbar(false);
             showToast(resEnvio.message, 'error');
             return;
         }
@@ -91,13 +92,20 @@ export default function Contactanos() {
         });
 
         if (resRegistro.error) {
+            setShowProgressbar(false);
             showToast(resRegistro.message, 'error');
             return;
         }
 
+        setShowProgressbar(false);
+
         resetForm();
 
-        showToast(resEnvio.message, 'success');
+        showAlert({
+            title: 'ÉXITO',
+            message: resEnvio.message,
+            icon: 'success',
+        });
     }
 
     return (
@@ -176,12 +184,16 @@ export default function Contactanos() {
                                 </div>
                             </form>
 
+                            <div className="mt-4 mb-4">
+                                { showProgressbar ?  <Progressbar/> : <></> }
+                            </div>
+
                             <div className="flex flex-col md:flex-row gap-2">
-                                <button className="w-full md:w-[150px] bg-yellow text-white p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { sendEmail(); }}>
+                                <button className="w-full md:w-[150px] bg-yellow text-white p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105 uppercase" onClick={() => { sendEmail(); }}>
                                     Enviar
                                 </button>
 
-                                <button className="w-full md:w-[150px] bg-purple text-white p-2 text-center rounded-4xl hover:bg-purple hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { resetForm(); }}>
+                                <button className="w-full md:w-[150px] bg-purple text-white p-2 text-center rounded-4xl hover:bg-purple hover:text-white transition hover:cursor-pointer hover:scale-105 uppercase" onClick={() => { resetForm(); }}>
                                     Limpiar Campos
                                 </button>
                             </div>

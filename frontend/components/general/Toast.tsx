@@ -1,4 +1,5 @@
 import { Toaster, toast } from "react-hot-toast";
+
 import { ReactNode } from "react";
 
 type ToastType = 'success' | 'error' | 'loading';
@@ -22,7 +23,7 @@ const showToast = (
 };
 
 const Toast = () => {
-    return <Toaster position="top-center" />;
+    return <Toaster position="top-right" />;
 };
 
 export { Toast, showToast };

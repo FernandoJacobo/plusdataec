@@ -141,7 +141,7 @@ export const LayoutCotizacion = (data: any): string => `
 
         <div class="numero-cotizacion">
             <h2> Cotización </h2>
-            <h6> NRO. ${data.id} </h6>
+            <h6> NRO. ${String(data.id).padStart(9, '0')} </h6>
         </div>
     </div>
 
@@ -203,14 +203,11 @@ export const LayoutCotizacion = (data: any): string => `
         <h3 class="title"> Notas </h3>
 
         <p>
-            Nuestra comisión por el trámite de devolución se calculará sobre el monto recuperado efectivamente,
-            incluyendo en el cálculo los intereses ganados, los cuales podrían ascender aproximadamente a $11,000.00
-            adicionales.
+            Nuestros honorarios por el trámite de devolución se calculará sobre el monto recuperado efectivamente de acuerdo a la Nota de Crédito emitida por el Servicio de Rentas Internas
         </p>
 
         <p>
-            Nuestros honorarios se pagan en su totalidad (100%) después de que el SRI emita la resolución final. No
-            requerimos anticipos.
+            Nuestros honorarios se pagan en su totalidad (100%) después de que el SRI emita la resolución final. No requerimos anticipos.
         </p>
     </div>
 
@@ -225,10 +222,10 @@ export const LayoutCotizacion = (data: any): string => `
     </div>
 
     <div class="footer">
-        <div> Correo: info@plusdata.ec </div>
-        <div> Cel: 0999677844 </div>
+        <div> Correo:  ${data.correoPD} </div>
+        <div> Cel:  ${data.numeroPD} </div>
         <div class="url">
-            www.plusdata.com
+            www.plusdata.ec
         </div>
     </div>
 

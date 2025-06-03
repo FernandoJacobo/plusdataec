@@ -17,13 +17,13 @@ const comoFunciona = [
         id: 2,
         title: 'Sube tu solicitud',
         content: 'Envía tu solicitud de devolucion de impuestos para revisión y validación preliminar. Recibirás una respuesta en un plazo máximo de 24 horas antes de ingresar del trámite al SRI.',
-        image: `/images/como-funciona/03.png`,
+        image: `/images/como-funciona/02.png`,
     },
     {
         id: 3,
         title: 'Monitorea el proceso en linea',
         content: 'Recibe notificaciones automáticas vía WhatsApp y correo electrónico para estar al tanto de cada avance y cambio de estado de tu trámite. Y no te preocupes, nosotros nos encargamos de todo.',
-        image: `/images/como-funciona/04.png`,
+        image: `/images/como-funciona/03.png`,
     },
     {
         id: 4,
@@ -104,7 +104,7 @@ export default function HomePage() {
                     }
                 });
             },
-            { threshold: 0.6 }
+            { threshold: 0.3 }
         );
 
         itemRefs.current.forEach((ref) => {
@@ -120,7 +120,7 @@ export default function HomePage() {
             <section id="inicio" className="w-full mb-6">
                 <div className="w-full md:w-3/4 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center mt-15 mb-10">
                     <div className="text-center md:text-left">
-                        <h1 className="text-4xl md:text-3xl lg:text-5xl font-bold mb-6 uppercase">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
                         </h1>
                         

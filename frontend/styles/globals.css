@@ -86,3 +86,17 @@ body {
 .btn-ouline-yellow {
     border: 1px solid var(--yellow);
 }
+
+.progress {
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;
+    background: linear-gradient(var(--violet) 0 0) left/0% 100% no-repeat transparent;
+    animation: progress-c2d4ps 1.6s infinite steps(10);
+}
+
+@keyframes progress-c2d4ps {
+    100% {
+        background-size: 110% 100%;
+    }
+}

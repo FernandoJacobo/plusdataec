@@ -12,6 +12,7 @@ import { register } from '@/lib/api/auth'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { showAlert } from '@/helpers/general';
 
 interface FormProps {
     onClick: (data: { id: number; name: string; phone: string; email: string }) => void;
@@ -45,7 +46,11 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
             return;
         }
 
-        showToast(res.message, 'success');
+        showAlert({
+            title: 'ÉXITO',
+            message: res.message,
+            icon: 'success',
+        });
 
         onClick(res.token);
     };

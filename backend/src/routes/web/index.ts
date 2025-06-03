@@ -103,7 +103,7 @@ router.post('/enviar-mensaje', async (req: Request, res: Response) : Promise<voi
 
         try {
             await transporter.sendMail(mailOptions);
-            res.status(200).json({ error: false, message: "Correo enviado exitosamente" });
+            res.status(200).json({ error: false, message: "Gracias por contactarnos, Enseguida nos pondremos en contacto contigo." });
         } catch (error) {
             console.error("Error al enviar correo:", error);
             res.status(500).json({ error: true, message: "Error al enviar correo" });

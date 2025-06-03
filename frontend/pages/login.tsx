@@ -1,10 +1,15 @@
 import Image from "next/image";
 import FormularioIngresar from '@/components/layout/web/FormularioIngresar';
 import { showToast } from "@/components/general/Toast";
+import { showAlert } from "@/helpers/general";
 
 export default function LoginPage() {
     const ingresar = () => {
-        showToast('Plataforma en construcción.', 'error');
+        showAlert({
+            title: 'NOTA',
+            message: 'No tiene permisos para acceder al sistema',
+            icon: 'info',
+        });
     };
 
     return (

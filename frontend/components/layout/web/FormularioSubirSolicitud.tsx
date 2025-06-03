@@ -15,10 +15,11 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
     const { contribuyente, setContribuyente, cotizacion, setCotizacion } = useWebStore();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [fileName, setFileName] = useState("Ningún archivo seleccionado");
+
+    // const [fileName, setFileName] = useState("Ningún archivo seleccionado");
 
     const validateForm = () => {
-        if (!cotizacion.nombreComlpeto.trim()) {
+        if (!cotizacion.nombreCompleto.trim()) {
             document.getElementById('name')?.focus();
             showToast('El campo Nombre o Razón Social es requerido.', 'error');
             return false;
@@ -94,17 +95,17 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
 
         if(!selectedFile) {
             setCotizacion({archivo: null})
-            setFileName('Ningún archivo seleccionado');
+            setCotizacion({archivoNombre: 'Ningún archivo seleccionado'});
             return;
         }
     
         if (selectedFile && selectedFile.type === 'application/pdf') {
-            setFileName(selectedFile.name);
+            setCotizacion({archivoNombre: selectedFile.name});
             setCotizacion({archivo: selectedFile})
         } else {
             showToast('Archivo inválido. Solo se permite PDF.', 'error');
             setCotizacion({archivo: null})
-            setFileName('Ningún archivo seleccionado');
+            setCotizacion({archivoNombre: 'Ningún archivo seleccionado'});
         }
     };
 
@@ -134,8 +135,8 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                         id="name"
                         type="text"
                         placeholder=""
-                        value={cotizacion.nombreComlpeto}
-                        onChange={(e) => setCotizacion({nombreComlpeto: e.target.value})}
+                        value={cotizacion.nombreCompleto}
+                        onChange={(e) => setCotizacion({nombreCompleto: e.target.value})}
                         className="w-full p-2 rounded input-control"
                     />
                 </div>
@@ -209,7 +210,7 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                             Examinar
                         </button>
 
-                        <span className="text-violet truncate"> {cotizacion.archivo ? `${truncateFileName(cotizacion.archivo.name)} (${formatBytes(cotizacion.archivo.size)})` : fileName} </span>
+                        <span className="text-violet truncate"> {cotizacion.archivo ? `${truncateFileName(cotizacion.archivo.name)} (${formatBytes(cotizacion.archivo.size)})` : cotizacion.archivoNombre} </span>
                     </div>
                 </div>
 

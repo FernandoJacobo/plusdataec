@@ -5,18 +5,19 @@ import { showToast } from "@/components/general/Toast";
 import { useWebStore } from '@/store/useWebStore';
 
 import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
-import { numberToPercent, numberFormat } from '@/helpers/general';
+import { numberToPercent, numberFormat, showAlert } from '@/helpers/general';
+
+import { API_BASE } from "@/lib/config";
 
 interface FormProps {
     onClickRegresar: () => void;
     onClickSenEmail: () => void;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-const API_BASE = `${API_URL}/api/email`;
+const API_BASE_EMAIL = `${API_BASE}/email`;
 
 export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenEmail }: FormProps) {
-    const { arrTiposImpuesto, cotizacion, setCotizacion } = useWebStore();
+    const { arrTiposImpuesto, cotizacion, setCotizacion, informacionDeContacto } = useWebStore();
 
     const handleSendEmail = async () => {
         if (!validateForm()) return;
@@ -25,7 +26,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
 
         const data = new FormData();
 
-        data.append('nombreComlpeto', cotizacion.nombreComlpeto);
+        data.append('nombreCompleto', cotizacion.nombreCompleto);
         data.append('nombreEmpresa', cotizacion.nombreORazonSocialBeneficiario);
         data.append('correo', cotizacion.correo);
         data.append('numero', cotizacion.celular);
@@ -33,8 +34,11 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
         data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label : cotizacion.idTipoImpuesto.toString());
         data.append('valorASolicitar', numberFormat(cotizacion.valorASolicitar));
         data.append('honorarios', numberToPercent(cotizacion.honorarios));
+        data.append('correoPD', informacionDeContacto.correo);
+        data.append('telefonoPD', informacionDeContacto.numero);
+        data.append('idCotizacion', cotizacion.id.toString() ? cotizacion.id.toString() : '');
 
-        const res = await fetch(`${API_BASE}/enviar-cotizacion`, {
+        const res = await fetch(`${API_BASE_EMAIL}/enviar-cotizacion`, {
             method: "POST",
             body: data,
         });
@@ -46,7 +50,13 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
             return;
         }
 
-        showToast(message, 'success');
+        // showToast(message, 'success');
+
+        showAlert({
+            title: 'ÉXITO',
+            message: message,
+            icon: 'success',
+        });
 
         onClickSenEmail();
 
@@ -54,7 +64,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
     };
 
     const validateForm = () => {
-        if (cotizacion.nombreComlpeto.trim() == '') {
+        if (cotizacion.nombreCompleto.trim() == '') {
             showToast('Campo requerido.', 'error');
             return false;
         }
@@ -114,8 +124,8 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
                         <input
                             type="text"
                             placeholder=""
-                            value={cotizacion.nombreComlpeto}
-                            onChange={(e) => setCotizacion({nombreComlpeto: e.target.value})}
+                            value={cotizacion.nombreCompleto}
+                            onChange={(e) => setCotizacion({nombreCompleto: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>

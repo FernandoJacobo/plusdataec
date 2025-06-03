@@ -9,7 +9,7 @@ const Accordion = ({ title, content, isOpen, onToggle }: AccordionProps) => {
     return (
         <div className="bg-accordion border overflow-hidden border-accordion">
             <button
-                className="w-full flex justify-between items-center p-4 hover:bg-gray-200 transition btn-accordion text-[16px]"
+                className="w-full flex justify-between items-center p-4 hover:bg-gray-200 transition btn-accordion text-[13px] md:text-[16px] cursor-pointer"
                 onClick={onToggle}
             >
                 <span className="title-accordion">{title}</span>
@@ -25,7 +25,7 @@ const Accordion = ({ title, content, isOpen, onToggle }: AccordionProps) => {
                     isOpen ? "max-h-40 p-4" : "max-h-0 p-0"
                 }`}
             >
-                <p className="text-accordion text-[15px]">{content}</p>
+                <p className="text-accordion text-[12px] md:text-[15px]">{content}</p>
             </div>
         </div>
     );

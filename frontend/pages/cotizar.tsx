@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FormularioCotizarEnLinea from '@/components/layout/web/FormularioCotizarEnLinea';
 import FormularioEnviarCoizacion from '@/components/layout/web/FormularioEnviarCotizacion';
-import FormularioIngresar from '@/components/layout/web/FormularioIngresar';
-import FormularioRegistro from '@/components/layout/web/FormularioRegistro';
 import FormularioSubirSolicitud from '@/components/layout/web/FormularioSubirSolicitud';
 
 import { showToast } from '@/components/general/Toast';
 import { useWebStore } from '@/store/useWebStore';
-import { numberToPercent, numberFormat } from '@/helpers/general';
+import { numberToPercent, numberFormat, showAlert } from '@/helpers/general';
 import { register, update, confirm } from '@/lib/api/cotizaciones';
 
 const steps = [
@@ -19,8 +17,16 @@ const steps = [
     { id: 3, title: 'Confirmar' },
 ];
 
+import { API_BASE } from "@/lib/config";
+const API_BASE_EMAIL = `${API_BASE}/email`;
+
 export default function CotizarPage() {
-    const { arrTiposImpuesto, cotizacion } = useWebStore();
+    const { fetchHonorarios, arrHonorarios, fetchTiposImpuesto, arrTiposImpuesto, cotizacion, informacionDeContacto } = useWebStore();
+
+    useEffect(() => { 
+        fetchHonorarios();
+        fetchTiposImpuesto();
+    }, []);
 
     const [currentStep, setCurrentStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState<number[]>([]);
@@ -60,7 +66,7 @@ export default function CotizarPage() {
             idTiposImpuesto: cotizacion.idTipoImpuesto,
             valorASolicitar: cotizacion.valorASolicitar,
             honorarios: cotizacion.honorarios,
-            nombre: cotizacion.nombreComlpeto,
+            nombre: cotizacion.nombreCompleto,
             correo: cotizacion.correo,
             celular: cotizacion.celular,
             nombreBeneficiario: cotizacion.nombreORazonSocialBeneficiario,
@@ -90,11 +96,13 @@ export default function CotizarPage() {
             idTiposImpuesto: cotizacion.idTipoImpuesto,
             valorASolicitar: cotizacion.valorASolicitar,
             honorarios: cotizacion.honorarios,
-            nombre: cotizacion.nombreComlpeto,
+            nombre: cotizacion.nombreCompleto,
             correo: cotizacion.correo,
             celular: cotizacion.celular,
             nombreBeneficiario: cotizacion.nombreORazonSocialBeneficiario,
             rucBeneficiario: cotizacion.rucBeneficiario,
+            correoPD: informacionDeContacto.correo,
+            numeroPD: informacionDeContacto.numero,
         };
 
         let res = await confirm(cotizacionData);
@@ -103,9 +111,39 @@ export default function CotizarPage() {
 
         if (res.id) cotizacion.id = res.id;
 
+        const data = new FormData();
+        
+        data.append('nombreCompleto', cotizacion.nombreCompleto);
+        data.append('nombreEmpresa', cotizacion.nombreORazonSocialBeneficiario);
+        data.append('correo', cotizacion.correo);
+        data.append('numero', cotizacion.celular);
+        data.append('rucEmpresa', cotizacion.rucBeneficiario);
+        data.append('tipoDeImpuesto', tipoImpuesto ? tipoImpuesto.label : cotizacion.idTipoImpuesto.toString());
+        data.append('valorASolicitar', numberFormat(cotizacion.valorASolicitar));
+        data.append('honorarios', numberToPercent(cotizacion.honorarios));
+        data.append('correoPD', informacionDeContacto.correo);
+        data.append('telefonoPD', informacionDeContacto.numero);
+        data.append('idCotizacion', cotizacion.id.toString() ? cotizacion.id.toString() : '');
+
+        const resEmail = await fetch(`${API_BASE_EMAIL}/enviar-cotizacion`, {
+            method: "POST",
+            body: data,
+        });
+
+        const { success, message } = await resEmail.json();
+
+        if (!success) return showToast(message, 'error');
+
         if (res.pdfBase64) {
-            downloadBase64(`data:application/pdf;base64,${res.pdfBase64}`, res.fileName);
-            showToast(res.message, 'success');
+            // downloadBase64(`data:application/pdf;base64,${res.pdfBase64}`, res.fileName);
+            
+            //showToast(res.message, 'success');
+            showAlert({
+                title: 'ÉXITO',
+                message: res.message,
+                icon: 'success',
+            });
+            
             reiniciarCotizacion();
         } else {
             showToast('No se recibió el contenido Base64 del PDF.', 'error');
@@ -121,11 +159,13 @@ export default function CotizarPage() {
         cotizacion.idTipoImpuesto = 0;
         cotizacion.valorASolicitar = 0;
         cotizacion.honorarios = 0;
-        cotizacion.nombreComlpeto = '';
+        cotizacion.nombreCompleto = '';
         cotizacion.correo = '';
         cotizacion.celular = '';
         cotizacion.nombreORazonSocialBeneficiario = '';
         cotizacion.rucBeneficiario = '';
+        cotizacion.archivo = null;
+        cotizacion.archivoNombre = '';
     }
 
     const renderStepContent = () => {
@@ -133,7 +173,10 @@ export default function CotizarPage() {
             case 1:
                 return showCotizar ? (
                     <FormularioCotizarEnLinea
-                        onClickDownload={() => setShowCotizar(false)}
+                        onClickDownload={() => {
+                            setShowCotizar(false);
+                            registrarActualizarCotizacion(1);
+                        }}
                         onClickNext={() => {
                             handleStepAdvance(2);
                             registrarActualizarCotizacion(1);

@@ -17,12 +17,13 @@ export interface Cotizacion {
     idTipoImpuesto: number;
     valorASolicitar: number;
     honorarios: number;
-    nombreComlpeto: string;
+    nombreCompleto: string;
     correo: string;
     celular: string;
     nombreORazonSocialBeneficiario: string;
     rucBeneficiario: string;
     archivo: File | null;
+    archivoNombre: string;
 }
 
 export interface Honorarios {

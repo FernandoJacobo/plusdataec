@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-import { WebStoreState } from '@/types'
+import { WebStoreState } from '@/types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+import { API_BASE_WEB } from "@/lib/config";
 
-const API_BASE = `${API_URL}/api/web`;
+const API_BASE = API_BASE_WEB;
 
 export const useWebStore = create<WebStoreState>((set) => ({
     // Mensaje de Contacto
@@ -43,12 +43,13 @@ export const useWebStore = create<WebStoreState>((set) => ({
         idTipoImpuesto: 0,
         valorASolicitar: 0,
         honorarios: 0,
-        nombreComlpeto: '',
+        nombreCompleto: '',
         correo: '',
         celular: '',
         nombreORazonSocialBeneficiario: '',
         rucBeneficiario: '',
-        archivo: null
+        archivo: null,
+        archivoNombre: '',
     },
     setCotizacion: (valor) =>
         set((state) => ({
@@ -87,6 +88,7 @@ export const useWebStore = create<WebStoreState>((set) => ({
     fetchHonorarios: async () => {
         set({ loadingHonorarios: true, errorHonorarios: null });
         try {
+            console.log(API_BASE);
             const res = await fetch(`${API_BASE}/honorarios`);
             if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
 
