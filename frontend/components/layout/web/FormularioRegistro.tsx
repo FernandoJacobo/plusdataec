@@ -10,6 +10,9 @@ import { isValidEmail, isValidPhone } from '@/helpers/validations';
 
 import { register } from '@/lib/api/auth'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 interface FormProps {
     onClick: (data: { id: number; name: string; phone: string; email: string }) => void;
     showLinkLogin: boolean;
@@ -19,7 +22,9 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
+
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -81,7 +86,7 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
             showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
-        
+
         return true;
     };
 
@@ -138,14 +143,24 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
 
                 <div className="flex flex-col gap-3">
                     <label className="font-bold">Contraseña</label>
-                    <input
-                        id='password'
-                        type="password"
-                        placeholder="Mínimo 8 caracteres"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="input-control"
-                    />
+                    <div className='flex flex-row align-middle'>
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            placeholder="Mínimo 8 caracteres"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="input-control w-full"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className=" text-gray-500 hover:text-gray-700 w-auto text-[14px] p-2 cursor-pointer"
+                            aria-label="Mostrar/Ocultar contraseña"
+                        >
+                            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                        </button>
+                    </div>
                 </div>
 
                 <div className='flex d-flex flex-col md:flex-row gap-5'>
@@ -154,7 +169,7 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                     >
                         Registrarse
                     </button>
-                    
+
                     <button type="reset"
                         className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { resetForm() }}>
                         Limpiar Campos

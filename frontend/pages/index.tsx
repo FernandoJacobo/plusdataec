@@ -83,6 +83,12 @@ const preguntas = [
 
 export default function HomePage() {
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    
+    const handleToggle = (index: number) => {
+        setOpenIndex(prevIndex => (prevIndex === index ? null : index));
+    };
     
     const [currentImage, setCurrentImage] = useState(comoFunciona[0]);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -109,18 +115,20 @@ export default function HomePage() {
     }, []);
 
     return (
-        <div className="pt-20">
+        <>
             {/* Hero Section */}
-            <section id="inicio" className="w-full mb-4">
-                <div className="w-full md:w-3/4 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center mb-4 p-8 md:p-16">
+            <section id="inicio" className="w-full mb-6">
+                <div className="w-full md:w-3/4 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center mt-15 mb-10">
                     <div className="text-center md:text-left">
-                        <h1 className="text-3xl md:text-4xl font-bold mb-6 uppercase">
+                        <h1 className="text-4xl md:text-3xl lg:text-5xl font-bold mb-6 uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
                         </h1>
-                        <p className="text-lg text-gray-500 mb-6">
+                        
+                        <p className="text-lg text-gray-500 mb-10">
                             Transforma tu experiencia en la gestión del trámite de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
                         </p>
-                        <Link href={'/contactanos'} className="px-6 py-3 rounded-full transition hover:scale-110 btn-hero">
+
+                        <Link href={'/cotizar'} className="px-6 py-3 rounded-full transition hover:scale-110 btn-hero">
                             Cotiza aquí
                         </Link>
                     </div>
@@ -129,9 +137,9 @@ export default function HomePage() {
                         <Image
                             src="/images/hero-section.png"
                             alt="Hero"
-                            width={500}
-                            height={500}
-                            className="w-full object-contain"
+                            width={600}
+                            height={600}
+                            className="w-full md:w-200 object-contain"
                         />
                     </div>
                 </div>
@@ -160,7 +168,7 @@ export default function HomePage() {
             </section>
 
             {/* Cómo Funciona */}
-            <section id="como-funciona" className="w-full flex flex-col items-center">
+            <section id="como-funciona" className="w-full flex flex-col items-center mb-6">
                 <div className="text-center p-4 mb-4">
                     <h1 className="text-4xl font-bold text-purple mb-4">¿Cómo funciona?</h1>
                     <p>
@@ -216,21 +224,27 @@ export default function HomePage() {
             </section>
 
             {/* Preguntas frecuentes */}
-            <section id="preguntas" className="w-full mb-6">
+            <section id="preguntas" className="w-full">
                 <div className="text-center p-4 mb-4">
                     <h1 className="text-4xl font-bold text-purple mb-4">¿Tienes preguntas? Tenemos respuestas</h1>
                 </div>
 
-                <div className="w-full md:w-3/4 mx-auto px-4">
+                <div className="w-full md:w-3/4 mx-auto px-4 mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {preguntas.map((pregunta) => (
+                        {preguntas.map((pregunta, index) => (
                             <div key={pregunta.id} className="p-4">
-                                <Accordion title={pregunta.title} content={pregunta.content} />
+                                <Accordion
+                                    key={index}
+                                    title={pregunta.title}
+                                    content={pregunta.content}
+                                    isOpen={openIndex === index}
+                                    onToggle={() => handleToggle(index)}
+                                />
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
-        </div>
+        </>
     );
 }

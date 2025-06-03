@@ -6,6 +6,11 @@ export interface Mensaje {
     mensaje: string;
 }
 
+export interface InformacionDeContacto {
+    numero: string;
+    correo: string;
+}
+
 export interface Cotizacion {
     id: number;
     idEstatus: number;
@@ -43,6 +48,9 @@ export interface OptionSelect {
 export interface WebStoreState {
     mensaje: Mensaje,
     setMensaje: (input: Partial<Mensaje>) => void;
+
+    informacionDeContacto: InformacionDeContacto,
+    setInformacionDeContacto: (input: Partial<InformacionDeContacto>) => void;
 
     cotizacion: Cotizacion;
     setCotizacion: (input: Partial<Cotizacion>) => void;

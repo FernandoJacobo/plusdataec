@@ -23,6 +23,19 @@ export const useWebStore = create<WebStoreState>((set) => ({
             },
         })),
 
+    // Información de Contacto
+    informacionDeContacto: {
+        numero: '0967899905',
+        correo: 'info@plusdata.ec'
+    },
+    setInformacionDeContacto: (valor) =>
+        set((state) => ({
+            informacionDeContacto: {
+                ...state.informacionDeContacto,
+                ...valor,
+            },
+        })),
+
     // Cotización inicial
     cotizacion: {
         id: 0,

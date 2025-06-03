@@ -9,7 +9,7 @@ import { showToast } from "@/components/general/Toast";
 import { sendMessage, registerMessage } from '@/lib/api/web';
 
 export default function Contactanos() {
-    const { mensaje, setMensaje } = useWebStore();
+    const { informacionDeContacto, mensaje, setMensaje } = useWebStore();
 
     const [showProgressbar, setShowProgressbar] = useState(false);
 
@@ -121,7 +121,7 @@ export default function Contactanos() {
                                 <div className="flex-1 p-2">
                                     <h1 className="text-lg font-[500]">Soluciona tus dudas en segundos</h1>
                                     <h1 className="text-lg font-bold">
-                                        Llamanos o escribenos al <span className="text-amber-400">0999677844</span>
+                                        Llamanos o escribenos al <span className="text-amber-400"> {informacionDeContacto.numero} </span>
                                     </h1>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@ export default function Contactanos() {
                                 <div className="flex-1 p-2">
                                     <h1 className="text-lg font-[500]">Deseas una conversación más formal</h1>
                                     <h1 className="text-lg font-bold">
-                                        Escríbenos al correo <span className="text-amber-400">info@plusdata.ec</span>
+                                        Escríbenos al correo <span className="text-amber-400"> {informacionDeContacto.correo} </span>
                                     </h1>
                                 </div>
                             </div>

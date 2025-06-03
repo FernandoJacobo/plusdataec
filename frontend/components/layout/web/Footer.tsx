@@ -1,11 +1,15 @@
 import Link from 'next/link';
 
+import { useWebStore } from '@/store/useWebStore';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentDots, faCopyright } from '@fortawesome/free-solid-svg-icons'
 
 const year = new Date().getFullYear();
 
 export default function Footer() {
+    const { informacionDeContacto } = useWebStore();
+
     return (
         <footer className="flex justify-center p-10 footer-web">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-rounded-full max-w-7xl">
@@ -13,7 +17,7 @@ export default function Footer() {
                 <div className="md:col-span-1">
                     <h1 className="text-lg text-white font-bold mb-3 uppercase">¡Habla con nosotros!</h1>
 
-                    <p className="text-lg text-white font-bold mb-3 uppercase">0999677844</p>
+                    <p className="text-lg text-white font-bold mb-3 uppercase">{informacionDeContacto.numero}</p>
 
                     <Link href={'/contactanos'} className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
                         <FontAwesomeIcon icon={faCommentDots} className='me-2' />
@@ -27,7 +31,9 @@ export default function Footer() {
                         <h1 className="text-md text-white font-bold mb-2">Productos</h1>
                         <ul>
                             <li className="p-1 text-white cursor-pointer hover:font-bold">
-                                Cotizador
+                                <Link href={'/cotizar'} className="p-1 text-white cursor-pointer hover:font-bold">
+                                    Cotizador
+                                </Link>
                             </li>
                         </ul>
                     </div>
