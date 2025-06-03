@@ -38,7 +38,6 @@ const logos = [
     "/images/logos/automatis.png",
     "/images/logos/bridgestone.png",
     "/images/logos/disna.png",
-    "/images/logos/interaseo.png",
     "/images/logos/rancho-mary-pronaca-india.png",
 ];
 
