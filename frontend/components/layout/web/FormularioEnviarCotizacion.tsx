@@ -53,7 +53,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
         // showToast(message, 'success');
 
         showAlert({
-            title: 'ÉXITO',
+            title: '¡COTIZACIÓN ENVIADA!',
             message: message,
             icon: 'success',
         });

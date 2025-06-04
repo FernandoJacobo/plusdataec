@@ -27,12 +27,14 @@ router.post('/register', async (req: Request, res: Response) : Promise<void> => 
 
     try {
         // 1. Insertar en la base de datos
-        const [result]: any = await db.query(
+        const result : any = await db.query(
             `INSERT INTO cotizaciones 
             (idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario]
         );
+
+        console.log(result);
 
         const insertedId = result.insertId;
 
@@ -45,6 +47,7 @@ router.post('/register', async (req: Request, res: Response) : Promise<void> => 
 
     } catch (error: any) {
         console.error('Error al registrar cotización:', error.message);
+
         res.status(500).json({
             error: true,
             message: 'Error interno del servidor',

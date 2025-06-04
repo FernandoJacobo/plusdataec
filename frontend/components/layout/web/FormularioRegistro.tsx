@@ -148,25 +148,28 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
 
                 <div className="flex flex-col gap-3">
                     <label className="font-bold">Contraseña</label>
-                    <div className='flex flex-row align-middle'>
+
+                    <div className="relative">
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Mínimo 8 caracteres"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="input-control w-full"
+                            className="input-control w-full pr-10" // padding-right para que no tape el texto
                         />
+
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className=" text-gray-500 hover:text-gray-700 w-auto text-[14px] p-2 cursor-pointer"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                             aria-label="Mostrar/Ocultar contraseña"
                         >
                             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                         </button>
                     </div>
                 </div>
+
 
                 <div className='flex d-flex flex-col md:flex-row gap-5'>
                     <button type="submit"

@@ -103,7 +103,7 @@ export default function HomePage() {
                     }
                 });
             },
-            { threshold: 0.3 }
+            { threshold: 0.2 }
         );
 
         itemRefs.current.forEach((ref) => {
@@ -117,7 +117,7 @@ export default function HomePage() {
         <>
             {/* Hero Section */}
             <section id="inicio" className="w-full mb-6">
-                <div className="w-full md:w-3/4 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center mt-15 mb-10">
+                <div className="w-full md:w-3/4 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-items-center mt-15 mb-20">
                     <div className="text-center md:text-left">
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
@@ -187,8 +187,8 @@ export default function HomePage() {
                                     <span className="h-full"></span>
                                 </div>
 
-                                <div className="w-full flex flex-col md:flex-row items-center">
-                                    <div className="w-full p-4">
+                                <div className="w-full flex flex-col md:flex-row">
+                                    <div className={activeIndex === index ? 'w-full p-4' : 'w-full p-4 text-gray-500'}>
                                         <h2 className="text-xl font-bold text-primary mb-2 uppercase">{ item.title }</h2>
                                         <p className="">
                                             { item.content }

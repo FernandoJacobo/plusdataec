@@ -139,7 +139,7 @@ export default function CotizarPage() {
             
             //showToast(res.message, 'success');
             showAlert({
-                title: 'ÉXITO',
+                title: '¡SOLICITUD RECIBIDA!',
                 message: res.message,
                 icon: 'success',
             });

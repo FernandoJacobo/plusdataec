@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentDots, faCopyright } from '@fortawesome/free-solid-svg-icons'
 
 const year = new Date().getFullYear();
+const message = 'Hola%necesito%información%para%reuperar%mis%impuestos%con%PLUSDATA';
 
 export default function Footer() {
     const { informacionDeContacto } = useWebStore();
@@ -19,7 +20,7 @@ export default function Footer() {
 
                     <p className="text-lg text-white font-bold mb-3 uppercase">{informacionDeContacto.numero}</p>
 
-                    <Link href={'/contactanos'} className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
+                    <Link href={`https://wa.me/${informacionDeContacto.numero}?text=${message}`} target='_blank' className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
                         <FontAwesomeIcon icon={faCommentDots} className='me-2' />
                         ¡Chatea con ahora!
                     </Link>

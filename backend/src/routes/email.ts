@@ -108,7 +108,7 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
         await transporter.sendMail(mailOptions);
         res.status(200).json({
             success: true,
-            message: "Correo enviado exitosamente. Revisa tu correo, te hemos enviado la cotización y te estaremos contactando para brindarte la mejor asesoría"
+            message: "Te enviamos la cotización a tu correo. Revisa tu bandeja de entrada (y spam). Pronto te contactaremos para brindarte la mejor asesoria."
         });
     } catch (error) {
         console.error("Error al enviar correo:", error);

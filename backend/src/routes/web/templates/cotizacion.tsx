@@ -1,3 +1,11 @@
+const formatDate = (dateString?: string) => {
+  const date = dateString ? new Date(dateString) : new Date();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // +1 porque enero es 0
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 export const LayoutCotizacion = (data: any): string => `
 <!DOCTYPE html>
 <html lang="es">
@@ -54,7 +62,7 @@ export const LayoutCotizacion = (data: any): string => `
             background: #999999;
             color: #FFFFFF;
             padding: 8px;
-            width: 30%;
+            width: 40%;
             display: flex;
             justify-content: space-between;
         }
@@ -117,8 +125,8 @@ export const LayoutCotizacion = (data: any): string => `
 
         .table th {
             text-align: center;
-            padding: 8px;
-            font-size: 15px;
+            padding: 5px;
+            font-size: 13px;
         }
 
         .table td {
@@ -152,7 +160,7 @@ export const LayoutCotizacion = (data: any): string => `
         </div>
         <div>
             <span class="label"> Fecha: </span>
-            ${data.fecha || new Date().toLocaleDateString()}
+            ${formatDate(data.fecha) || formatDate(new Date().toLocaleDateString())}
         </div>
         <div>
             <span class="label"> Beneficiario: </span>

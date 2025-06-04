@@ -13,11 +13,12 @@ interface Cotizacion {
     numeroPD?: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-const API_BASE = `${API_URL}/api/cotizaciones`;
+import { API_BASE } from "@/lib/config";
+
+const API_BASE_COT = `${API_BASE}/cotizaciones`;
 
 export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API_BASE}/register`, {
+    const res = await fetch(`${API_BASE_COT}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -29,7 +30,7 @@ export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, hon
 }
 
 export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API_BASE}/update`, {
+    const res = await fetch(`${API_BASE_COT}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -41,7 +42,7 @@ export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, h
 }
 
 export const confirm = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario, correoPD, numeroPD}: Cotizacion) => {
-    const res = await fetch(`${API_BASE}/confirm`, {
+    const res = await fetch(`${API_BASE_COT}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario, correoPD, numeroPD })

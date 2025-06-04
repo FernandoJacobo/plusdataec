@@ -67,11 +67,11 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
             return false;
         }
 
-        if (cotizacion.archivo == null) {
+        /* if (cotizacion.archivo == null) {
             document.getElementById('phone')?.focus();
             showToast('Es requerido cargar el formulario 101 en formato PDF', 'error');
             return false;
-        }
+        } */
 
         return true;
     }
