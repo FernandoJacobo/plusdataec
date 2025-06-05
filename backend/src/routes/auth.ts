@@ -30,7 +30,7 @@ router.post('/register', async (req: Request, res: Response) : Promise<void> => 
         );
 
         if (existingUser.length > 0) {
-            res.status(409).json({ error: true, message: 'El usuario ya existe' });
+            res.status(201).json({ error: true, message: 'La cuenta que intenta registrar ya existe.' });
             return;
         }
 

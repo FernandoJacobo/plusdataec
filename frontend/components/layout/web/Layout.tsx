@@ -1,6 +1,6 @@
 import Header from './Header'
 import Footer from './Footer'
-import FloatingButtons from './FloatingButtons'
+import FloatingButtons from '../../general/FloatingButtons'
 
 import { ReactNode } from 'react'
 import Head from 'next/head'

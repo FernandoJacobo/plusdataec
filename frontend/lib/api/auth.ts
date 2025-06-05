@@ -7,8 +7,9 @@ interface UserProps {
     contrasena: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-const API_BASE = `${API_URL}/api/auth`;
+import { API_BASE_AUTH } from "@/lib/config";
+
+const API_BASE = API_BASE_AUTH;
 
 export const login = async (email: string, password: string) => {
     const res = await fetch(`${API_BASE}/login`, {
@@ -28,8 +29,6 @@ export const register = async ({idEstatus, nombre, celular, correo, contrasena}:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idEstatus, nombre, celular, correo, contrasena })
     })
-
-    console.log(res);
 
     if (!res.ok) throw new Error('Registro fallido')
 

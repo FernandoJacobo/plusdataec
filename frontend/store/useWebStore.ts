@@ -88,7 +88,6 @@ export const useWebStore = create<WebStoreState>((set) => ({
     fetchHonorarios: async () => {
         set({ loadingHonorarios: true, errorHonorarios: null });
         try {
-            console.log(API_BASE);
             const res = await fetch(`${API_BASE}/honorarios`);
             if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
 

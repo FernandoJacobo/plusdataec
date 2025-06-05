@@ -13,7 +13,7 @@ export default function Footer() {
 
     return (
         <footer className="flex justify-center p-10 footer-web">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-rounded-full max-w-7xl">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full lg:w-3/4 max-w-7xl">
 
                 <div className="md:col-span-1">
                     <h1 className="text-lg text-white font-bold mb-3 uppercase">¡Habla con nosotros!</h1>

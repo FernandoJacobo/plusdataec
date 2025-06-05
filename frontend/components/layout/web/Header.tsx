@@ -69,8 +69,8 @@ export default function Header() {
 
                     <nav className="hidden lg:flex space-x-4">
                         <ButtonNavLink href="/cotizar"> Cotiza Aquí </ButtonNavLink>
-                        <ButtonNavLink href="/registro"> Regístrate </ButtonNavLink>
-                        <ButtonNavLink href="/login"> Ingresar </ButtonNavLink>
+                        <ButtonNavLink href="/auth/registro"> Regístrate </ButtonNavLink>
+                        <ButtonNavLink href="/auth"> Ingresar </ButtonNavLink>
                     </nav>
                 </div>
             </div>
@@ -84,7 +84,7 @@ export default function Header() {
                     <NavLink classLink={`link-navbar`} href="/contactanos"> Contáctanos </NavLink>
                     <NavLink classLink={`link-navbar`} href="/cotizar"> Cotiza Aquí </NavLink>
                     <NavLink classLink={`link-navbar`} href="/registro"> Regístrate </NavLink>
-                    <NavLink classLink={`link-navbar`} href="/login"> Ingresar </NavLink>
+                    <NavLink classLink={`link-navbar`} href="/auth"> Ingresar </NavLink>
                 </div>
             )}
         </header>

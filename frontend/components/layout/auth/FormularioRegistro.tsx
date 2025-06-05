@@ -42,7 +42,11 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
         });
 
         if (res.error) {
-            showToast(res.message, 'error');
+            showAlert({
+                title: 'ERROR',
+                message: res.message,
+                icon: 'error',
+            });
             return;
         }
 
@@ -187,7 +191,7 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                 {showLinkLogin && (
                     <p className="text-black text-center">
                         ¿Ya tienes una cuenta?{' '}
-                        <Link href="/login" className="text-violet hover:font-bold">
+                        <Link href="/auth" className="text-violet hover:font-bold">
                             Inicia Sesión
                         </Link>
                     </p>

@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/autoplay'
+import { Autoplay } from 'swiper/modules'
+
 import Image from "next/image";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faCircleDot } from "@fortawesome/free-solid-svg-icons";
 
@@ -11,35 +18,48 @@ const comoFunciona = [
         id: 1,
         title: 'Cotiza',
         content: 'Cotiza tu trámite de devolución  en linea y recupera tus impuestos con el 99% de efectividad a través del uso de la tecnología.',
-        image: `/images/como-funciona/01.png`,
+        image: `/images/como-funciona/1.png`,
     },
     {
         id: 2,
         title: 'Sube tu solicitud',
         content: 'Envía tu solicitud de devolucion de impuestos para revisión y validación preliminar. Recibirás una respuesta en un plazo máximo de 24 horas antes de ingresar del trámite al SRI.',
-        image: `/images/como-funciona/02.png`,
+        image: `/images/como-funciona/2.png`,
     },
     {
         id: 3,
         title: 'Monitorea el proceso en linea',
         content: 'Recibe notificaciones automáticas vía WhatsApp y correo electrónico para estar al tanto de cada avance y cambio de estado de tu trámite. Y no te preocupes, nosotros nos encargamos de todo.',
-        image: `/images/como-funciona/03.png`,
+        image: `/images/como-funciona/3.png`,
     },
     {
         id: 4,
         title: 'Recibe el dinero de devolución',
         content: 'Una vez aprobada la devolución, el Servicio de Rentas Internas emitirá una nota de crédito con los valores correspondientes, la misma que podrás utilizarla o negociarla según tus necesidades.',
-        image: `/images/como-funciona/04.png`,
+        image: `/images/como-funciona/4.png`,
     }
 ];
 
 const logos = [
-    "/images/logos/almon.png",
-    "/images/logos/automatis.png",
-    "/images/logos/bridgestone.png",
-    "/images/logos/disna.png",
-    "/images/logos/rancho-mary-pronaca-india.png",
+    '/images/logos/1.png',
+    '/images/logos/2.png',
+    '/images/logos/3.png',
+    '/images/logos/4.png',
+    '/images/logos/5.png',
+    '/images/logos/6.png',
+    '/images/logos/7.png',
+    '/images/logos/8.png',
+    '/images/logos/9.png',
+    '/images/logos/10.png',
+    '/images/logos/11.png',
+    '/images/logos/12.png',
 ];
+
+const grouped: any = [];
+
+for (let i = 0; i < logos.length; i += 4) {
+    grouped.push(logos.slice(i, i + 4))
+}
 
 const preguntas = [
     {
@@ -84,11 +104,11 @@ export default function HomePage() {
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
-    
+
     const handleToggle = (index: number) => {
         setOpenIndex(prevIndex => (prevIndex === index ? null : index));
     };
-    
+
     const [currentImage, setCurrentImage] = useState(comoFunciona[0]);
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -122,9 +142,9 @@ export default function HomePage() {
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
                         </h1>
-                        
+
                         <p className="text-lg text-gray-500 mb-10">
-                            Transforma tu experiencia en la gestión del trámite de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
+                            Transforma tu experiencia en la gestión de trámites de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
                         </p>
 
                         <Link href={'/cotizar'} className="px-6 py-3 rounded-full transition hover:scale-110 btn-hero">
@@ -144,24 +164,38 @@ export default function HomePage() {
                 </div>
 
                 {/* Logos */}
-                <div className="w-full p-10 overflow-hidden companies">
-                    <div className="max-w-7xl mx-auto px-6">
+                <div className="w-full py-10 items-center justify-items-center bg-white overflow-hidden companies">
+                    <div className="w-full md:w-3/4 mx-auto px-6">
                         <h2 className="text-center text-4xl font-bold mb-10">
                             <span>Cientos</span> de empresas han confiado en nosotros
                         </h2>
-                        <div className="flex flex-wrap justify-center gap-8">
-                            {logos.map((logo, index) => (
-                                <div key={index} className="w-1/2 sm:w-1/4 flex justify-center">
-                                    <Image
-                                        src={logo}
-                                        alt={`Logo ${index + 1}`}
-                                        width={200}
-                                        height={200}
-                                        className="object-contain filter grayscale"
-                                    />
-                                </div>
+
+                        <Swiper
+                            modules={[Autoplay]}
+                            autoplay={{ delay: 3000, disableOnInteraction: false }}
+                            loop={true}
+                        >
+                            {grouped.map((group, index) => (
+                                <SwiperSlide key={index}>
+                                    <div className="grid grid-cols-2 gap-8">
+                                        {group.map((logo, idx) => (
+                                            <div
+                                                key={idx}
+                                                className="flex justify-center items-center h-50"
+                                            >
+                                                <Image
+                                                    src={logo}
+                                                    alt={`Logo ${index * 4 + idx + 1}`}
+                                                    width={200}
+                                                    height={200}
+                                                    className="object-contain filter grayscale"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </SwiperSlide>
                             ))}
-                        </div>
+                        </Swiper>
                     </div>
                 </div>
             </section>
@@ -189,9 +223,9 @@ export default function HomePage() {
 
                                 <div className="w-full flex flex-col md:flex-row">
                                     <div className={activeIndex === index ? 'w-full p-4' : 'w-full p-4 text-gray-500'}>
-                                        <h2 className="text-xl font-bold text-primary mb-2 uppercase">{ item.title }</h2>
+                                        <h2 className="text-xl font-bold text-primary mb-2 uppercase">{item.title}</h2>
                                         <p className="">
-                                            { item.content }
+                                            {item.content}
                                         </p>
                                     </div>
 
@@ -200,8 +234,8 @@ export default function HomePage() {
                                             src={item.image}
                                             alt={`Paso ${item.id}`}
                                             width={400}
-                                            height={300}
-                                            className="rounded-2xl shadow-lg object-contain"
+                                            height={400}
+                                            className="w-full rounded-2xl object-contain"
                                         />
                                     </div>
                                 </div>
@@ -214,9 +248,9 @@ export default function HomePage() {
                         <Image
                             src={currentImage.image}
                             alt={`Imagen ${currentImage.id}`}
-                            width={400}
-                            height={300}
-                            className="rounded-2xl shadow-lg h-100 w-full"
+                            width={500}
+                            height={500}
+                            className="rounded-2xl w-full"
                         />
                     </div>
                 </div>
@@ -229,9 +263,9 @@ export default function HomePage() {
                 </div>
 
                 <div className="w-full md:w-3/4 mx-auto px-4 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-row flex-wrap">
                         {preguntas.map((pregunta, index) => (
-                            <div key={pregunta.id} className="p-4">
+                            <div key={pregunta.id} className="w-full md:w-1/2 md:p-2">
                                 <Accordion
                                     key={index}
                                     title={pregunta.title}

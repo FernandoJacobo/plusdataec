@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 
-import { LayoutCotizacion } from './web/templates/cotizacion';
+import { LayoutCotizacion } from './templates/cotizacion';
 
 import { writeFile, mkdir, access, readFile } from 'fs/promises';
 

@@ -13,12 +13,12 @@ interface Cotizacion {
     numeroPD?: string;
 }
 
-import { API_BASE } from "@/lib/config";
+import { URL_BASE } from "@/lib/config";
 
-const API_BASE_COT = `${API_BASE}/cotizaciones`;
+const API_BASE = `${URL_BASE}/cotizaciones`;
 
 export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API_BASE_COT}/register`, {
+    const res = await fetch(`${API_BASE}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -30,7 +30,7 @@ export const register = async ({idEstatus, idTiposImpuesto, valorASolicitar, hon
 }
 
 export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario}: Cotizacion) => {
-    const res = await fetch(`${API_BASE_COT}/update`, {
+    const res = await fetch(`${API_BASE}/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario })
@@ -42,7 +42,7 @@ export const update = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, h
 }
 
 export const confirm = async ({id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario, correoPD, numeroPD}: Cotizacion) => {
-    const res = await fetch(`${API_BASE_COT}/confirm`, {
+    const res = await fetch(`${API_BASE}/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario, correoPD, numeroPD })

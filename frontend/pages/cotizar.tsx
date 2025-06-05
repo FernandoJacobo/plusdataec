@@ -17,8 +17,8 @@ const steps = [
     { id: 3, title: 'Confirmar' },
 ];
 
-import { API_BASE } from "@/lib/config";
-const API_BASE_EMAIL = `${API_BASE}/email`;
+import { URL_BASE } from "@/lib/config";
+const API_BASE = `${URL_BASE}/email`;
 
 export default function CotizarPage() {
     const { fetchHonorarios, arrHonorarios, fetchTiposImpuesto, arrTiposImpuesto, cotizacion, informacionDeContacto } = useWebStore();
@@ -125,7 +125,7 @@ export default function CotizarPage() {
         data.append('telefonoPD', informacionDeContacto.numero);
         data.append('idCotizacion', cotizacion.id.toString() ? cotizacion.id.toString() : '');
 
-        const resEmail = await fetch(`${API_BASE_EMAIL}/enviar-cotizacion`, {
+        const resEmail = await fetch(`${API_BASE}/enviar-cotizacion-confirmada`, {
             method: "POST",
             body: data,
         });
@@ -149,7 +149,7 @@ export default function CotizarPage() {
             showToast('No se recibió el contenido Base64 del PDF.', 'error');
         }
 
-        console.log('URL para el correo electrónico:', res.downloadUrl);
+        // console.log('URL para el correo electrónico:', res.downloadUrl);
     };
 
     const reiniciarCotizacion = () => {
