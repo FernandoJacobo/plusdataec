@@ -4,6 +4,8 @@ import { useWebStore } from '@/store/useWebStore';
 
 import { Toast, showToast } from "@/components/general/Toast";
 
+import { Progressbar } from "@/components/general/Progressbar";
+
 import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 
 interface FormProps {
@@ -14,9 +16,9 @@ interface FormProps {
 export default function FormularioSubirSolicitud({onClickCancel, onClickContinue}: FormProps) {
     const { contribuyente, setContribuyente, cotizacion, setCotizacion } = useWebStore();
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showProgressbar, setShowProgressbar] = useState(false);
 
-    // const [fileName, setFileName] = useState("Ningún archivo seleccionado");
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const validateForm = () => {
         if (!cotizacion.nombreCompleto.trim()) {
@@ -212,6 +214,10 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
 
                         <span className="text-violet truncate"> {cotizacion.archivo ? `${truncateFileName(cotizacion.archivo.name)} (${formatBytes(cotizacion.archivo.size)})` : cotizacion.archivoNombre} </span>
                     </div>
+                </div>
+
+                <div className="mt-4 mb-4">
+                    { showProgressbar ?  <Progressbar/> : <></> }
                 </div>
 
                 <div className="flex flex-row gap-3 mt-7">

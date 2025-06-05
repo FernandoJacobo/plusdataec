@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentDots, faCopyright } from '@fortawesome/free-solid-svg-icons'
 
 const year = new Date().getFullYear();
-const message = 'Hola%necesito%información%para%reuperar%mis%impuestos%con%PLUSDATA';
+const message = 'Hola necesito información para reuperar mis impuestos con PLUSDATA';
 
 export default function Footer() {
     const { informacionDeContacto } = useWebStore();

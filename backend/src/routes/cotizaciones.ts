@@ -26,25 +26,18 @@ router.post('/register', async (req: Request, res: Response) : Promise<void> => 
     } = req.body;
 
     try {
-        // 1. Insertar en la base de datos
-        const result : any = await db.query(
+        const [result]: any = await db.query(
             `INSERT INTO cotizaciones 
             (idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [idEstatus, idTiposImpuesto, valorASolicitar, honorarios, nombre, correo, celular, nombreBeneficiario, rucBeneficiario]
         );
 
-        console.log(result);
-
-        const insertedId = result.insertId;
-
-        // 6. Responder con éxito
         res.status(201).json({
             error: false,
             message: 'Cotización registrada y PDF generado',
-            id: insertedId,
+            id: result.insertId,
         });
-
     } catch (error: any) {
         console.error('Error al registrar cotización:', error.message);
 

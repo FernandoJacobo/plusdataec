@@ -6,7 +6,9 @@ import FormularioCotizarEnLinea from '@/components/layout/web/FormularioCotizarE
 import FormularioEnviarCoizacion from '@/components/layout/web/FormularioEnviarCotizacion';
 import FormularioSubirSolicitud from '@/components/layout/web/FormularioSubirSolicitud';
 
+import { Progressbar } from "@/components/general/Progressbar";
 import { showToast } from '@/components/general/Toast';
+
 import { useWebStore } from '@/store/useWebStore';
 import { numberToPercent, numberFormat, showAlert } from '@/helpers/general';
 import { register, update, confirm } from '@/lib/api/cotizaciones';
@@ -18,7 +20,7 @@ const steps = [
 ];
 
 import { URL_BASE } from "@/lib/config";
-const API_BASE = `${URL_BASE}/email`;
+const API_BASE = `${URL_BASE}/api/email`;
 
 export default function CotizarPage() {
     const { fetchHonorarios, arrHonorarios, fetchTiposImpuesto, arrTiposImpuesto, cotizacion, informacionDeContacto } = useWebStore();
@@ -27,6 +29,8 @@ export default function CotizarPage() {
         fetchHonorarios();
         fetchTiposImpuesto();
     }, []);
+
+    const [showProgressbar, setShowProgressbar] = useState(false);
 
     const [currentStep, setCurrentStep] = useState(1);
     const [stepsCompleted, setStepsCompleted] = useState<number[]>([]);
@@ -90,6 +94,8 @@ export default function CotizarPage() {
     };
 
     const confirmar = async (idStatus: number) => {
+        setShowProgressbar(true);
+
         const cotizacionData = {
             id: cotizacion.id,
             idEstatus: idStatus,
@@ -107,9 +113,13 @@ export default function CotizarPage() {
 
         let res = await confirm(cotizacionData);
 
+        setShowProgressbar(false);
+
         if (res.error) return showToast(res.message, 'error');
 
         if (res.id) cotizacion.id = res.id;
+
+        setShowProgressbar(true);
 
         const data = new FormData();
         
@@ -132,12 +142,14 @@ export default function CotizarPage() {
 
         const { success, message } = await resEmail.json();
 
+        setShowProgressbar(false);
+
         if (!success) return showToast(message, 'error');
 
         if (res.pdfBase64) {
             // downloadBase64(`data:application/pdf;base64,${res.pdfBase64}`, res.fileName);
             
-            //showToast(res.message, 'success');
+            // showToast(res.message, 'success');
             showAlert({
                 title: '¡SOLICITUD RECIBIDA!',
                 message: res.message,
@@ -183,10 +195,12 @@ export default function CotizarPage() {
                         }}
                     />
                 ) : (
-                    <FormularioEnviarCoizacion
-                        onClickRegresar={() => setShowCotizar(true)}
-                        onClickSenEmail={() => setShowCotizar(true)}
-                    />
+                    <>
+                        <FormularioEnviarCoizacion
+                            onClickRegresar={() => setShowCotizar(true)}
+                            onClickSenEmail={() => setShowCotizar(true)}
+                        />
+                    </>
                 );
             case 2:
                 return (
@@ -232,6 +246,10 @@ export default function CotizarPage() {
                                 </ul>
                             </div>
 
+                            <div className="mt-4 mb-4">
+                                { showProgressbar ?  <Progressbar/> : <></> }
+                            </div>
+
                             <div className="flex flex-col md:flex-row gap-4">
                                 <button
                                     className="w-full md:w-1/2 btn-ouline text-violet font-bold p-2 rounded-full transition hover:bg-ext-amber hover:text-violet hover:scale-105 uppercase hover:cursor-pointer"
@@ -256,6 +274,7 @@ export default function CotizarPage() {
 
     return (
         <div className="w-full max-w-4xl mx-auto p-4">
+
             <div className="flex justify-between items-center space-x-4 mb-6">
                 {steps.map(step => (
                     <div
@@ -270,6 +289,7 @@ export default function CotizarPage() {
                     </div>
                 ))}
             </div>
+            
             {renderStepContent()}
         </div>
     );

@@ -7,7 +7,7 @@ import { faCommentDots } from "@fortawesome/free-solid-svg-icons";
 
 import Link from "next/link";
 
-const message = 'Hola%necesito%información%para%reuperar%mis%impuestos%con%PLUSDATA';
+const message = 'Hola necesito información para reuperar mis impuestos con PLUSDATA';
 
 export default function FloatingButtons() {
     const { informacionDeContacto } = useWebStore();

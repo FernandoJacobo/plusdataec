@@ -7,6 +7,8 @@ import { useWebStore } from '@/store/useWebStore';
 import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 import { numberToPercent, numberFormat, showAlert } from '@/helpers/general';
 
+import { Progressbar } from "@/components/general/Progressbar";
+
 import { API_BASE } from "@/lib/config";
 
 interface FormProps {
@@ -19,8 +21,12 @@ const API_BASE_EMAIL = `${API_BASE}/email`;
 export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenEmail }: FormProps) {
     const { arrTiposImpuesto, cotizacion, setCotizacion, informacionDeContacto } = useWebStore();
 
+    const [showProgressbar, setShowProgressbar] = useState(false);
+
     const handleSendEmail = async () => {
         if (!validateForm()) return;
+
+        setShowProgressbar(true);
 
         const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto);
 
@@ -45,12 +51,12 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
 
         const { success, message } = await res.json();
         
+        setShowProgressbar(false);
+        
         if (!success) {
             showToast(message, 'error');
             return;
         }
-
-        // showToast(message, 'success');
 
         showAlert({
             title: '¡COTIZACIÓN ENVIADA!',
@@ -176,6 +182,10 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
                             onChange={(e) => setCotizacion({rucBeneficiario: e.target.value})}
                             className="w-full p-2 rounded input-control"
                         />
+                    </div>
+
+                    <div className="mt-4 mb-4">
+                        { showProgressbar ?  <Progressbar/> : <></> }
                     </div>
 
                     <div className="flex flex-row gap-3 mt-7">

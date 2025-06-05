@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import Select from 'react-select';
+
 import { numberToPercent, numberFormat } from '@/helpers/general';
+
 import { useWebStore } from '@/store/useWebStore';
+
+import { Progressbar } from "@/components/general/Progressbar";
 
 interface FormProps {
     onClickDownload: () => void;
@@ -11,6 +15,8 @@ interface FormProps {
 
 export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext }: FormProps) {
     const { cotizacion, setCotizacion, arrHonorarios, fetchHonorarios, arrTiposImpuesto, fetchTiposImpuesto } = useWebStore();
+
+    const [showProgressbar, setShowProgressbar] = useState(false);
 
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto) || null;
 
@@ -50,6 +56,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
 
     const print = () => {
         if (!validateForm()) return;
+        
         onClickDownload();
     };
 
@@ -135,6 +142,10 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                 <p className="text-gray-500 mt-4 mb-4">
                     Nuestros honorarios se pagan en su totalidad (100%) después de que el SRI emita la resolución final. No requerimos anticipos.
                 </p>
+
+                <div className="mt-4 mb-4">
+                    { showProgressbar ?  <Progressbar/> : <></> }
+                </div>
 
                 {/* Botones */}
                 <div className="flex flex-col md:flex-row gap-3">

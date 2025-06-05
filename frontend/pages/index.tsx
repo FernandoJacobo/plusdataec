@@ -175,10 +175,10 @@ export default function HomePage() {
                             autoplay={{ delay: 3000, disableOnInteraction: false }}
                             loop={true}
                         >
-                            {grouped.map((group, index) => (
+                            {grouped.map((group : any, index : any) => (
                                 <SwiperSlide key={index}>
                                     <div className="grid grid-cols-2 gap-8">
-                                        {group.map((logo, idx) => (
+                                        {group.map((logo: any, idx : any) => (
                                             <div
                                                 key={idx}
                                                 className="flex justify-center items-center h-50"
