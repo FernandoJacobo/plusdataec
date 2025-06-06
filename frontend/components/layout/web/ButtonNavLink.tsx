@@ -6,10 +6,11 @@ import { usePathname } from 'next/navigation'
 
 interface ButtonNavLinkProps {
     href: string
-    children: React.ReactNode
+    children: React.ReactNode,
+    target?: string | '',
 }
 
-export function ButtonNavLink({ href, children }: ButtonNavLinkProps) {
+export function ButtonNavLink({ href, children, target }: ButtonNavLinkProps) {
     const pathname = usePathname()
 
     const isActive = pathname === href
@@ -17,6 +18,7 @@ export function ButtonNavLink({ href, children }: ButtonNavLinkProps) {
     return (
         <Link
             href={href}
+            target={target}
             className={`px-10 py-2 rounded-full transition btn-navbar ${isActive
                     ? 'active'
                     : ''

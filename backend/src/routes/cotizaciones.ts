@@ -159,7 +159,7 @@ router.post('/confirm', async (req: Request, res: Response) : Promise<void> => {
         await browser.close();
 
         // 4. Guardar el archivo PDF
-        const fileName = `cotizacion-${nroCotizacion}.pdf`;
+        const fileName = `Cotización ${nroCotizacion} PLUSDATA.EC.pdf`;
         const dirPath = path.join(__dirname, '../public', 'cotizaciones');
         await mkdir(dirPath, { recursive: true });
         const filePath = path.join(dirPath, fileName);

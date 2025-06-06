@@ -69,8 +69,8 @@ export default function Header() {
 
                     <nav className="hidden lg:flex space-x-4">
                         <ButtonNavLink href="/cotizar"> Cotiza Aquí </ButtonNavLink>
-                        <ButtonNavLink href="/auth/registro"> Regístrate </ButtonNavLink>
-                        <ButtonNavLink href="/auth"> Ingresar </ButtonNavLink>
+                        <ButtonNavLink href="/auth/registro" target="_blank"> Regístrate </ButtonNavLink>
+                        <ButtonNavLink href="/auth" target="_blank"> Ingresar </ButtonNavLink>
                     </nav>
                 </div>
             </div>

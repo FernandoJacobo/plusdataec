@@ -65,7 +65,7 @@ routes.post("/enviar-cotizacion", upload.single("archivo"), async (req: Request,
     const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
     await browser.close();
 
-    const fileName = `cotizacion-${nroCotizacion}.pdf`;
+    const fileName = `Cotización ${nroCotizacion} PLUSDATA.EC.pdf`;
     const dirPath = path.join(__dirname, '../public', 'cotizaciones');
     await mkdir(dirPath, { recursive: true });
     const filePath = path.join(dirPath, fileName);
@@ -168,7 +168,7 @@ routes.post("/enviar-cotizacion-confirmada", upload.single("archivo"), async (re
     const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
     await browser.close();
 
-    const fileName = `cotizacion-${nroCotizacion}.pdf`;
+    const fileName = `Cotización ${nroCotizacion} PLUSDATA.EC.pdf`;
     const dirPath = path.join(__dirname, '../public', 'cotizaciones');
     await mkdir(dirPath, { recursive: true });
     const filePath = path.join(dirPath, fileName);

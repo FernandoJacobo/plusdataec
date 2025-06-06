@@ -4,6 +4,8 @@ export interface Mensaje {
     correo: string;
     celular: string;
     mensaje: string;
+    correoPD: string;
+    numeroPD: string;
 }
 
 export interface InformacionDeContacto {

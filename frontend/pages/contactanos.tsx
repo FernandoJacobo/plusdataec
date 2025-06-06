@@ -74,7 +74,9 @@ export default function Contactanos() {
             nombre: mensaje.nombre,
             correo: mensaje.correo,
             celular: mensaje.celular,
-            mensaje: mensaje.mensaje
+            mensaje: mensaje.mensaje,
+            correoPD: informacionDeContacto.correo,
+            numeroPD: informacionDeContacto.numero
         });
 
         if (resEnvio.error) {
@@ -88,7 +90,9 @@ export default function Contactanos() {
             nombre: mensaje.nombre,
             correo: mensaje.correo,
             celular: mensaje.celular,
-            mensaje: mensaje.mensaje
+            mensaje: mensaje.mensaje,
+            correoPD: informacionDeContacto.correo,
+            numeroPD: informacionDeContacto.numero
         });
 
         if (resRegistro.error) {

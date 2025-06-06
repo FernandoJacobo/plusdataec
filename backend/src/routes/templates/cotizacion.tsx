@@ -17,17 +17,13 @@ export const LayoutCotizacion = (data: any): string => `
         html, body {
             height: 100%;
             margin: 0;
-        }
-
-        body {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 20px;
         }
 
         .main {
-            height: calc(100vh - 1px)
+            padding: 30px;
         }
 
         h1 {
@@ -101,28 +97,6 @@ export const LayoutCotizacion = (data: any): string => `
             text-transform: uppercase;
         }
 
-        .footer {
-            text-align: right;
-            font-size: 0.9em;
-            width: 100%;
-            display: flex;
-            justify-content: end;
-            flex-direction: column;
-            align-items: end;
-            height: 500px;
-        }
-
-        .footer div {
-            padding: 8px;
-            width: 30%;
-        }
-
-        .footer .url {
-            background-color: #F5A623;
-            color: #FFFFFF;
-            text-align: center;
-        }
-
         .table {
             width: 100%;
             border-collapse: collapse;
@@ -146,8 +120,25 @@ export const LayoutCotizacion = (data: any): string => `
             font-size: 13px;
         }
 
-        .right {
+        .footer {
+            font-size: 0.9em;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            justify-content: end;
+            align-items: end;
+        }
+
+        .footer div {
+            padding: 10px;
+            width: 30%;
             text-align: right;
+        }
+
+        .footer .url {
+            background-color: #F5A623;
+            color: #FFFFFF;
+            text-align: center;
         }
     </style>
 </head>
@@ -244,10 +235,10 @@ export const LayoutCotizacion = (data: any): string => `
     </div>
 
     <div class="footer">
-        <div> Correo:  ${data.correoPD} </div>
-        <div> Cel:  ${data.numeroPD} </div>
+        <div> <span> Correo:  ${data.correoPD} </span> </div>
+        <div> <span> Cel:  ${data.numeroPD} </span> </div>
         <div class="url">
-            www.plusdata.ec
+            <span> www.plusdata.ec </span>
         </div>
     </div>
 

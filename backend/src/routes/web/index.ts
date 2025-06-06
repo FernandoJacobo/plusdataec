@@ -68,7 +68,7 @@ router.post(
     "/enviar-mensaje",
     async (req: Request, res: Response): Promise<void> => {
         try {
-            const { nombre, correo, celular, mensaje } = req.body;
+            const { nombre, correo, celular, mensaje, correoPD, numeroPD} = req.body;
 
             if (!nombre || !correo || !celular || !mensaje) {
                 res
@@ -104,7 +104,9 @@ router.post(
 
             htmlTemplate = htmlTemplate
                 .replace("{{nombre}}", nombre || "")
-                .replace("{{mensaje}}", mensaje || "");
+                .replace("{{mensaje}}", mensaje || "")
+                .replace("{{correo}}", correoPD || "")
+                .replace("{{numero}}", numeroPD || "");
 
             const transporter = nodemailer.createTransport({
                 host: process.env.SMTP_SERVER,
