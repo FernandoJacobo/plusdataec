@@ -14,6 +14,8 @@ export const useWebStore = create<WebStoreState>((set) => ({
         correo: '',
         celular: '',
         mensaje: '',
+        correoPD: '',
+        numeroPD: ''
     },
     setMensaje: (valor) =>
         set((state) => ({
