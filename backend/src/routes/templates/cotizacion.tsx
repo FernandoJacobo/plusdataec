@@ -14,11 +14,20 @@ export const LayoutCotizacion = (data: any): string => `
     <meta charset="UTF-8">
     <title>Cotización</title>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            color: #333;
-			font-size: 15px;
-			padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .main {
+            height: calc(100vh - 1px)
         }
 
         h1 {
@@ -83,6 +92,8 @@ export const LayoutCotizacion = (data: any): string => `
             font-size: 0.9em;
             line-height: 1.5;
             width: 70%;
+            text-align: justify;
+            text-justify: inter-word;
         }
 
         .notes h3 {
@@ -98,11 +109,12 @@ export const LayoutCotizacion = (data: any): string => `
             justify-content: end;
             flex-direction: column;
             align-items: end;
+            height: 500px;
         }
 
         .footer div {
-            width: 30%;
             padding: 8px;
+            width: 30%;
         }
 
         .footer .url {
@@ -142,91 +154,93 @@ export const LayoutCotizacion = (data: any): string => `
 
 <body>
 
-    <div class="header">
-        <div class="logo">
+    <div class="main">
+        <div class="header">
+            <div class="logo">
 
+            </div>
+
+            <div class="numero-cotizacion">
+                <h2> Cotización </h2>
+                <h6> NRO. ${String(data.id).padStart(9, '0')} </h6>
+            </div>
         </div>
 
-        <div class="numero-cotizacion">
-            <h2> Cotización </h2>
-            <h6> NRO. ${String(data.id).padStart(9, '0')} </h6>
+        <div class="section section-cliente">
+            <div>
+                <span class="label"> Cliente: </span>
+                ${data.nombre}
+            </div>
+            <div>
+                <span class="label"> Fecha: </span>
+                ${formatDate(data.fecha) || formatDate(new Date().toLocaleDateString())}
+            </div>
+            <div>
+                <span class="label"> Beneficiario: </span>
+                ${data.nombreBeneficiario}
+            </div>
+            <div>
+                <span class="label"> RUC: </span>
+                ${data.rucBeneficiario}
+            </div>
+            <div>
+                <span class="label"> Celular: </span>
+                ${data.celular}
+            </div>
+            <div>
+                <span class="label"> Correo: </span>
+                ${data.correo}
+            </div>
         </div>
-    </div>
 
-    <div class="section section-cliente">
-        <div>
-            <span class="label"> Cliente: </span>
-            ${data.nombre}
+        <div class="section section-content">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Descripción </th>
+                        <th> Tipo de Tramite </th>
+                        <th> Monto a Solicitar </th>
+                        <th> % Honorarios </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> PATROCINIO EN LA DEVOLUCIÓN DE IMPUESTOS </td>
+                        <td> ${data.idTiposImpuesto} </td>
+                        <td> $ ${data.valorASolicitar} </td>
+                        <td> ${data.honorarios} </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div>
-            <span class="label"> Fecha: </span>
-            ${formatDate(data.fecha) || formatDate(new Date().toLocaleDateString())}
+
+        <div class="section section-total">
+            <div>
+                <span class="label"> Total (No incluye IVA) </span> ${data.honorarios}
+            </div>
         </div>
-        <div>
-            <span class="label"> Beneficiario: </span>
-            ${data.nombreBeneficiario}
+
+        <div class="notes">
+            <h3 class="title"> Notas </h3>
+
+            <p>
+                Nuestros honorarios por el trámite de devolución se calculará sobre el monto recuperado efectivamente de acuerdo a la Nota de Crédito emitida por el Servicio de Rentas Internas
+            </p>
+
+            <p>
+                Nuestros honorarios se pagan en su totalidad (100%) después de que el SRI emita la resolución final. No requerimos anticipos.
+            </p>
         </div>
-        <div>
-            <span class="label"> RUC: </span>
-            ${data.rucBeneficiario}
+
+        <div class="notes">
+            <h3 class="title"> Acepta tu cotización </h3>
+
+            <p>
+                Una vez aceptada la cotización, nuestros asesores le proporcionarán acceso
+                a nuestra plataforma PLUSDATA.EC para que pueda seguir el estado de su
+                trámite en tiempo real.
+            </p>
         </div>
-        <div>
-            <span class="label"> Celular: </span>
-            ${data.celular}
-        </div>
-        <div>
-            <span class="label"> Correo: </span>
-            ${data.correo}
-        </div>
-    </div>
-
-    <div class="section section-content">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th> Descripción </th>
-                    <th> Tipo de Tramite </th>
-                    <th> Monto a Solicitar </th>
-                    <th> % Honorarios </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td> PATROCINIO EN LA DEVOLUCIÓN DE IMPUESTOS </td>
-                    <td> ${data.idTiposImpuesto} </td>
-                    <td> $ ${data.valorASolicitar} </td>
-                    <td> ${data.honorarios} </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="section section-total">
-        <div>
-            <span class="label"> Total (No incluye IVA) </span> ${data.honorarios}
-        </div>
-    </div>
-
-    <div class="notes">
-        <h3 class="title"> Notas </h3>
-
-        <p>
-            Nuestros honorarios por el trámite de devolución se calculará sobre el monto recuperado efectivamente de acuerdo a la Nota de Crédito emitida por el Servicio de Rentas Internas
-        </p>
-
-        <p>
-            Nuestros honorarios se pagan en su totalidad (100%) después de que el SRI emita la resolución final. No requerimos anticipos.
-        </p>
-    </div>
-
-    <div class="notes">
-        <h3 class="title"> Acepta tu cotización </h3>
-
-        <p>
-            Una vez aceptada la cotización, nuestros asesores le proporcionarán acceso
-            a nuestra plataforma PLUSDATA.EC para que pueda seguir el estado de su
-            trámite en tiempo real.
-        </p>
     </div>
 
     <div class="footer">

@@ -13,20 +13,20 @@ export default function Footer() {
 
     return (
         <footer className="flex justify-center p-10 footer-web">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full lg:w-3/4 max-w-7xl">
+            <div className="w-full lg:w-3/4 flex flex-col lg:flex-row">
 
-                <div className="md:col-span-1">
+                <div className="w-full lg:w-1/3 lg:p-5">
                     <h1 className="text-lg text-white font-bold mb-3 uppercase">¡Habla con nosotros!</h1>
 
                     <p className="text-lg text-white font-bold mb-3 uppercase">{informacionDeContacto.numero}</p>
 
-                    <Link href={`https://wa.me/${informacionDeContacto.numero}?text=${message}`} target='_blank' className="px-7 py-2 rounded-full transition hover:scale-110  btn-footer">
+                    <Link href={`https://wa.me/${informacionDeContacto.numero}?text=${message}`} target='_blank' className="p-2 rounded-full transition hover:scale-110  btn-footer">
                         <FontAwesomeIcon icon={faCommentDots} className='me-2' />
                         ¡Chatea con ahora!
                     </Link>
                 </div>
 
-                <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="w-full lg:w-2/3 p-5 grid grid-cols-1 sm:grid-cols-3 gap-6">
 
                     <div>
                         <h1 className="text-md text-white font-bold mb-2">Productos</h1>
@@ -62,7 +62,7 @@ export default function Footer() {
 
                 </div>
 
-                <div className="md:col-span-1">
+                <div className="w-full lg:w-1/3 p-5">
                     <h1 className="text-lg text-white font-bold mb-3 uppercase">¿Qué es plusdata.ec?</h1>
 
                     <p className="text-md text-white mb-4">
@@ -91,10 +91,6 @@ export default function Footer() {
 
                         <Link href="" className='rounded-full transition bg-white p-3 footer-social'>
                             <i className="fa-brands fa-youtube text-2xl"></i>
-                        </Link>
-
-                        <Link href="" className='rounded-full transition bg-white p-3 footer-social'>
-                            <i className="fa-brands fa-x-twitter text-2xl"></i>
                         </Link>
                     </div>
                 </div>

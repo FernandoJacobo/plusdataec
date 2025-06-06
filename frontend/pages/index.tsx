@@ -57,8 +57,8 @@ const logos = [
 
 const grouped: any = [];
 
-for (let i = 0; i < logos.length; i += 4) {
-    grouped.push(logos.slice(i, i + 4))
+for (let i = 0; i < logos.length; i += 6) {
+    grouped.push(logos.slice(i, i + 6))
 }
 
 const preguntas = [
@@ -123,7 +123,7 @@ export default function HomePage() {
                     }
                 });
             },
-            { threshold: 0.2 }
+            { threshold: 1.0 }
         );
 
         itemRefs.current.forEach((ref) => {
@@ -177,7 +177,7 @@ export default function HomePage() {
                         >
                             {grouped.map((group : any, index : any) => (
                                 <SwiperSlide key={index}>
-                                    <div className="grid grid-cols-2 gap-8">
+                                    <div className="grid grid-cols-3 gap-2">
                                         {group.map((logo: any, idx : any) => (
                                             <div
                                                 key={idx}
@@ -209,11 +209,11 @@ export default function HomePage() {
                     </p>
                 </div>
 
-                <div className="w-full md:w-3/4 flex flex-col md:flex-row p-4 mb-4 timeline">
+                <div className="w-full md:w-2/3 px-10 flex flex-col md:flex-row p-4 mb-4">
                     <div className="w-full">
                         {comoFunciona.map((item, index) => (
                             <div key={item.id} data-index={index} ref={(el) => { itemRefs.current[index] = el; }} className="flex flex-row h-100">
-                                <div className="flex flex-col items-center h-full">
+                                <div className={index !== comoFunciona.length - 1 ? 'flex flex-col items-center h-full timeline' : 'flex flex-col items-center h-full'}>
                                     <FontAwesomeIcon
                                         icon={activeIndex === index ? faCircle : faCircleDot}
                                         className="text-primary"
@@ -244,13 +244,13 @@ export default function HomePage() {
                     </div>
 
                     {/* Imagen fija a la derecha */}
-                    <div className="hidden w-full md:flex flex-col items-center justify-center h-100 sticky top-40">
+                    <div className="hidden w-full md:flex flex-col items-center justify-center h-[100%] sticky top-40">
                         <Image
                             src={currentImage.image}
                             alt={`Imagen ${currentImage.id}`}
-                            width={500}
-                            height={500}
-                            className="rounded-2xl w-full"
+                            width={600}
+                            height={600}
+                            className="rounded-2xl"
                         />
                     </div>
                 </div>

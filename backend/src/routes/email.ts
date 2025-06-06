@@ -204,7 +204,7 @@ routes.post("/enviar-cotizacion-confirmada", upload.single("archivo"), async (re
     const mailOptions = {
         from: `"PLUSDATA ECUADOR S.A." <${process.env.EMAIL}>`,
         to: correo,
-        subject: `Cotización trámite devolución impuestos Nro. ${nroCotizacion} PLUSDATA ECUADOR S.A.`,
+        subject: `Solicitud trámite devolución impuestos Cotización Nro. ${nroCotizacion} PLUSDATA ECUADOR S.A.`,
         html: htmlTemplate,
         attachments,
     };

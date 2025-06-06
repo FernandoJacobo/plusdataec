@@ -46,8 +46,8 @@ export default function Header() {
 
     return (
         <header className="bg-white sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto flex justify-between items-center">
-                <div className="flex items-center justify-between w-full flex-row-reverse sm:flex-row p-2">
+            <div className="max-w-7xl mx-auto flex justify-between items-center ps-10 pe-10">
+                <div className="flex items-center justify-between w-full flex-row-reverse sm:flex-row">
                     <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-3 rounded-lg transition btn-mobile">
                         {isOpen ? <FontAwesomeIcon icon={faXmark} className="mr-2" /> : <FontAwesomeIcon icon={faBars} className="mr-2" />}
                     </button>
@@ -55,8 +55,8 @@ export default function Header() {
                     <Image
                         src="/images/logo.png"
                         alt="Hero"
-                        width={130}
-                        height={130}
+                        width={150}
+                        height={150}
                         className=""
                     />
 
@@ -77,7 +77,7 @@ export default function Header() {
 
             {/* Menú móvil desplegable */}
             {isOpen && (
-                <div className="lg:hidden p-4 space-y-2 bg-white shadow">
+                <div className="lg:hidden space-y-2 bg-white shadow ps-10 pe-10">
                     <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#inicio" : "/"}`}> Inicio </NavLink>
                     <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#como-funciona" : "/#como-funciona"}`}> ¿Cómo funciona? </NavLink>
                     <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#preguntas" : "/#preguntas"}`}> Preguntas </NavLink>
