@@ -10,83 +10,85 @@ import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import { NavLink } from './NavLink'
 import { ButtonNavLink } from './ButtonNavLink'
+import Link from 'next/link';
 
 export default function Header() {
-    const [isOpen, setIsOpen] = useState(false)
+    const [isOpen, setIsOpen] = useState(false);
 
     const [activeSection, setActiveSection] = useState("");
 
+    const pathname = usePathname();
+
     useEffect(() => {
+        const observerFunction = () => {
+            const sections = document.querySelectorAll("section[id]");
+
+            const observer = new IntersectionObserver(
+                entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.getAttribute("id")!;
+                            setActiveSection(id);
+                        }
+                    });
+                },
+                { threshold: 0.3 }
+            );
+
+            sections.forEach(section => observer.observe(section));
+            return () => observer.disconnect();
+        };
+
         observerFunction();
     }, []);
 
-    const observerFunction = () => {
-        const sections = document.querySelectorAll("section[id]");
-
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const id = entry.target.getAttribute("id")!;
-                        setActiveSection(id);
-                    }
-                });
-            },
-            {
-                threshold: 0.3, // 60% visible para activar
-            }
-        );
-
-        sections.forEach(section => observer.observe(section));
-
-        return () => observer.disconnect();
-    }
-
-    const pathname = usePathname();
-
     return (
         <header className="bg-white sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto flex justify-between items-center ps-10 pe-10">
-                <div className="flex items-center justify-between w-full flex-row-reverse sm:flex-row">
-                    <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-3 rounded-lg transition btn-mobile">
-                        {isOpen ? <FontAwesomeIcon icon={faXmark} className="mr-2" /> : <FontAwesomeIcon icon={faBars} className="mr-2" />}
-                    </button>
+            <div className="max-w-screen-xl mx-auto px-1 py-1 ps-4 pe-4 flex items-center justify-between">
+                {/* Botón menú móvil */}
+                <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 rounded-md transition hover:bg-gray-100 btn-mobile cursor-pointer">
+                    <FontAwesomeIcon icon={isOpen ? faXmark : faBars} className="text-xl" />
+                </button>
 
+                {/* Logo */}
+                <div className="relative w-20 h-20 sm:w-25 sm:h-25 md:w-30 md:h-30">
                     <Image
                         src="/images/logo.png"
-                        alt="Hero"
-                        width={150}
-                        height={150}
-                        className=""
+                        alt="Logo"
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 768px) 100vw, 200px"
                     />
+                </div>
 
-                    <nav className="hidden lg:flex space-x-9">
-                        <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#inicio" : "/"}`}> Inicio </NavLink>
-                        <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#como-funciona" : "/#como-funciona"}`} > ¿Cómo funciona? </NavLink>
-                        <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#preguntas" : "/#preguntas"}`} > Preguntas </NavLink>
-                        <NavLink classLink={`link-navbar`} href="/contactanos"> Contáctanos </NavLink>
-                    </nav>
+                {/* Navegación desktop */}
+                <nav className="hidden lg:flex space-x-8">
+                    <NavLink classLink="link-navbar" href={pathname === "/" ? "#inicio" : "/"}>Inicio</NavLink>
+                    <NavLink classLink="link-navbar" href={pathname === "/" ? "#como-funciona" : "/#como-funciona"}>¿Cómo funciona?</NavLink>
+                    <NavLink classLink="link-navbar" href={pathname === "/" ? "#preguntas" : "/#preguntas"}>Preguntas</NavLink>
+                    <NavLink classLink="link-navbar" href="/contactanos">Contáctanos</NavLink>
+                </nav>
 
-                    <nav className="hidden lg:flex space-x-4">
-                        <ButtonNavLink href="/cotizar"> Cotiza Aquí </ButtonNavLink>
-                        <ButtonNavLink href="/auth/registro" target="_blank"> Regístrate </ButtonNavLink>
-                        <ButtonNavLink href="/auth" target="_blank"> Ingresar </ButtonNavLink>
-                    </nav>
+                {/* Botones acción desktop */}
+                <div className="hidden lg:flex space-x-3">
+                    <ButtonNavLink href="/cotizar">Cotiza Aquí</ButtonNavLink>
+                    <ButtonNavLink href="/auth/registro" target="_blank">Regístrate</ButtonNavLink>
+                    <ButtonNavLink href="/auth" target="_blank">Ingresar</ButtonNavLink>
                 </div>
             </div>
 
-            {/* Menú móvil desplegable */}
+            {/* Menú móvil */}
             {isOpen && (
-                <div className="lg:hidden space-y-2 bg-white shadow ps-10 pe-10">
-                    <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#inicio" : "/"}`}> Inicio </NavLink>
-                    <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#como-funciona" : "/#como-funciona"}`}> ¿Cómo funciona? </NavLink>
-                    <NavLink classLink={`link-navbar`} href={`${pathname === "/" ? "#preguntas" : "/#preguntas"}`}> Preguntas </NavLink>
-                    <NavLink classLink={`link-navbar`} href="/contactanos"> Contáctanos </NavLink>
-                    <NavLink classLink={`link-navbar`} href="/cotizar"> Cotiza Aquí </NavLink>
-                    <NavLink classLink={`link-navbar`} href="/registro"> Regístrate </NavLink>
-                    <NavLink classLink={`link-navbar`} href="/auth"> Ingresar </NavLink>
+                <div className="lg:hidden bg-white px-6 py-4 space-y-3 transition-all duration-300">
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#inicio" : "/"}>Inicio</NavLink>
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#como-funciona" : "/#como-funciona"}>¿Cómo funciona?</NavLink>
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#preguntas" : "/#preguntas"}>Preguntas</NavLink>
+                    <NavLink classLink="block link-navbar" href="/contactanos">Contáctanos</NavLink>
+                    <NavLink classLink="block link-navbar" href="/cotizar">Cotiza Aquí</NavLink>
+                    <NavLink classLink="block link-navbar" href="/auth/registro" target="_blank">Regístrate</NavLink>
+                    <NavLink classLink="block link-navbar" href="/auth" target="_blank">Ingresar</NavLink>
                 </div>
             )}
         </header>
-    )
+    );
 }

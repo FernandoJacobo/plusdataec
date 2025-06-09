@@ -1,18 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-
 import Link from 'next/link';
 
 import { Toast, showToast } from "@/components/general/Toast";
-
 import { isValidEmail, isValidPhone } from '@/helpers/validations';
-
-import { register } from '@/lib/api/auth'
+import { register } from '@/lib/api/auth';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { showAlert } from '@/helpers/general';
+import { Progressbar } from '@/components/general/Progressbar';
 
 interface FormProps {
     onClick: (data: { id: number; name: string; phone: string; email: string }) => void;
@@ -20,17 +18,23 @@ interface FormProps {
 }
 
 export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps) {
+    const [showProgressbar, setShowProgressbar] = useState(false);
+
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
-
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+
+    // Estado para un solo error, con clave y mensaje
+    const [error, setError] = useState<{ field: string; message: string } | null>(null);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!validateForm()) return;
+
+        setShowProgressbar(true);
 
         const res = await register({
             id: 0,
@@ -41,6 +45,8 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
             contrasena: password
         });
 
+        setShowProgressbar(false);
+
         if (res.error) {
             showAlert({
                 title: 'ERROR',
@@ -49,6 +55,8 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
             });
             return;
         }
+
+        resetForm();
 
         showAlert({
             title: 'ÉXITO',
@@ -61,41 +69,42 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
 
     const validateForm = (): boolean => {
         if (!name.trim()) {
+            setError({ field: 'name', message: 'El nombre es requerido' });
             document.getElementById('name')?.focus();
-            showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
 
         if (!phone.trim()) {
+            setError({ field: 'phone', message: 'El número de celular es requerido' });
             document.getElementById('phone')?.focus();
-            showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
 
         if (!isValidPhone(phone.trim())) {
+            setError({ field: 'phone', message: 'Número de celular inválido' });
             document.getElementById('phone')?.focus();
-            showToast('Número de celular invlido', 'error');
             return false;
         }
 
         if (!email.trim()) {
+            setError({ field: 'email', message: 'El correo es requerido' });
             document.getElementById('email')?.focus();
-            showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
 
         if (!isValidEmail(email.trim())) {
+            setError({ field: 'email', message: 'Correo electrónico inválido' });
             document.getElementById('email')?.focus();
-            showToast('Correo electrónico invlido', 'error');
             return false;
         }
 
         if (password.length < 8) {
+            setError({ field: 'password', message: 'La contraseña debe tener al menos 8 caracteres' });
             document.getElementById('password')?.focus();
-            showToast('Completa todos los campos correctamente', 'error');
             return false;
         }
 
+        setError(null);
         return true;
     };
 
@@ -104,6 +113,7 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
         setPhone('');
         setEmail('');
         setPassword('');
+        setError(null);
         document.getElementById('name')?.focus();
     }
 
@@ -115,38 +125,44 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                 <div className="flex flex-col gap-3">
                     <label className="font-bold">Nombre Completo</label>
                     <input
+                        autoComplete='off'
                         id='name'
                         type="text"
                         placeholder="Ingresa tu nombre completo"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="input-control"
+                        className={`input-control ${error?.field === 'name' ? 'border-red-500' : ''}`}
                     />
+                    {error?.field === 'name' && <p className="text-red-600 text-[12px]">{error.message}</p>}
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="w-full flex flex-col gap-3">
                         <label className="font-bold">Nro. de celular</label>
                         <input
+                            autoComplete='off'
                             id='phone'
                             type="text"
                             placeholder="Registra tu número"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
-                            className="input-control"
+                            className={`input-control ${error?.field === 'phone' ? 'border-red-500' : ''}`}
                         />
+                        {error?.field === 'phone' && <p className="text-red-600 text-[12px]">{error.message}</p>}
                     </div>
 
                     <div className="w-full flex flex-col gap-3">
                         <label className="font-bold">Correo Electrónico</label>
                         <input
-                            id='id'
+                            autoComplete='off'
+                            id='email'
                             type="email"
                             placeholder="Ingresa tu correo electrónico"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="input-control"
+                            className={`input-control ${error?.field === 'email' ? 'border-red-500' : ''}`}
                         />
+                        {error?.field === 'email' && <p className="text-red-600 text-[12px]">{error.message}</p>}
                     </div>
                 </div>
 
@@ -155,12 +171,14 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
 
                     <div className="relative">
                         <input
+                            autoComplete='off'
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Mínimo 8 caracteres"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="input-control w-full pr-10" // padding-right para que no tape el texto
+                            className={`input-control w-full pr-10 ${error?.field === 'password' ? 'border-red-500' : ''}`}
+                            id="password"
                         />
 
                         <button
@@ -172,8 +190,10 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                         </button>
                     </div>
+                    {error?.field === 'password' && <p className="text-red-600 text-[12px]">{error.message}</p>}
                 </div>
 
+                { showProgressbar ?  <Progressbar/> : <></> }
 
                 <div className='flex d-flex flex-col md:flex-row gap-5'>
                     <button type="submit"
@@ -183,7 +203,9 @@ export default function FormularioRegistro({ onClick, showLinkLogin }: FormProps
                     </button>
 
                     <button type="reset"
-                        className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105" onClick={() => { resetForm() }}>
+                        className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-violet transition hover:cursor-pointer hover:scale-105"
+                        onClick={resetForm}
+                    >
                         Limpiar Campos
                     </button>
                 </div>
