@@ -13,7 +13,7 @@ export default function Footer() {
 
     return (
         <footer className="flex justify-center py-10 footer-web">
-            <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="w-full md:w-5/6 mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row lg:justify-between gap-8">
 
                     <div className="w-full">
@@ -21,7 +21,7 @@ export default function Footer() {
 
                         <p className="text-lg text-white font-bold mb-3 uppercase">{informacionDeContacto.numero}</p>
 
-                        <Link href={`https://wa.me/${informacionDeContacto.numero}?text=${message}`} target='_blank' className="p-2 rounded-full transition hover:scale-110  btn-footer">
+                        <Link href={`https://wa.me/${informacionDeContacto.numero}?text=${message}`} target='_blank' className="p-2  md:ps-10 md:pe-10 rounded-full transition hover:scale-110  btn-footer">
                             <FontAwesomeIcon icon={faCommentDots} className='me-2' />
                             ¡Chatea con ahora!
                         </Link>

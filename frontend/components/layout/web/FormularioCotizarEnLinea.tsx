@@ -7,6 +7,7 @@ import { numberToPercent, numberFormat } from '@/helpers/general';
 import { useWebStore } from '@/store/useWebStore';
 
 import { Progressbar } from "@/components/general/Progressbar";
+import { isValidDecimalNumber } from '@/helpers/validations';
 
 interface FormProps {
     onClickDownload: () => void;
@@ -37,13 +38,32 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
         setValorASolicitar(value);
 
         const val = parseFloat(value.replace(/[^0-9.]/g, ''));
+        
+        if (!isValidDecimalNumber(value)) {
+            setCotizacion({ valorASolicitar: 0 });
+            setCotizacion({ honorarios: 0 });
+            newErrors.valorASolicitar = 'El campo solo permite valores númericos a dos decimales Ej. 100.00.';
+            setErrors(newErrors);
+            return false;
+        }
+
         setCotizacion({ valorASolicitar: val });
 
         if (val < 9999.99) {
+            setCotizacion({ valorASolicitar: 0 });
+            setCotizacion({ honorarios: 0 });
             newErrors.valorASolicitar = 'Monto mínimo $10,000.00.';
+            setErrors(newErrors);
+            return false;
         }
 
-        setErrors(newErrors);
+        if (val >= 5000000) {
+            setCotizacion({ valorASolicitar: 0 });
+            setCotizacion({ honorarios: 0 });
+            newErrors.valorASolicitar = 'Para montos superiores a $5,000,000.00 solicita tu cotización a través del formulario contactanos.';
+            setErrors(newErrors);
+            return false;
+        }
 
         const honorario = getHonorio(val);
         setCotizacion({ honorarios: honorario });
@@ -62,6 +82,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
 
     const next = () => {
         if (!validateForm()) return;
+
         onClickNext();
     };
 
@@ -70,19 +91,23 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
 
         if (cotizacion.idTipoImpuesto === 0) {
             newErrors.tipoImpuesto = 'Selecciona un tipo de impuesto.';
+            setErrors(newErrors);
+            return false;
         }
 
         if (cotizacion.valorASolicitar === 0) {
             newErrors.valorASolicitar = 'Agrega un valor a solicitar.';
+            setErrors(newErrors);
+            return false;
         }
 
         if (cotizacion.valorASolicitar < 9999.99) {
             newErrors.valorASolicitar = 'Monto mínimo $10,000.00.';
+            setErrors(newErrors);
+            return false;
         }
 
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
+        return true;
     };
 
     useEffect(() => {
@@ -106,7 +131,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         value={tipoImpuesto}
                         onChange={onChangeTipoImpuesto}
                     />
-                    {errors.tipoImpuesto && <p className="text-red-500 text-sm">{errors.tipoImpuesto}</p>}
+                    {errors.tipoImpuesto && <p className="text-red-600 text-[12px]">{errors.tipoImpuesto}</p>}
                 </div>
 
                 {/* Valor a solicitar */}
@@ -119,7 +144,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
                         onChange={(e) => onChangeValorASolicitar(e.target.value)}
                         className="w-full text-right input-control"
                     />
-                    {errors.valorASolicitar && <p className="text-red-500 text-sm">{errors.valorASolicitar}</p>}
+                    {errors.valorASolicitar && <p className="text-red-600 text-[12px]">{errors.valorASolicitar}</p>}
                 </div>
 
                 {/* Resultado cotización */}

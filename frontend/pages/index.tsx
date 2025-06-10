@@ -151,7 +151,7 @@ export default function HomePage() {
                             Transforma tu experiencia en la gestión de trámites de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
                         </p>
 
-                        <Link href={'/cotizar'} className="p-2 rounded-full transition hover:scale-110 btn-hero">
+                        <Link href={'/cotizar'} className="p-3 ps-10 pe-10 rounded-full transition hover:scale-110 btn-hero">
                             Cotiza aquí
                         </Link>
                     </div>
@@ -277,7 +277,7 @@ export default function HomePage() {
             </section>
 
             {/* Preguntas frecuentes */}
-            <section id="preguntas" className="w-full">
+            <section id="preguntas" className="w-full mb-20">
                 <div className="text-center p-4 mb-4">
                     <h1 className="text-4xl font-bold text-purple mb-4">
                         ¿Tienes preguntas? Tenemos respuestas
