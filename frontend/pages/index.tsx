@@ -140,8 +140,8 @@ export default function HomePage() {
     return (
         <>
             {/* Hero Section */}
-            <section id="inicio" className="w-full">
-                <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 items-center justify-items-center p-10">
+            <section id="inicio" className="w-full scroll-mt-36">
+                <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 items-center justify-items-center p-10 hero">
                     <div className="text-center md:text-left p-8">
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
@@ -205,7 +205,7 @@ export default function HomePage() {
             </section>
 
             {/* Cómo Funciona */}
-            <section id="como-funciona" className="w-full flex flex-col items-center">
+            <section id="como-funciona" className="w-full flex flex-col items-center scroll-mt-36">
                 <div className="w-full text-center p-4 mt-4 mb-4">
                     <h1 className="text-4xl font-bold text-purple">¿Cómo funciona?</h1>
                     <p className="mt-4 mb-4">
@@ -277,7 +277,7 @@ export default function HomePage() {
             </section>
 
             {/* Preguntas frecuentes */}
-            <section id="preguntas" className="w-full mb-20">
+            <section id="preguntas" className="w-full mb-20 scroll-mt-36">
                 <div className="text-center p-4 mb-4">
                     <h1 className="text-4xl font-bold text-purple mb-4">
                         ¿Tienes preguntas? Tenemos respuestas
@@ -298,7 +298,6 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
-
         </>
     );
 }

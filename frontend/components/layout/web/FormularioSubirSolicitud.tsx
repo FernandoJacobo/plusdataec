@@ -6,7 +6,7 @@ import { Toast, showToast } from "@/components/general/Toast";
 
 import { Progressbar } from "@/components/general/Progressbar";
 
-import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
+import { isOnlyNumbers, isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
 
 interface FormProps {
     onClickCancel: () => void;
@@ -128,6 +128,25 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
         return `${kb.toFixed(1)} KB`;
     }
 
+    const onChangeCelular = (value: string) => {
+        if (!isOnlyNumbers(value.trim())) {
+            setCotizacion({celular: ''})
+            return;
+        }
+
+        setCotizacion({celular: value})
+    }
+
+
+    const onChangeRuc = (value: string) => {
+        if (!isOnlyNumbers(value.trim())) {
+            setCotizacion({rucBeneficiario: ''})
+            return;
+        }
+        
+        setCotizacion({rucBeneficiario: value})
+    }
+
     return (
         <>
             <form autoComplete="off" className="">
@@ -163,7 +182,7 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                             type="text"
                             placeholder=""
                             value={cotizacion.celular}
-                            onChange={(e) => setCotizacion({celular: e.target.value})}
+                            onChange={(e) => onChangeCelular(e.target.value)}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>
@@ -188,7 +207,7 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                         type="text"
                         placeholder=""
                         value={cotizacion.rucBeneficiario}
-                        onChange={(e) => setCotizacion({rucBeneficiario: e.target.value})}
+                        onChange={(e) => onChangeRuc(e.target.value)}
                         className="w-full p-2 rounded input-control"
                     />
                 </div>

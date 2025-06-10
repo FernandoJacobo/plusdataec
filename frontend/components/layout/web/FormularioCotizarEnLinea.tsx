@@ -8,6 +8,7 @@ import { useWebStore } from '@/store/useWebStore';
 
 import { Progressbar } from "@/components/general/Progressbar";
 import { isValidDecimalNumber } from '@/helpers/validations';
+import Link from 'next/link';
 
 interface FormProps {
     onClickDownload: () => void;
@@ -22,7 +23,8 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     const tipoImpuesto = arrTiposImpuesto.find(item => item.value === cotizacion.idTipoImpuesto) || null;
 
     const [valorASolicitar, setValorASolicitar] = useState('');
-    const [errors, setErrors] = useState<{ tipoImpuesto?: string; valorASolicitar?: string }>({});
+
+    const [errors, setErrors] = useState<{ tipoImpuesto?: React.ReactNode | string; valorASolicitar?: React.ReactNode | string }>({});
 
     const onChangeTipoImpuesto = (e: any) => {
         setErrors((prev) => ({ ...prev, tipoImpuesto: '' }));
@@ -32,16 +34,19 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     };
 
     const onChangeValorASolicitar = (value: string) => {
-        const newErrors: { tipoImpuesto?: string; valorASolicitar?: string } = {};
+        const newErrors: { tipoImpuesto?: React.ReactNode | string; valorASolicitar?: React.ReactNode | string } = {};
 
         setErrors((prev) => ({ ...prev, valorASolicitar: '' }));
         setValorASolicitar(value);
 
         const val = parseFloat(value.replace(/[^0-9.]/g, ''));
+
+        console.log(isValidDecimalNumber(value));
         
         if (!isValidDecimalNumber(value)) {
             setCotizacion({ valorASolicitar: 0 });
             setCotizacion({ honorarios: 0 });
+            setValorASolicitar('');
             newErrors.valorASolicitar = 'El campo solo permite valores númericos a dos decimales Ej. 100.00.';
             setErrors(newErrors);
             return false;
@@ -57,10 +62,14 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
             return false;
         }
 
-        if (val >= 5000000) {
+        if (val > 5000000) {
             setCotizacion({ valorASolicitar: 0 });
             setCotizacion({ honorarios: 0 });
-            newErrors.valorASolicitar = 'Para montos superiores a $5,000,000.00 solicita tu cotización a través del formulario contactanos.';
+            newErrors.valorASolicitar = (
+                <>
+                    Para montos superiores a $5,000,000.00 solicita tu cotización a través del formulario de <Link href="/contactanos" className="underline text-purple font-bold">contactanos</Link>.
+                </>
+            );
             setErrors(newErrors);
             return false;
         }

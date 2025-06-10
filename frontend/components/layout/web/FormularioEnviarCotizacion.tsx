@@ -4,7 +4,7 @@ import { showToast } from "@/components/general/Toast";
 
 import { useWebStore } from '@/store/useWebStore';
 
-import { isValidEmail, isValidPhone, isValidRuc } from '@/helpers/validations'
+import { isValidEmail, isValidPhone, isValidRuc, isOnlyNumbers } from '@/helpers/validations'
 import { numberToPercent, numberFormat, showAlert } from '@/helpers/general';
 
 import { Progressbar } from "@/components/general/Progressbar";
@@ -117,6 +117,25 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
         onClickRegresar();
     }
 
+    const onChangeCelular = (value: string) => {
+        if (!isOnlyNumbers(value.trim())) {
+            setCotizacion({celular: ''})
+            return;
+        }
+
+        setCotizacion({celular: value})
+    }
+
+
+    const onChangeRuc = (value: string) => {
+        if (!isOnlyNumbers(value.trim())) {
+            setCotizacion({rucBeneficiario: ''})
+            return;
+        }
+        
+        setCotizacion({rucBeneficiario: value})
+    }
+
     return (
         <div className="w-full flex flex-col items-center justify-center p-10">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full md:w-4/6  space-y-4">
@@ -155,7 +174,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
                                 type="text"
                                 placeholder=""
                                 value={cotizacion.celular}
-                                onChange={(e) => setCotizacion({celular: e.target.value})}
+                                onChange={(e) => {onChangeCelular(e.target.value)}}
                                 className="w-full p-2 rounded input-control"
 
                             />
@@ -179,7 +198,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
                             type="text"
                             placeholder=""
                             value={cotizacion.rucBeneficiario}
-                            onChange={(e) => setCotizacion({rucBeneficiario: e.target.value})}
+                            onChange={(e) => { onChangeRuc(e.target.value) }}
                             className="w-full p-2 rounded input-control"
                         />
                     </div>

@@ -78,6 +78,10 @@
 
 /* Hero Section */
 
+.hero {
+    height: calc(100vh - 100px);
+}
+
 .btn-hero {
     border: 1px solid var(--yellow);
     background-color: var(--yellow);

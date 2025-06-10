@@ -14,6 +14,11 @@ export const isValidRuc = (ruc: string): boolean => {
 }
 
 export const isValidDecimalNumber = (number: string): boolean => {
-    const regex = /^\d+(\.\d{1,2})?$/;
+    const regex = /^(?:\d+(?:\.\d{0,2})?|\.\d{1,2})$/;
     return regex.test(number);
+}
+
+export const isOnlyNumbers = (value: string): boolean => {
+    const regex = /^\d+$/;
+    return regex.test(value);
 }
