@@ -9,9 +9,11 @@ interface NavLinkProps {
     classLink: string
 }
 
-export function NavLink({ href, target, children, classLink }: NavLinkProps) {
+export function NavLink({ href, target = 'none', children, classLink }: NavLinkProps) {
+    const linkProps = target !== 'none' ? { target } : {}
+
     return (
-        <Link href={href} className={`${classLink} block transition`} target={`${target}`} >
+        <Link href={href} className={`${classLink} block transition`} {...linkProps}>
             {children}
         </Link>
     )

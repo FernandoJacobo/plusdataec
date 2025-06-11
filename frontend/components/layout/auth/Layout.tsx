@@ -1,9 +1,6 @@
-import { useState } from 'react';
-
 import Head from 'next/head'
 
 import FloatingButtons from '../../general/FloatingButtons'
-import Image from 'next/image';
 
 import { ReactNode } from 'react'
 
@@ -21,12 +18,10 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
             <div className="min-h-screen flex flex-col relative items-center justify-center">
                 <div className='w-full flex items-center justify-center'>
-                    <Image
+                    <img
                         src="/images/logo.png"
-                        alt="Hero"
-                        width={200}
-                        height={200}
-                        className=""
+                        alt="Logo"
+                        className="object-contain"
                     />
                 </div>
                 

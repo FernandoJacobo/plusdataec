@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Swiper, SwiperSlide } from 'swiper/react'
+
 import 'swiper/css'
 import 'swiper/css/autoplay'
-import { Autoplay } from 'swiper/modules'
 
-import Image from "next/image";
+import { Autoplay } from 'swiper/modules'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircle, faCircleDot } from "@fortawesome/free-solid-svg-icons";
 
 import Accordion from "@/components/layout/web/Accordion";
+
 import Link from "next/link";
 
 const comoFunciona = [
@@ -157,12 +158,10 @@ export default function HomePage() {
                     </div>
 
                     <div className="relative md:justify-end w-100 h-100 md:w-full md:h-full p-8">
-                        <Image
+                        <img
                             src="/images/hero-section.png"
                             alt="Hero"
-                            fill
                             className="object-contain"
-                            sizes="(max-width: 768px) 100vw, 200px"
                         />
                     </div>
                 </div>
@@ -187,12 +186,10 @@ export default function HomePage() {
                                                 key={idx}
                                                 className="flex justify-center items-center h-50"
                                             >
-                                                <Image
+                                                <img
                                                     src={logo}
                                                     alt={`Logo ${index * 4 + idx + 1}`}
-                                                    width={200}
-                                                    height={200}
-                                                    className="object-contain filter grayscale"
+                                                    className="object-contain filter w-[150] h-[150] grayscale"
                                                 />
                                             </div>
                                         ))}
@@ -251,10 +248,9 @@ export default function HomePage() {
 
                                     {/* Imagen para móvil */}
                                     <div className="md:hidden relative w-full h-64 mt-4">
-                                        <Image
+                                        <img
                                             src={item.image}
                                             alt={`Paso ${item.id}`}
-                                            fill
                                             className="object-contain"
                                         />
                                     </div>
@@ -265,12 +261,10 @@ export default function HomePage() {
 
                     {/* Imagen fija para desktop */}
                     <div className="hidden md:flex flex-col sticky h-100 top-40 w-full">
-                        <Image
+                        <img
                             src={currentImage.image}
                             alt={`Imagen ${currentImage.id}`}
-                            width={500}
-                            height={500}
-                            className="rounded-2xl object-contain"
+                            className="rounded-2xl object-contain w-full h-[350px]"
                         />
                     </div>
                 </div>

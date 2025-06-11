@@ -11,8 +11,6 @@ import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { NavLink } from './NavLink'
 import { ButtonNavLink } from './ButtonNavLink'
 
-import Link from 'next/link';
-
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
 
