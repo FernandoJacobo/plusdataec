@@ -7,10 +7,14 @@ interface NavLinkProps {
     target?: string
     children: React.ReactNode
     classLink: string
+    click?: () => void
 }
 
-export function NavLink({ href, target = 'none', children, classLink }: NavLinkProps) {
-    const linkProps = target !== 'none' ? { target } : {}
+export function NavLink({ href, target = 'none', children, classLink, click }: NavLinkProps) {
+    const linkProps: Record<string, any> = {
+        ...(target !== 'none' && { target }),
+        ...(click && { onClick: click }),
+    }
 
     return (
         <Link href={href} className={`${classLink} block transition`} {...linkProps}>

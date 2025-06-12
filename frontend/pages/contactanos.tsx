@@ -102,7 +102,7 @@ export default function Contactanos() {
     };
 
     return (
-        <section className="w-full bg-purple-50 p-8" id="contactanos">
+        <section className="w-full bg-purple-50 md:p-8" id="contactanos">
             <div className="px-4">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center mb-4">
                     {/* Información de contacto */}
@@ -141,7 +141,7 @@ export default function Contactanos() {
                     </div>
 
                     {/* Formulario */}
-                    <div className="">
+                    <div className="mb-5">
                         <div className="w-full bg-white shadow-lg rounded-2xl overflow-hidden p-8">
                             <h1 className="text-lg font-bold mb-3">¿Prefieres que nosotros te contactemos? ¡Adelante!</h1>
                             <p className="text-purple text-medium font-[400] mb-3">Nuestro equipo te responderá en el menor tiempo posible</p>

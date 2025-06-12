@@ -142,22 +142,22 @@ export default function HomePage() {
         <>
             {/* Hero Section */}
             <section id="inicio" className="w-full scroll-mt-36">
-                <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 items-center justify-items-center p-10 hero">
-                    <div className="text-center md:text-left p-8">
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold uppercase">
+                <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 items-center justify-items-center md:p-10 hero">
+                    <div className="w-full items-center justify-items-center md:justify-items-start text-left p-5 md:p-8">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-[900] text-purple uppercase">
                             La única plataforma tecnológica para devoluciones de impuestos.
                         </h1>
 
-                        <p className="text-lg text-gray-500 mt-4 mb-5">
+                        <p className="text-xl text-purple mt-5 mb-5">
                             Transforma tu experiencia en la gestión de trámites de devoluciones de impuestos. Sube la solicitud y nosotros nos encargamos del resto.
                         </p>
 
-                        <Link href={'/cotizar'} className="p-3 ps-10 pe-10 rounded-full transition hover:scale-110 btn-hero">
+                        <Link href={'/cotizar'} className="rounded-full transition hover:scale-110 btn-hero">
                             Cotiza aquí
                         </Link>
                     </div>
 
-                    <div className="relative md:justify-end w-100 h-100 md:w-full md:h-full p-8">
+                    <div className="relative md:justify-end w-full h-full p-8">
                         <img
                             src="/images/hero-section.png"
                             alt="Hero"
@@ -168,8 +168,8 @@ export default function HomePage() {
 
                 {/* Logos */}
                 <div className="w-full items-center justify-items-center bg-white overflow-hidden companies">
-                    <div className="w-full md:w-5/6 p-4">
-                        <h2 className="text-center text-4xl font-bold mt-10 mb-10">
+                    <div className="w-full md:w-5/6">
+                        <h2 className="text-center text-4xl font-bold mt-10 mb-10 md:p-4">
                             <span>Cientos</span> de empresas han confiado en nosotros
                         </h2>
 
@@ -180,16 +180,16 @@ export default function HomePage() {
                         >
                             {grouped.map((group: any, index: any) => (
                                 <SwiperSlide key={index}>
-                                    <div className="grid grid-cols-3 gap-1">
+                                    <div className="grid grid-cols-3 gap-4 place-items-center mb-10">
                                         {group.map((logo: any, idx: any) => (
                                             <div
                                                 key={idx}
-                                                className="flex justify-center items-center h-50"
+                                                className="flex justify-center items-center w-[100px] h-[100px] md:w-[150px] md:h-[150px]"
                                             >
                                                 <img
                                                     src={logo}
                                                     alt={`Logo ${index * 4 + idx + 1}`}
-                                                    className="object-contain filter w-[150] h-[150] grayscale"
+                                                    className="object-contain grayscale"
                                                 />
                                             </div>
                                         ))}
@@ -243,7 +243,7 @@ export default function HomePage() {
                                         <h2 className="text-xl font-bold text-primary mb-2 uppercase">
                                             {item.title}
                                         </h2>
-                                        <p>{item.content}</p>
+                                        <p className="text-base md:text-lg">{item.content}</p>
                                     </div>
 
                                     {/* Imagen para móvil */}

@@ -126,7 +126,7 @@ export default function FormularioCotizarEnLinea({ onClickDownload, onClickNext 
     }, []);
 
     return (
-        <div className="w-full flex flex-col items-center justify-center p-10">
+        <div className="w-full flex flex-col items-center justify-center md:p-10 mb-5">
             <form autoComplete="off" className="w-full md:w-4/6 bg-white p-8 rounded-2xl shadow-lg space-y-4">
                 <h2 className="text-2xl font-bold text-center"> Cotizar en línea </h2>
 

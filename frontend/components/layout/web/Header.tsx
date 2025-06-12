@@ -43,21 +43,23 @@ export default function Header() {
 
     return (
         <header className="bg-white sticky top-0 z-50">
-            <div className="max-w-screen-xl mx-auto px-1 py-1 ps-4 pe-4 flex items-center justify-between">
+            <div className="max-w-screen-xl mx-auto px-1 py-1 ps-4 pe-4 flex items-center justify-between flex-row-reverse md:flex-row">
                 {/* Botón menú móvil */}
                 <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden p-2 rounded-md transition hover:bg-gray-100 btn-mobile cursor-pointer">
                     <FontAwesomeIcon icon={isOpen ? faXmark : faBars} className="text-xl" />
                 </button>
 
                 {/* Logo */}
-                <div className="relative w-20 h-20 sm:w-25 sm:h-25 md:w-30 md:h-30">
-                    <Image
-                        src="/images/logo.png"
-                        alt="Logo"
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 100vw, 200px"
-                    />
+                <div className="relative w-25 h-25 md:w-30 md:h-30">
+                    <NavLink classLink="link-navbar" href={pathname === "/" ? "#inicio" : "/"}>
+                        <Image
+                            src="/images/logo.png"
+                            alt="Logo"
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 200px"
+                        />
+                    </NavLink>
                 </div>
 
                 {/* Navegación desktop */}
@@ -79,13 +81,13 @@ export default function Header() {
             {/* Menú móvil */}
             {isOpen && (
                 <div className="lg:hidden bg-white px-6 py-4 space-y-3 transition-all duration-300">
-                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#inicio" : "/"}>Inicio</NavLink>
-                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#como-funciona" : "/#como-funciona"}>¿Cómo funciona?</NavLink>
-                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#preguntas" : "/#preguntas"}>Preguntas</NavLink>
-                    <NavLink classLink="block link-navbar" href="/contactanos">Contáctanos</NavLink>
-                    <NavLink classLink="block link-navbar" href="/cotizar">Cotiza Aquí</NavLink>
-                    <NavLink classLink="block link-navbar" href="/auth/registro" target="_blank">Regístrate</NavLink>
-                    <NavLink classLink="block link-navbar" href="/auth" target="_blank">Ingresar</NavLink>
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#inicio" : "/"} click={() => setIsOpen(false)}>Inicio</NavLink>
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#como-funciona" : "/#como-funciona"} click={() => setIsOpen(false)}>¿Cómo funciona?</NavLink>
+                    <NavLink classLink="block link-navbar" href={pathname === "/" ? "#preguntas" : "/#preguntas"} click={() => setIsOpen(false)}>Preguntas</NavLink>
+                    <NavLink classLink="block link-navbar" href="/contactanos" click={() => setIsOpen(false)}>Contáctanos</NavLink>
+                    <NavLink classLink="block link-navbar" href="/cotizar" click={() => setIsOpen(false)}>Cotiza Aquí</NavLink>
+                    <NavLink classLink="block link-navbar" href="/auth/registro" target="_blank" click={() => setIsOpen(false)}>Regístrate</NavLink>
+                    <NavLink classLink="block link-navbar" href="/auth" target="_blank" click={() => setIsOpen(false)}>Ingresar</NavLink>
                 </div>
             )}
         </header>

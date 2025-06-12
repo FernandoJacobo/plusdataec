@@ -204,7 +204,7 @@ export default function CotizarPage() {
                 );
             case 2:
                 return (
-                    <div className="w-full flex justify-center p-10">
+                    <div className="w-full flex justify-center md:p-10">
                         <div className="w-full md:w-5/6 bg-white p-8 rounded-2xl shadow-xl max-w-lg space-y-4">
                             <h2 className="text-xl font-bold text-center">Registra la información del contribuyente</h2>
                             <FormularioSubirSolicitud
@@ -219,7 +219,7 @@ export default function CotizarPage() {
                 );
             case 3:
                 return (
-                    <div className="w-full flex justify-center p-10">
+                    <div className="w-full flex justify-center md:p-10">
                         <div className="w-full md:w-4/6 bg-white p-8 rounded-2xl shadow-lg space-y-4">
                             <h2 className="text-xl font-bold text-center mb-4">Confirmar Solicitud</h2>
 
@@ -282,7 +282,7 @@ export default function CotizarPage() {
                         onClick={() => goToStep(step.id)}
                         className="flex-1 text-center cursor-pointer"
                     >
-                        <div className={`text-sm font-semibold ${step.id === currentStep ? 'text-violet' : 'text-gray-400'}`}>
+                        <div className={`text-xs md:text-base font-semibold ${step.id === currentStep ? 'text-violet' : 'text-gray-400'}`}>
                             {step.id}- {step.title}
                         </div>
                         <div className={`h-1 mt-1 rounded ${step.id === currentStep ? 'bg-violet' : 'bg-gray-200'}`} />

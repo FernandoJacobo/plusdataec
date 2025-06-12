@@ -79,7 +79,7 @@
 /* Hero Section */
 
 .hero {
-    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
 }
 
 .btn-hero {
@@ -87,8 +87,12 @@
     background-color: var(--yellow);
     color: var(--white);
     font-weight: bold;
-    text-align: center;
     font-size: 15px;
+    width: 150px;
+    display: flex;
+    padding: 15px;
+    text-align: center;
+    justify-content: center;
 }
 
 .btn-hero {

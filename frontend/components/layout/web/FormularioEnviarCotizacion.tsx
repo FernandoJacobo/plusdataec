@@ -137,7 +137,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
     }
 
     return (
-        <div className="w-full flex flex-col items-center justify-center p-10">
+        <div className="w-full flex flex-col items-center justify-center md:p-10 mb-5">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full md:w-4/6  space-y-4">
                 <h2 className="text-2xl font-bold text-center"> Enviar cotización a mi correo </h2>
 
@@ -207,7 +207,7 @@ export default function FormularioEnviarCoizacion({ onClickRegresar, onClickSenE
                         { showProgressbar ?  <Progressbar/> : <></> }
                     </div>
 
-                    <div className="flex flex-row gap-3 mt-7">
+                    <div className="flex flex-col md:flex-row gap-3 mt-7">
                         <button type="button" className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancelSenEmail(); }}>
                             Regresar
                         </button>

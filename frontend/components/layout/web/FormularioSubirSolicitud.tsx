@@ -239,12 +239,12 @@ export default function FormularioSubirSolicitud({onClickCancel, onClickContinue
                     { showProgressbar ?  <Progressbar/> : <></> }
                 </div>
 
-                <div className="flex flex-row gap-3 mt-7">
-                    <button type='button' className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancel(); }}>
+                <div className="flex flex-col md:flex-row gap-3 mt-7">
+                    <button type='button' className="w-full md:w-1/2 btn-ouline text-violet uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { cancel(); }}>
                         Regresar
                     </button>
 
-                    <button type='button' className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-4xl hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { next(); }}>
+                    <button type='button' className="w-full md:w-1/2 bg-yellow text-white uppercase font-bold p-2 text-center rounded-full hover:border-amber hover:bg-ext-amber hover:text-white transition hover:cursor-pointer hover:scale-105" onClick={() => { next(); }}>
                         Continuar
                     </button>
                 </div>
