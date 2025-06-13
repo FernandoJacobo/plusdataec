@@ -107,7 +107,7 @@ export default function Contactanos() {
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 items-center mb-4">
                     {/* Información de contacto */}
                     <div className="w-full p-4">
-                        <h1 className="text-4xl text-center font-bold mb-4">¿Tienes dudas? ¡Contáctanos!</h1>
+                        <h1 className="text-4xl text-center text-purple font-[900] mb-4">¿Tienes dudas? ¡Contáctanos!</h1>
 
                         <p className="text-purple text-lg font-[400] p-2 mb-8 text-center md:text-left">
                             Tienes soporte gratis e ilimitado para comunicarte con nuestro equipo especializado ¡Dino cómo podemos ayudarte!
